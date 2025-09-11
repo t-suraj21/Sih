@@ -1,0 +1,16 @@
+2025-09-09 23:20:28 [[32minfo[39m]: 🗄️  Using mock database connection for development
+2025-09-09 23:20:28 [[32minfo[39m]: ✅ Mock database connected successfully
+2025-09-09 23:20:28 [[32minfo[39m]: 📦 Using mock Redis connection for development
+2025-09-09 23:20:28 [[32minfo[39m]: ✅ Mock Redis connected successfully
+2025-09-09 23:20:28 [[32minfo[39m]: 🚀 Yatra Backend Server running on port 3001
+2025-09-09 23:20:28 [[32minfo[39m]: 🌍 Environment: development
+2025-09-09 23:20:28 [[32minfo[39m]: 📊 Health check: http://localhost:3001/health
+2025-09-09 23:20:28 [[32minfo[39m]: 📚 API base URL: http://localhost:3001/api
+2025-09-09 23:28:36 [[32minfo[39m]: 🗄️  Using mock database connection for development
+2025-09-09 23:28:36 [[32minfo[39m]: ✅ Mock database connected successfully
+2025-09-09 23:28:36 [[32minfo[39m]: 📦 Using mock Redis connection for development
+2025-09-09 23:28:36 [[32minfo[39m]: ✅ Mock Redis connected successfully
+2025-09-09 23:28:36 [[32minfo[39m]: 🚀 Yatra Backend Server running on port 3001
+2025-09-09 23:28:36 [[32minfo[39m]: 🌍 Environment: development
+2025-09-09 23:28:36 [[32minfo[39m]: 📊 Health check: http://localhost:3001/health
+2025-09-09 23:28:36 [[32minfo[39m]: 📚 API base URL: http://localhost:3001/api
