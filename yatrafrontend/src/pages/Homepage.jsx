@@ -46,12 +46,12 @@ const Homepage = () => {
       description: 'Pink City with royal palaces and forts'
     },
     {
-      url: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop',
-      title: 'Golden Triangle',
+      url: 'https://m.media-amazon.com/images/I/81LkCh5u4LL.jpg',
+      title: 'Golden Temple',
       description: 'Historic monuments and cultural heritage'
     },
     {
-      url: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=1920&h=1080&fit=crop',
+      url: 'https://t4.ftcdn.net/jpg/06/31/02/21/360_F_631022109_PXYXdWEMMa494E6dwHC0GSTvqSeHc3My.jpg',
       title: 'Rajasthan Desert',
       description: 'Sand dunes and camel safaris'
     }
@@ -282,34 +282,32 @@ const Homepage = () => {
   ];
 
   const testimonials = [
-    {
-      id: 1,
-      name: 'Sonu yadav',
-      location: 'Mumbai',
-      rating: 5,
-      comment: 'Amazing experience! The guide was verified and knowledgeable. Food recommendations were all FSSAI certified. Felt completely safe throughout the trip.',
-      
-      trip: 'Rajasthan Heritage Tour'
-    },
-    {
-      id: 2,
-      name: 'Vivek Singh',
-      location: 'Delhi',
-      rating: 5,
-      comment: 'The SOS feature gave me confidence to explore remote areas. All hotels were exactly as described with no hidden charges. Highly recommended!',
-      
-      trip: 'Kerala Backwater Experience'
-    },
-    {
-      id: 3,
-      name: 'Suraj yadav',
-      location: 'Ahmedabad',
-      rating: 5,
-      comment: 'Eco-tourism options were fantastic! Stayed at certified green hotels and supported local communities. The transparency is unmatched.',
-      
-      trip: 'Himachal Eco Adventure'
-    }
-  ];
+  {
+    id: 1,
+    name: 'Sonu Yadav',
+    location: 'Mumbai',
+    rating: 5,
+    comment: 'Amazing experience! The guide was verified and highly knowledgeable. Food recommendations were all FSSAI certified. Felt completely safe throughout the trip.',
+    trip: 'Rajasthan Heritage Tour'
+  },
+  {
+    id: 2,
+    name: 'Vivek Singh',
+    location: 'Delhi',
+    rating: 5,
+    comment: 'The SOS feature gave me confidence to explore remote areas. All hotels were exactly as described, with no hidden charges. Highly recommended!',
+    trip: 'Kerala Backwater Experience'
+  },
+  {
+    id: 3,
+    name: 'Suraj Yadav',
+    location: 'Ahmedabad',
+    rating: 5,
+    comment: 'Eco-tourism options were fantastic! Stayed at certified green hotels and supported local communities. The transparency was unmatched.',
+    trip: 'Himachal Eco Adventure'
+  }
+];
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -658,11 +656,7 @@ const Homepage = () => {
             {testimonials.map((testimonial) => (
               <div key={testimonial.id} className="bg-white rounded-xl shadow-lg p-6">
                 <div className="flex items-center mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full mr-4"
-                  />
+                  
                   <div>
                     <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
                     <p className="text-gray-600 text-sm">{testimonial.location}</p>
