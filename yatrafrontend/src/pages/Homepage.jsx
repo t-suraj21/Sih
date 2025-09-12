@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
 
 const Homepage = () => {
+  const { t } = useTranslation();
   const [searchData, setSearchData] = useState({
     destination: '',
     date: '',
@@ -291,12 +293,11 @@ const Homepage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Safe, Verified, and Transparent
-              <span className="block text-green-400">Travel in India</span>
+              {t('safeVerifiedTransparent')}
+              <span className="block text-green-400">{t('travelInIndia')}</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              Plan your trip with verified hotels, guides, food, and transport. 
-              Experience India with complete trust and transparency.
+              {t('planTripDescription')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -304,13 +305,13 @@ const Homepage = () => {
                 to="/services"
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
               >
-                Plan My Trip
+                {t('planMyTrip')}
               </Link>
               <Link
                 to="/destinations"
                 className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
               >
-                Explore Destinations
+                {t('exploreDestinations')}
               </Link>
             </div>
 
@@ -321,7 +322,7 @@ const Homepage = () => {
                   <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Destination"
+                    placeholder={t('destination')}
                     value={searchData.destination}
                     onChange={(e) => setSearchData({...searchData, destination: e.target.value})}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -357,7 +358,7 @@ const Homepage = () => {
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
                 >
                   <Search className="w-5 h-5" />
-                  <span>Search</span>
+                  <span>{t('search')}</span>
                 </button>
               </form>
             </div>
@@ -371,7 +372,7 @@ const Homepage = () => {
           <div className="text-center mb-12">
             <div className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
               <MapPin className="w-4 h-4 mr-2" />
-              Discover India
+              {t('discoverIndia')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Featured Destinations Across India
@@ -491,7 +492,7 @@ const Homepage = () => {
                         to={`/destination/${destination.name}`}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1"
                       >
-                        <span>Explore</span>
+                        <span>{t('explore')}</span>
                         <ChevronRight className="w-4 h-4" />
                       </Link>
                     </div>
@@ -519,10 +520,10 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Yatra Trusted Tourism?
+              {t('whyChooseYatra')}
             </h2>
             <p className="text-xl text-gray-600">
-              Your safety and satisfaction are our top priorities
+              {t('safetyPriority')}
             </p>
           </div>
           

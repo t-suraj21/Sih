@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LanguageProvider } from './contexts/LanguageContext';
 import Layout from './components/Layout/Layout';
 import Homepage from './pages/Homepage';
 import Destinations from './pages/Destinations';
@@ -20,28 +21,30 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/destinations" element={<Destinations />} />
-          <Route path="/destination/:destinationName" element={<DestinationDetails />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/hotels" element={<Hotels />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/safety-sos" element={<SafetySOS />} />
-          <Route path="/eco-tourism" element={<EcoTourism />} />
-          <Route path="/dashboard/user" element={<UserDashboard />} />
-          <Route path="/dashboard/vendor" element={<VendorDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/faq" element={<FAQ />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/destinations" element={<Destinations />} />
+            <Route path="/destination/:destinationName" element={<DestinationDetails />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/hotels" element={<Hotels />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/safety-sos" element={<SafetySOS />} />
+            <Route path="/eco-tourism" element={<EcoTourism />} />
+            <Route path="/dashboard/user" element={<UserDashboard />} />
+            <Route path="/dashboard/vendor" element={<VendorDashboard />} />
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/faq" element={<FAQ />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </LanguageProvider>
   );
 }
 

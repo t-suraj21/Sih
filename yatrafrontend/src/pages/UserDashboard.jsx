@@ -53,9 +53,9 @@ const UserDashboard = () => {
             year: 'numeric' 
           }),
           totalTrips: 0, // Will be updated from bookings
-          ecoPoints: 1250, // Mock for now
-          savedServices: 12, // Mock for now
-          emergencyContact: '' // Mock for now
+          ecoPoints: 0, // Will be calculated from actual data
+          savedServices: 0, // Will be calculated from actual data
+          emergencyContact: currentUser.emergencyContact || ''
         });
       }
 
@@ -121,13 +121,13 @@ const UserDashboard = () => {
           }));
         }
       } else {
-        // Use mock data if backend doesn't have bookings
-        setBookings(mockBookings);
+        // No bookings found
+        setBookings([]);
       }
     } catch (error) {
       console.error('Error loading bookings:', error);
-      // Use mock data if API fails
-      setBookings(mockBookings);
+      // Show empty state on error
+      setBookings([]);
     } finally {
       setIsLoading(false);
     }
@@ -143,22 +143,6 @@ const UserDashboard = () => {
       navigate('/login');
     }
   };
-
-  // Mock booking data as fallback
-  const mockBookings = [
-    {
-      id: 'YTR001',
-      type: 'Hotel',
-      serviceName: 'Heritage Palace Hotel',
-      location: 'Jaipur, Rajasthan',
-      date: '2024-12-25',
-      checkOut: '2024-12-28',
-      status: 'confirmed',
-      amount: 10500,
-      qrCode: 'QR001',
-      image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=300&h=200&fit=crop'
-    }
-  ];
 
   // Show loading spinner
   if (isLoading) {

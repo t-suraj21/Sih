@@ -38,20 +38,25 @@ const Booking = () => {
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [serviceDetails, setServiceDetails] = useState(null);
 
-  // Mock service data
-  const serviceDetails = {
-    name: 'Heritage Palace Hotel',
-    location: 'Jaipur, Rajasthan',
-    image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=500&h=400&fit=crop',
-    rating: 4.8,
-    reviews: 324,
-    hygieneRating: 9.2,
-    pricePerNight: 3500,
-    originalPrice: 4200,
-    amenities: ['Free WiFi', 'AC', 'TV', 'Room Service', 'Pool', 'Spa'],
-    features: ['Government Verified', 'FSSAI Certified Restaurant', 'Eco-Friendly'],
-    cancellationPolicy: 'Free cancellation till 24 hours before check-in'
+  useEffect(() => {
+    // Load service details from URL params or API
+    const serviceId = searchParams.get('serviceId');
+    if (serviceId) {
+      loadServiceDetails(serviceId);
+    }
+  }, [searchParams]);
+
+  const loadServiceDetails = async (serviceId) => {
+    try {
+      const response = await apiService.getHotelDetails(serviceId);
+      if (response.success && response.data?.hotel) {
+        setServiceDetails(response.data.hotel);
+      }
+    } catch (error) {
+      console.error('Error loading service details:', error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -60,8 +65,10 @@ const Booking = () => {
   };
 
   const calculateTotal = () => {
+    if (!serviceDetails) return { subtotal: 0, taxes: 0, serviceFee: 0, total: 0, nights: 0 };
+    
     const nights = Math.ceil((new Date(bookingData.checkOut) - new Date(bookingData.checkIn)) / (1000 * 60 * 60 * 24));
-    const subtotal = serviceDetails.pricePerNight * nights * bookingData.rooms;
+    const subtotal = (serviceDetails.price || serviceDetails.pricePerNight || 0) * nights * (bookingData.rooms || 1);
     const taxes = Math.round(subtotal * 0.12); // 12% GST
     const serviceFee = 99;
     return { subtotal, taxes, serviceFee, total: subtotal + taxes + serviceFee, nights };
@@ -84,9 +91,21 @@ const Booking = () => {
   };
 
   const renderBookingDetails = () => {
-    const { subtotal, taxes, serviceFee, total, nights } = calculateTotal();
-    
+  const { subtotal, taxes, serviceFee, total, nights } = calculateTotal();
+
+  // Show loading state if service details are not loaded
+  if (!serviceDetails) {
     return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading service details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Booking Form */}
         <div className="lg:col-span-2 space-y-6">

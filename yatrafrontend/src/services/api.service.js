@@ -46,6 +46,7 @@ class ApiService {
     try {
       const response = await api.post('/auth/register', userData);
       
+      // Backend returns: { success: true, data: { user: {...}, token: "...", refreshToken: "..." } }
       if (response.data.success && response.data.data?.token) {
         setAuthToken(response.data.data.token);
         setUserData(response.data.data.user);
@@ -54,6 +55,16 @@ class ApiService {
       return response.data;
     } catch (error) {
       console.error('Registration error:', error);
+      
+      // Handle validation errors specifically
+      if (error.response?.status === 400 && error.response?.data?.errors) {
+        const validationErrors = error.response.data.errors.map(err => err.message).join(', ');
+        return {
+          success: false,
+          message: validationErrors
+        };
+      }
+      
       return {
         success: false,
         message: error.response?.data?.message || 'Registration failed'
@@ -65,6 +76,7 @@ class ApiService {
     try {
       const response = await api.post('/auth/login', credentials);
       
+      // Backend returns: { success: true, data: { user: {...}, token: "...", refreshToken: "..." } }
       if (response.data.success && response.data.data?.token) {
         setAuthToken(response.data.data.token);
         setUserData(response.data.data.user);
@@ -106,7 +118,7 @@ class ApiService {
 
   async updateProfile(profileData) {
     try {
-      const response = await api.put(API_CONFIG.ENDPOINTS.AUTH.UPDATE_PROFILE, profileData);
+      const response = await api.put('/auth/profile', profileData);
       
       if (response.data.success && response.data.data?.user) {
         setUserData(response.data.data.user);
@@ -124,7 +136,7 @@ class ApiService {
 
   async sendOTP(phoneNumber) {
     try {
-      const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.SEND_OTP, {
+      const response = await api.post('/auth/send-otp', {
         phone: phoneNumber
       });
       return response.data;
@@ -139,7 +151,7 @@ class ApiService {
 
   async verifyPhone(phoneNumber, otp) {
     try {
-      const response = await api.post(API_CONFIG.ENDPOINTS.AUTH.VERIFY_PHONE, {
+      const response = await api.post('/auth/verify-otp', {
         phone: phoneNumber,
         otp
       });
@@ -160,11 +172,11 @@ class ApiService {
         params: searchParams
       });
       return {
-        success: response.data.success,
+        success: response.data.success || true,
         data: {
-          hotels: response.data.data?.hotels || []
+          hotels: response.data.data?.hotels || response.data.hotels || []
         },
-        message: response.data.message
+        message: response.data.message || 'Hotels retrieved successfully'
       };
     } catch (error) {
       console.error('Search hotels error:', error);
@@ -191,7 +203,7 @@ class ApiService {
 
   async addHotel(hotelData) {
     try {
-      const response = await api.post(API_CONFIG.ENDPOINTS.HOTELS.ADD, hotelData);
+      const response = await api.post('/hotels', hotelData);
       return response.data;
     } catch (error) {
       console.error('Add hotel error:', error);
@@ -220,11 +232,11 @@ class ApiService {
     try {
       const response = await api.get('/bookings');
       return {
-        success: response.data.success,
+        success: response.data.success || true,
         data: {
-          bookings: response.data.data?.bookings || []
+          bookings: response.data.data?.bookings || response.data.bookings || []
         },
-        message: response.data.message
+        message: response.data.message || 'Bookings retrieved successfully'
       };
     } catch (error) {
       console.error('Get bookings error:', error);
@@ -238,7 +250,7 @@ class ApiService {
 
   async getBookingDetails(bookingId) {
     try {
-      const response = await api.get(`${API_CONFIG.ENDPOINTS.BOOKINGS.DETAILS}/${bookingId}`);
+      const response = await api.get(`/bookings/${bookingId}`);
       return response.data;
     } catch (error) {
       console.error('Get booking details error:', error);
@@ -251,7 +263,7 @@ class ApiService {
 
   async cancelBooking(bookingId) {
     try {
-      const response = await api.put(`${API_CONFIG.ENDPOINTS.BOOKINGS.CANCEL}/${bookingId}/cancel`);
+      const response = await api.put(`/bookings/${bookingId}/cancel`);
       return response.data;
     } catch (error) {
       console.error('Cancel booking error:', error);
@@ -291,7 +303,7 @@ class ApiService {
 
   async getPaymentDetails(bookingId) {
     try {
-      const response = await api.get(`${API_CONFIG.ENDPOINTS.PAYMENTS.DETAILS}/${bookingId}`);
+      const response = await api.get(`/payments/${bookingId}`);
       return response.data;
     } catch (error) {
       console.error('Get payment details error:', error);
@@ -305,7 +317,7 @@ class ApiService {
   // Review APIs
   async addReview(reviewData) {
     try {
-      const response = await api.post(API_CONFIG.ENDPOINTS.REVIEWS.ADD, reviewData);
+      const response = await api.post('/reviews', reviewData);
       return response.data;
     } catch (error) {
       console.error('Add review error:', error);
@@ -318,7 +330,7 @@ class ApiService {
 
   async getReviews(hotelId) {
     try {
-      const response = await api.get(`${API_CONFIG.ENDPOINTS.REVIEWS.LIST}/${hotelId}`);
+      const response = await api.get(`/reviews/${hotelId}`);
       return response.data;
     } catch (error) {
       console.error('Get reviews error:', error);
@@ -333,7 +345,7 @@ class ApiService {
   // SOS APIs
   async sendSOSAlert(sosData) {
     try {
-      const response = await api.post(API_CONFIG.ENDPOINTS.SOS.SEND, sosData);
+      const response = await api.post('/sos', sosData);
       return response.data;
     } catch (error) {
       console.error('Send SOS alert error:', error);
@@ -346,7 +358,7 @@ class ApiService {
 
   async getSOSStatus(alertId) {
     try {
-      const response = await api.get(`${API_CONFIG.ENDPOINTS.SOS.STATUS}/${alertId}/status`);
+      const response = await api.get(`/sos/${alertId}/status`);
       return response.data;
     } catch (error) {
       console.error('Get SOS status error:', error);
@@ -360,7 +372,7 @@ class ApiService {
   // Admin APIs
   async getAdminDashboard() {
     try {
-      const response = await api.get(API_CONFIG.ENDPOINTS.ADMIN.DASHBOARD);
+      const response = await api.get('/admin/dashboard');
       return response.data;
     } catch (error) {
       console.error('Get admin dashboard error:', error);
@@ -373,7 +385,7 @@ class ApiService {
 
   async verifyHotel(hotelId, verificationData) {
     try {
-      const response = await api.post(`${API_CONFIG.ENDPOINTS.ADMIN.VERIFY_HOTEL}/${hotelId}`, verificationData);
+      const response = await api.post(`/admin/verify-hotel/${hotelId}`, verificationData);
       return response.data;
     } catch (error) {
       console.error('Verify hotel error:', error);
@@ -386,7 +398,7 @@ class ApiService {
 
   async blockUser(userId, blockData) {
     try {
-      const response = await api.put(`${API_CONFIG.ENDPOINTS.ADMIN.BLOCK_USER}/${userId}`, blockData);
+      const response = await api.put(`/admin/block-user/${userId}`, blockData);
       return response.data;
     } catch (error) {
       console.error('Block user error:', error);

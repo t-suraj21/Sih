@@ -54,11 +54,31 @@ const Signup = () => {
       // Validate current step
       if (step === 2) {
         // Validate basic info
-        if (!formData.firstName || !formData.lastName || !formData.email || 
-            !formData.phone || !formData.password || !formData.confirmPassword) {
+        if (!formData.firstName?.trim() || !formData.lastName?.trim() || !formData.email?.trim() || 
+            !formData.phone?.trim() || !formData.password || !formData.confirmPassword) {
           setMessage({
             type: 'error',
             text: 'Please fill in all required fields'
+          });
+          return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          setMessage({
+            type: 'error',
+            text: 'Please enter a valid email address'
+          });
+          return;
+        }
+        
+        // Phone validation (basic)
+        const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          setMessage({
+            type: 'error',
+            text: 'Please enter a valid phone number'
           });
           return;
         }
@@ -77,6 +97,27 @@ const Signup = () => {
             text: 'Password must be at least 8 characters long'
           });
           return;
+        }
+        
+        // Password must contain at least one lowercase letter, one uppercase letter, and one number
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/;
+        if (!passwordRegex.test(formData.password)) {
+          setMessage({
+            type: 'error',
+            text: 'Password must contain at least one lowercase letter, one uppercase letter, and one number'
+          });
+          return;
+        }
+        
+        // Additional vendor validation
+        if (formData.userType === 'vendor') {
+          if (!formData.businessName?.trim() || !formData.businessType?.trim()) {
+            setMessage({
+              type: 'error',
+              text: 'Please fill in business information'
+            });
+            return;
+          }
         }
       }
       
@@ -331,6 +372,9 @@ const Signup = () => {
             {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
           </button>
         </div>
+        <p className="text-xs text-gray-500 mt-1">
+          Password must be at least 8 characters with uppercase, lowercase, and number
+        </p>
       </div>
 
       <div>
@@ -357,6 +401,22 @@ const Signup = () => {
           </button>
         </div>
       </div>
+
+      {/* Error Message Display */}
+      {message.text && (
+        <div className={`p-3 rounded-lg flex items-center ${
+          message.type === 'success' 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {message.type === 'success' ? (
+            <CheckCircle className="w-4 h-4 mr-2" />
+          ) : (
+            <AlertCircle className="w-4 h-4 mr-2" />
+          )}
+          <span className="text-sm">{message.text}</span>
+        </div>
+      )}
 
       <div className="flex space-x-4">
         <button

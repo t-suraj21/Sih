@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Globe, AlertTriangle, Home, MapPin, Hotel, Leaf, User, Phone, HelpCircle, Info, LogIn, UserPlus, LogOut } from 'lucide-react';
 import apiService from '../../services/api.service';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('EN');
+  const { language, changeLanguage } = useLanguage();
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
   const location = useLocation();
@@ -41,19 +44,19 @@ const Header = () => {
 
   // Primary navigation - always visible on desktop
   const primaryNavigation = [
-    { name: 'Services', href: '/services', description: 'Guides & Transport' },
-    { name: 'Food & Hygiene', href: '/services?tab=food', description: 'FSSAI Certified' },
-    { name: 'Contact', href: '/contact', description: '24x7 Support' }
+    { name: t('services'), href: '/services', description: t('guidesTransport') },
+    { name: t('foodHygiene'), href: '/services?tab=food', description: t('fssaiCertified') },
+    { name: t('contact'), href: '/contact', description: t('support247') }
   ];
 
   // Secondary navigation - shown in hamburger menu
   const secondaryNavigation = [
-    { name: 'Home', href: '/', icon: <Home className="w-5 h-5" /> },
-    { name: 'Destinations', href: '/destinations', icon: <MapPin className="w-5 h-5" /> },
-    { name: 'Hotels & Stays', href: '/hotels', icon: <Hotel className="w-5 h-5" /> },
-    { name: 'Eco Tourism', href: '/eco-tourism', icon: <Leaf className="w-5 h-5" /> },
-    { name: 'About Us', href: '/about', icon: <Info className="w-5 h-5" /> },
-    { name: 'FAQ', href: '/faq', icon: <HelpCircle className="w-5 h-5" /> }
+    { name: t('home'), href: '/', icon: <Home className="w-5 h-5" /> },
+    { name: t('destinations'), href: '/destinations', icon: <MapPin className="w-5 h-5" /> },
+    { name: t('hotels'), href: '/hotels', icon: <Hotel className="w-5 h-5" /> },
+    { name: t('ecoTourism'), href: '/eco-tourism', icon: <Leaf className="w-5 h-5" /> },
+    { name: t('aboutUs'), href: '/about', icon: <Info className="w-5 h-5" /> },
+    { name: t('faq'), href: '/faq', icon: <HelpCircle className="w-5 h-5" /> }
   ];
 
   const languages = ['EN', 'HI', 'BN', 'TA', 'TE'];
@@ -120,7 +123,7 @@ const Header = () => {
               <div className="relative">
                 <select
                   value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
+                  onChange={(e) => changeLanguage(e.target.value)}
                   className="appearance-none bg-gray-50 border-0 rounded-xl px-4 py-2.5 pr-8 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                 >
                   {languages.map((lang) => (
@@ -138,13 +141,13 @@ const Header = () => {
                   to="/login"
                   className="text-gray-700 hover:text-blue-600 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-all"
                 >
-                  Login
+                  {t('login')}
                 </Link>
                 <Link
                   to="/signup"
                   className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-105"
                 >
-                  Sign Up
+                  {t('signUp')}
                 </Link>
               </div>
             </div>
@@ -181,8 +184,8 @@ const Header = () => {
                       <span className="text-white font-bold text-lg">Y</span>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">Menu</div>
-                      <div className="text-xs text-gray-500">Explore Yatra</div>
+                      <div className="text-lg font-bold text-gray-900">{t('menu')}</div>
+                      <div className="text-xs text-gray-500">{t('exploreYatra')}</div>
                     </div>
                   </div>
                   <button
@@ -196,8 +199,8 @@ const Header = () => {
                 {/* Primary Navigation for Mobile/Quick Access */}
                 <div className="px-6 py-4 border-b border-gray-100">
                   <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                    <span className="lg:hidden">Main Services</span>
-                    <span className="hidden lg:inline">Quick Access</span>
+                    <span className="lg:hidden">{t('mainServices')}</span>
+                    <span className="hidden lg:inline">{t('quickAccess')}</span>
                   </h3>
                   <div className="space-y-1">
                     {primaryNavigation.map((item) => (
@@ -231,8 +234,8 @@ const Header = () => {
                 {/* Secondary Navigation */}
                 <div className="flex-1 px-6 py-4">
                   <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                    <span className="lg:hidden">Explore</span>
-                    <span className="hidden lg:inline">All Pages</span>
+                    <span className="lg:hidden">{t('explore')}</span>
+                    <span className="hidden lg:inline">{t('allPages')}</span>
                   </h3>
                   <div className="space-y-1">
                     {secondaryNavigation.map((item) => (
@@ -257,10 +260,10 @@ const Header = () => {
                 <div className="p-6 border-t border-gray-100 space-y-4">
                   {/* Language Selector */}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">Language</span>
+                    <span className="text-sm font-medium text-gray-700">{t('language')}</span>
                     <select
                       value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
+                      onChange={(e) => changeLanguage(e.target.value)}
                       className="bg-gray-50 border-0 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {languages.map((lang) => (
@@ -278,14 +281,14 @@ const Header = () => {
                       className="flex-1 text-center text-gray-700 hover:text-blue-600 px-4 py-3 rounded-xl font-medium border border-gray-200 hover:border-blue-300 transition-all"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Login
+                      {t('login')}
                     </Link>
                     <Link
                       to="/signup"
                       className="flex-1 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sign Up
+                      {t('signUp')}
                     </Link>
                   </div>
 
@@ -298,8 +301,8 @@ const Header = () => {
                             <User className="w-4 h-4 text-white" />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-blue-900">Account</div>
-                            <div className="text-xs text-blue-700">Manage your profile</div>
+                            <div className="text-sm font-semibold text-blue-900">{t('account')}</div>
+                            <div className="text-xs text-blue-700">{t('manageProfile')}</div>
                           </div>
                         </div>
                       </div>
@@ -310,7 +313,7 @@ const Header = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <User className="w-5 h-5" />
-                        <span>My Dashboard</span>
+                        <span>{t('myDashboard')}</span>
                       </Link>
                       
                       <Link
@@ -319,7 +322,7 @@ const Header = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <AlertTriangle className="w-5 h-5" />
-                        <span>Emergency Center</span>
+                        <span>{t('emergencyCenter')}</span>
                       </Link>
                     </div>
                   </div>
