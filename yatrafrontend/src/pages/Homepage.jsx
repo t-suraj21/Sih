@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
@@ -12,6 +12,63 @@ const Homepage = () => {
   });
   
   const scrollRef = useRef(null);
+  
+  // Hero images for rotation
+  const heroImages = [
+    {
+      url: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&h=1080&fit=crop',
+      title: 'Taj Mahal, Agra',
+      description: 'The iconic symbol of love and architectural marvel'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1920&h=1080&fit=crop',
+      title: 'Lake Palace, Udaipur',
+      description: 'Floating palace in the heart of Rajasthan'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1920&h=1080&fit=crop',
+      title: 'Goa Beaches',
+      description: 'Pristine beaches and tropical paradise'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1920&h=1080&fit=crop',
+      title: 'Kerala Backwaters',
+      description: 'Serene waterways and lush green landscapes'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop',
+      title: 'Himalayan Mountains',
+      description: 'Majestic peaks and adventure destinations'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=1920&h=1080&fit=crop',
+      title: 'Jaipur Heritage',
+      description: 'Pink City with royal palaces and forts'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop',
+      title: 'Golden Triangle',
+      description: 'Historic monuments and cultural heritage'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=1920&h=1080&fit=crop',
+      title: 'Rajasthan Desert',
+      description: 'Sand dunes and camel safaris'
+    }
+  ];
+  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Image rotation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % heroImages.length
+      );
+    }, 10000); // Change image every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [heroImages.length]);
 
   const featuredDestinations = [
     {
@@ -281,17 +338,45 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&h=1080&fit=crop")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.3
-        }}></div>
+      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden min-h-screen">
+        {/* Rotating Background Images */}
+        <div className="absolute inset-0">
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                backgroundImage: `url("${image.url}")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        
+        {/* Gradient overlay for better visual effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-blue-800/40 to-indigo-900/60"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="text-center">
+            {/* Current Image Info */}
+            <div className="mb-8">
+              <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white">
+                  {heroImages[currentImageIndex].title}
+                </h2>
+                <p className="text-lg text-gray-200 mt-1">
+                  {heroImages[currentImageIndex].description}
+                </p>
+              </div>
+            </div>
+            
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               {t('safeVerifiedTransparent')}
               <span className="block text-green-400">{t('travelInIndia')}</span>
@@ -362,6 +447,22 @@ const Homepage = () => {
                 </button>
               </form>
             </div>
+          </div>
+          
+          {/* Image Indicators */}
+          <div className="flex justify-center space-x-3 mt-8">
+            {heroImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentImageIndex 
+                    ? 'bg-white scale-125' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </section>
