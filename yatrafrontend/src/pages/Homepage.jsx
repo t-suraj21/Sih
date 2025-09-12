@@ -65,7 +65,7 @@ const Homepage = () => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroImages.length
       );
-    }, 2000); // Change image every 10 seconds
+    }, 4000); // Change image every 10 seconds
 
     return () => clearInterval(interval);
   }, [heroImages.length]);
@@ -284,29 +284,29 @@ const Homepage = () => {
   const testimonials = [
     {
       id: 1,
-      name: 'Priya Sharma',
+      name: 'Sonu yadav',
       location: 'Mumbai',
       rating: 5,
       comment: 'Amazing experience! The guide was verified and knowledgeable. Food recommendations were all FSSAI certified. Felt completely safe throughout the trip.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face',
+      
       trip: 'Rajasthan Heritage Tour'
     },
     {
       id: 2,
-      name: 'Rajesh Kumar',
+      name: 'Vivek Singh',
       location: 'Delhi',
       rating: 5,
       comment: 'The SOS feature gave me confidence to explore remote areas. All hotels were exactly as described with no hidden charges. Highly recommended!',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face',
+      
       trip: 'Kerala Backwater Experience'
     },
     {
       id: 3,
-      name: 'Anita Patel',
+      name: 'Suraj yadav',
       location: 'Ahmedabad',
       rating: 5,
       comment: 'Eco-tourism options were fantastic! Stayed at certified green hotels and supported local communities. The transparency is unmatched.',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face',
+      
       trip: 'Himachal Eco Adventure'
     }
   ];
