@@ -29,6 +29,7 @@ function App() {
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/destination/:destinationName" element={<DestinationDetails />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/destination/:destinationName/services" element={<Services />} />
             <Route path="/hotels" element={<Hotels />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/safety-sos" element={<SafetySOS />} />

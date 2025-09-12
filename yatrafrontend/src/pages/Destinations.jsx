@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, MapPin, Star, Shield, Utensils, Car, Users, CheckCircle } from 'lucide-react';
+import { indianDestinations } from '../data/indianDestinations';
 
 const Destinations = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     search: '',
     state: '',
@@ -12,136 +15,13 @@ const Destinations = () => {
 
   const [destinations, setDestinations] = useState([]);
 
-  // Mock data for destinations
-  const destinationsData = [
-    {
-      id: 1,
-      name: 'Jaipur',
-      state: 'Rajasthan',
-      type: 'Heritage',
-      budget: 'Medium',
-      image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=500&h=300&fit=crop',
-      description: 'The Pink City offers magnificent palaces, forts, and vibrant culture with verified heritage guides and FSSAI-approved food outlets.',
-      rating: 4.8,
-      hygieneScore: 9.2,
-      safetyLevel: 'High',
-      verifiedServices: 45,
-      attractions: ['Amber Fort', 'City Palace', 'Hawa Mahal', 'Jantar Mantar'],
-      bestTime: 'Oct - Mar'
-    },
-    {
-      id: 2,
-      name: 'Goa',
-      state: 'Goa',
-      type: 'Beach',
-      budget: 'Medium',
-      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500&h=300&fit=crop',
-      description: 'Beach paradise with eco-certified resorts, water sports, and vibrant nightlife. All activities are safety-verified.',
-      rating: 4.7,
-      hygieneScore: 8.9,
-      safetyLevel: 'High',
-      verifiedServices: 38,
-      attractions: ['Baga Beach', 'Dudhsagar Falls', 'Old Goa Churches', 'Anjuna Market'],
-      bestTime: 'Nov - Feb'
-    },
-    {
-      id: 3,
-      name: 'Agra',
-      state: 'Uttar Pradesh',
-      type: 'Heritage',
-      budget: 'Low',
-      image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500&h=300&fit=crop',
-      description: 'Home of the magnificent Taj Mahal with government-certified guides and safe dining options throughout the city.',
-      rating: 4.9,
-      hygieneScore: 8.7,
-      safetyLevel: 'High',
-      verifiedServices: 52,
-      attractions: ['Taj Mahal', 'Agra Fort', 'Fatehpur Sikri', 'Mehtab Bagh'],
-      bestTime: 'Oct - Mar'
-    },
-    {
-      id: 4,
-      name: 'Kerala Backwaters',
-      state: 'Kerala',
-      type: 'Eco',
-      budget: 'High',
-      image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=500&h=300&fit=crop',
-      description: 'Gods Own Country with verified houseboats, organic food outlets, and sustainable tourism practices.',
-      rating: 4.8,
-      hygieneScore: 9.4,
-      safetyLevel: 'High',
-      verifiedServices: 41,
-      attractions: ['Alleppey Backwaters', 'Kumarakom', 'Vembanad Lake', 'Spice Plantations'],
-      bestTime: 'Sep - Mar'
-    },
-    {
-      id: 5,
-      name: 'Manali',
-      state: 'Himachal Pradesh',
-      type: 'Adventure',
-      budget: 'Medium',
-      image: 'https://images.unsplash.com/photo-1605538883669-825200433431?w=500&h=300&fit=crop',
-      description: 'Mountain adventure destination with verified trekking guides, safe accommodation, and eco-friendly activities.',
-      rating: 4.6,
-      hygieneScore: 8.5,
-      safetyLevel: 'Medium',
-      verifiedServices: 34,
-      attractions: ['Rohtang Pass', 'Solang Valley', 'Hadimba Temple', 'Old Manali'],
-      bestTime: 'Apr - Jun, Sep - Nov'
-    },
-    {
-      id: 6,
-      name: 'Udaipur',
-      state: 'Rajasthan',
-      type: 'Heritage',
-      budget: 'High',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop',
-      description: 'City of Lakes with luxury verified hotels, royal palaces, and authenticated cultural experiences.',
-      rating: 4.9,
-      hygieneScore: 9.1,
-      safetyLevel: 'High',
-      verifiedServices: 47,
-      attractions: ['City Palace', 'Lake Pichola', 'Jag Mandir', 'Saheliyon Ki Bari'],
-      bestTime: 'Oct - Mar'
-    },
-    {
-      id: 7,
-      name: 'Rishikesh',
-      state: 'Uttarakhand',
-      type: 'Adventure',
-      budget: 'Low',
-      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=500&h=300&fit=crop',
-      description: 'Yoga capital with verified ashrams, adventure sports, and organic food outlets along the Ganges.',
-      rating: 4.7,
-      hygieneScore: 8.8,
-      safetyLevel: 'High',
-      verifiedServices: 29,
-      attractions: ['Laxman Jhula', 'Ram Jhula', 'Triveni Ghat', 'Beatles Ashram'],
-      bestTime: 'Feb - May, Sep - Nov'
-    },
-    {
-      id: 8,
-      name: 'Hampi',
-      state: 'Karnataka',
-      type: 'Heritage',
-      budget: 'Low',
-      image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=500&h=300&fit=crop',
-      description: 'UNESCO World Heritage site with certified archaeological guides and authentic local cuisine experiences.',
-      rating: 4.5,
-      hygieneScore: 8.3,
-      safetyLevel: 'Medium',
-      verifiedServices: 22,
-      attractions: ['Virupaksha Temple', 'Hampi Bazaar', 'Matanga Hill', 'Elephant Stables'],
-      bestTime: 'Oct - Feb'
-    }
-  ];
-
-  const states = ['All States', 'Rajasthan', 'Goa', 'Uttar Pradesh', 'Kerala', 'Himachal Pradesh', 'Uttarakhand', 'Karnataka'];
-  const budgetRanges = ['All Budgets', 'Low', 'Medium', 'High'];
-  const tourismTypes = ['All Types', 'Heritage', 'Beach', 'Adventure', 'Eco'];
+  // Get unique states and types from the data
+  const states = ['All States', ...Array.from(new Set(indianDestinations.map(d => d.state)))];
+  const budgetRanges = ['All Budgets', ...Array.from(new Set(indianDestinations.map(d => d.budget)))];
+  const tourismTypes = ['All Types', ...Array.from(new Set(indianDestinations.map(d => d.type)))];
 
   useEffect(() => {
-    let filtered = destinationsData;
+    let filtered = indianDestinations;
 
     if (filters.search) {
       filtered = filtered.filter(dest => 
@@ -192,17 +72,66 @@ const Destinations = () => {
     }
   };
 
+  const handleExploreServices = (destination) => {
+    // Navigate to destination-specific services page
+    navigate(`/destination/${encodeURIComponent(destination.name)}/services`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Explore Destinations</h1>
-          <p className="text-gray-600">Discover verified and safe travel destinations across India</p>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Explore India's Destinations</h1>
+            <p className="text-xl text-blue-100 mb-6">
+              Discover {indianDestinations.length}+ verified and safe travel destinations across India
+            </p>
+            <div className="flex items-center justify-center space-x-8 text-sm">
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                <span>Verified Services</span>
+              </div>
+              <div className="flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                <span>Safety Guaranteed</span>
+              </div>
+              <div className="flex items-center">
+                <Star className="w-5 h-5 mr-2" />
+                <span>Quality Assured</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">{indianDestinations.length}</div>
+            <div className="text-sm text-gray-600">Total Destinations</div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {Array.from(new Set(indianDestinations.map(d => d.state))).length}
+            </div>
+            <div className="text-sm text-gray-600">States & UTs</div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+            <div className="text-2xl font-bold text-purple-600">
+              {indianDestinations.reduce((sum, d) => sum + d.verifiedServices, 0)}
+            </div>
+            <div className="text-sm text-gray-600">Verified Services</div>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 text-center">
+            <div className="text-2xl font-bold text-orange-600">
+              {(indianDestinations.reduce((sum, d) => sum + d.rating, 0) / indianDestinations.length).toFixed(1)}
+            </div>
+            <div className="text-sm text-gray-600">Average Rating</div>
+          </div>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div className="lg:w-1/4">
@@ -383,7 +312,10 @@ const Destinations = () => {
                           <span>{destination.verifiedServices} Services</span>
                         </span>
                       </div>
-                      <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                      <button 
+                        onClick={() => handleExploreServices(destination)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                      >
                         Explore Services
                       </button>
                     </div>
