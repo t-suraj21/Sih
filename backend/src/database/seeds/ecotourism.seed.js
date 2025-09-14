@@ -4,6 +4,7 @@ import { connectMongoDB } from '../../config/database.js';
 const ecoTourismData = [
   {
     name: "Kerala Backwater Eco Resort",
+    slug: "kerala-backwater-eco-resort",
     type: "Accommodation",
     category: "Sustainable Accommodation",
     description: "Experience sustainable luxury at our eco-friendly resort nestled in the serene backwaters of Kerala. Our resort operates on 100% renewable energy, uses organic farming practices, and supports local communities through various initiatives.",
@@ -89,6 +90,7 @@ const ecoTourismData = [
   },
   {
     name: "Himalayan Wildlife Conservation Trek",
+    slug: "himalayan-wildlife-conservation-trek",
     type: "Activity",
     category: "Wildlife Conservation",
     description: "Join our guided conservation trek in the Himalayas where you'll participate in wildlife monitoring, tree plantation, and community education programs. This trek combines adventure with meaningful conservation work.",
@@ -173,6 +175,7 @@ const ecoTourismData = [
   },
   {
     name: "Rajasthan Desert Solar Farm Tour",
+    slug: "rajasthan-desert-solar-farm-tour",
     type: "Tour",
     category: "Carbon Neutral Travel",
     description: "Explore India's largest solar installations in the Thar Desert while learning about renewable energy and desert conservation. This educational tour showcases how technology can work with nature for sustainable development.",
@@ -256,6 +259,7 @@ const ecoTourismData = [
   },
   {
     name: "Organic Farm Stay Experience",
+    slug: "organic-farm-stay-experience",
     type: "Accommodation",
     category: "Organic Farming",
     description: "Live and work on a certified organic farm in Punjab, learning sustainable farming practices while enjoying fresh, farm-to-table meals. Participate in daily farming activities and understand the importance of organic agriculture.",
@@ -341,6 +345,7 @@ const ecoTourismData = [
   },
   {
     name: "Goa Coastal Cleanup & Marine Conservation",
+    slug: "goa-coastal-cleanup-marine-conservation",
     type: "Activity",
     category: "Wildlife Conservation",
     description: "Join our marine conservation program in Goa, participating in beach cleanups, turtle conservation, and coral restoration activities. Learn about marine ecosystems while making a direct positive impact on ocean health.",
@@ -425,6 +430,7 @@ const ecoTourismData = [
   },
   {
     name: "Sustainable Village Tourism - Meghalaya",
+    slug: "sustainable-village-tourism-meghalaya",
     type: "Destination",
     category: "Community Tourism",
     description: "Experience authentic village life in Meghalaya while supporting local communities through responsible tourism. Stay with local families, learn traditional crafts, and participate in sustainable development projects.",

@@ -7,7 +7,10 @@ import {
   deleteUser,
   getUserStats,
   verifyUserKYC,
-  getUserActivity
+  getUserActivity,
+  getUserDashboard,
+  getUserProfile,
+  updateUserProfile
 } from '../controllers/user.controller.js';
 import { authMiddleware, requireAdmin } from '../middlewares/auth.middleware.js';
 
@@ -15,6 +18,11 @@ const router = express.Router();
 
 // All routes require authentication
 router.use(authMiddleware);
+
+// User routes (accessible by the user themselves)
+router.get('/dashboard', getUserDashboard);
+router.get('/profile', getUserProfile);
+router.put('/profile', updateUserProfile);
 
 // Admin only routes
 router.get('/', requireAdmin, getAllUsers);
