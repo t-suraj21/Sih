@@ -165,6 +165,32 @@ class ApiService {
     }
   }
 
+  async refreshToken(refreshToken) {
+    try {
+      const response = await api.post('/auth/refresh-token', { refreshToken });
+      return response.data;
+    } catch (error) {
+      console.error('Refresh token error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to refresh token'
+      };
+    }
+  }
+
+  async changePassword(passwordData) {
+    try {
+      const response = await api.post('/auth/change-password', passwordData);
+      return response.data;
+    } catch (error) {
+      console.error('Change password error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to change password'
+      };
+    }
+  }
+
   // Hotel APIs
   async searchHotels(searchParams) {
     try {

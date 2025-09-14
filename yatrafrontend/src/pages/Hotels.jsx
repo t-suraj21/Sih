@@ -1,25 +1,50 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Filter, SlidersHorizontal, Star, Award } from 'lucide-react';
+import { useSearchParams, useLocation } from 'react-router-dom';
+import { MapPin, Filter, SlidersHorizontal, Star, Award, Search, Navigation, Globe } from 'lucide-react';
 import HotelSearch from '../components/Hotels/HotelSearch';
 import HotelCard from '../components/Hotels/HotelCard';
 import HotelBookingForm from '../components/Hotels/HotelBookingForm';
 import { realHotelBookingService } from '../services/realHotelApi';
+import { indianDestinations } from '../data/indianDestinations';
 
 const Hotels = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  
   const [hotels, setHotels] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [searchParams, setSearchParams] = useState(null);
+  const [searchData, setSearchData] = useState(null);
   const [states, setStates] = useState([]);
   const [selectedState, setSelectedState] = useState('');
+  const [destinationSuggestions, setDestinationSuggestions] = useState([]);
+  const [showDestinationSuggestions, setShowDestinationSuggestions] = useState(false);
+  const [destinationQuery, setDestinationQuery] = useState('');
 
   // Load initial data on component mount
   useEffect(() => {
-    loadInitialData();
+    // Check if there's a destination from URL params or location state
+    const destinationFromParams = searchParams.get('destination');
+    const destinationFromState = location.state?.destination;
+    
+    if (destinationFromParams || destinationFromState) {
+      const destination = destinationFromParams || destinationFromState;
+      setDestinationQuery(destination);
+      handleSearch({
+        destination: destination,
+        checkIn: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+        checkOut: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+        guests: 2,
+        rooms: 1,
+        state: ''
+      });
+    } else {
+      loadInitialData();
+    }
     loadStates();
-  }, []);
+  }, [searchParams, location.state]);
 
   const loadInitialData = async () => {
     handleSearch({
@@ -43,15 +68,13 @@ const Hotels = () => {
     }
   };
 
-  const handleSearch = async (searchData) => {
+  const handleSearch = async (searchDataParam) => {
     setIsLoading(true);
-    setSearchParams({...searchData, state: selectedState});
+    const finalSearchData = {...searchDataParam, state: selectedState};
+    setSearchData(finalSearchData);
     
     try {
-      const result = await realHotelBookingService.searchHotels({
-        ...searchData,
-        state: selectedState
-      });
+      const result = await realHotelBookingService.searchHotels(finalSearchData);
       if (result.success) {
         setHotels(result.data);
       } else {
@@ -66,11 +89,49 @@ const Hotels = () => {
     }
   };
 
+  // Search destinations function
+  const searchDestinations = (query) => {
+    if (!query || query.length < 2) {
+      setDestinationSuggestions([]);
+      setShowDestinationSuggestions(false);
+      return;
+    }
+
+    const filtered = indianDestinations.filter(dest => 
+      dest.name.toLowerCase().includes(query.toLowerCase()) ||
+      dest.state.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 8);
+
+    setDestinationSuggestions(filtered);
+    setShowDestinationSuggestions(filtered.length > 0);
+  };
+
+  // Handle destination input change
+  const handleDestinationChange = (query) => {
+    setDestinationQuery(query);
+    searchDestinations(query);
+  };
+
+  // Handle destination selection
+  const handleDestinationSelect = (destination) => {
+    setDestinationQuery(destination.name);
+    setShowDestinationSuggestions(false);
+    setDestinationSuggestions([]);
+    
+    // Trigger search with selected destination
+    if (searchData) {
+      handleSearch({
+        ...searchData,
+        destination: destination.name
+      });
+    }
+  };
+
   const handleStateChange = (stateName) => {
     setSelectedState(stateName);
-    if (searchParams) {
+    if (searchData) {
       handleSearch({
-        ...searchParams,
+        ...searchData,
         state: stateName
       });
     }
@@ -153,6 +214,61 @@ const Hotels = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Destination Search */}
+        <div className="mb-8 bg-white rounded-xl shadow-sm p-6">
+          <div className="flex items-center mb-4">
+            <Navigation className="w-5 h-5 mr-2 text-blue-600" />
+            <h3 className="font-semibold text-gray-900">Search Hotels by Destination</h3>
+          </div>
+          
+          <div className="relative max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Enter destination (e.g., Jaipur, Goa, Delhi...)"
+                value={destinationQuery}
+                onChange={(e) => handleDestinationChange(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            
+            {/* Destination Suggestions */}
+            {showDestinationSuggestions && destinationSuggestions.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                {destinationSuggestions.map((destination) => (
+                  <button
+                    key={destination.id}
+                    onClick={() => handleDestinationSelect(destination)}
+                    className="w-full text-left px-4 py-3 hover:bg-blue-50 border-b border-gray-100 last:border-b-0 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                      <div>
+                        <div className="font-medium text-gray-900">{destination.name}</div>
+                        <div className="text-sm text-gray-600">{destination.state}</div>
+                      </div>
+                      <div className="ml-auto">
+                        <Star className="w-4 h-4 text-yellow-400" />
+                        <span className="text-sm text-gray-600 ml-1">{destination.rating}</span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {destinationQuery && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-blue-800 text-sm">
+                <Globe className="w-4 h-4 inline mr-1" />
+                Searching hotels in <strong>{destinationQuery}</strong> - Showing verified properties with transparent pricing.
+              </p>
+            </div>
+          )}
+        </div>
+
         {/* Search Component */}
         <HotelSearch onSearch={handleSearch} isLoading={isLoading} />
 
@@ -203,7 +319,7 @@ const Hotels = () => {
         </div>
 
         {/* Results Header */}
-        {searchParams && (
+        {searchData && (
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 flex items-center">
@@ -212,14 +328,14 @@ const Hotels = () => {
                 {selectedState && (
                   <span className="text-gray-600 font-normal"> in {selectedState}</span>
                 )}
-                {!selectedState && searchParams.destination && searchParams.destination !== 'India' && (
-                  <span className="text-gray-600 font-normal"> for {searchParams.destination}</span>
+                {!selectedState && searchData.destination && searchData.destination !== 'India' && (
+                  <span className="text-gray-600 font-normal"> for {searchData.destination}</span>
                 )}
               </h2>
-              {searchParams.checkIn && searchParams.checkOut && (
+              {searchData.checkIn && searchData.checkOut && (
                 <p className="text-gray-600 text-sm">
-                  {new Date(searchParams.checkIn).toLocaleDateString()} - {new Date(searchParams.checkOut).toLocaleDateString()}
-                  • {searchParams.guests} guest{searchParams.guests > 1 ? 's' : ''} • {searchParams.rooms} room{searchParams.rooms > 1 ? 's' : ''}
+                  {new Date(searchData.checkIn).toLocaleDateString()} - {new Date(searchData.checkOut).toLocaleDateString()}
+                  • {searchData.guests} guest{searchData.guests > 1 ? 's' : ''} • {searchData.rooms} room{searchData.rooms > 1 ? 's' : ''}
                 </p>
               )}
             </div>
@@ -260,7 +376,7 @@ const Hotels = () => {
         )}
 
         {/* No Results */}
-        {!isLoading && hotels.length === 0 && searchParams && (
+        {!isLoading && hotels.length === 0 && searchData && (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-gray-400" />
@@ -270,7 +386,7 @@ const Hotels = () => {
               Try adjusting your search criteria or choose a different destination
             </p>
             <button
-              onClick={() => handleSearch({ ...searchParams, destination: 'Jaipur, Rajasthan' })}
+              onClick={() => handleSearch({ ...searchData, destination: 'Jaipur, Rajasthan' })}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               Try searching in Jaipur

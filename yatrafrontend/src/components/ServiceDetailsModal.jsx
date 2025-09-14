@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { X, Star, MapPin, Phone, Clock, CheckCircle, Users, Car, Utensils, Hotel } from 'lucide-react';
+import { X, Star, MapPin, Phone, Clock, CheckCircle, Users, Car, Utensils, Hotel, Award, Zap } from 'lucide-react';
 
-const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType }) => {
+const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType, onBook }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!isOpen || !service) return null;
@@ -9,9 +9,11 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType }) => {
   const getServiceIcon = (type) => {
     switch (type) {
       case 'hotels': return <Hotel className="w-6 h-6" />;
+      case 'attractions': return <Award className="w-6 h-6" />;
       case 'guides': return <Users className="w-6 h-6" />;
       case 'transport': return <Car className="w-6 h-6" />;
       case 'food': return <Utensils className="w-6 h-6" />;
+      case 'activities': return <Zap className="w-6 h-6" />;
       default: return <CheckCircle className="w-6 h-6" />;
     }
   };
@@ -195,6 +197,88 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType }) => {
           </div>
         );
 
+      case 'attractions':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">Category</h4>
+              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                {service.category}
+              </span>
+            </div>
+
+            {service.timings && (
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Visiting Hours</h4>
+                <p className="text-gray-600">{service.timings}</p>
+              </div>
+            )}
+
+            {service.entryFee && (
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Entry Fee</h4>
+                <p className="text-gray-600">{service.entryFee}</p>
+              </div>
+            )}
+
+            {service.duration && (
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Recommended Duration</h4>
+                <p className="text-gray-600">{service.duration}</p>
+              </div>
+            )}
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">Rating</h4>
+              <div className="bg-blue-50 rounded-lg p-3">
+                <div className="flex items-center">
+                  <Star className="w-5 h-5 text-yellow-400 mr-2" />
+                  <span className="text-lg font-bold text-blue-900">{service.ratings?.overall?.toFixed(1) || service.rating}</span>
+                  <span className="text-sm text-blue-700 ml-2">({service.ratings?.count || 0} reviews)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'activities':
+        return (
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">Activity Type</h4>
+              <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
+                {service.activity}
+              </span>
+            </div>
+
+            {service.duration && (
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3">Duration</h4>
+                <p className="text-gray-600">{service.duration}</p>
+              </div>
+            )}
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">Features</h4>
+              <div className="flex flex-wrap gap-2">
+                {service.features?.map((feature, index) => (
+                  <span key={index} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-3">Pricing</h4>
+              <div className="bg-blue-50 rounded-lg p-3">
+                <p className="text-lg font-bold text-blue-900">{service.price}</p>
+                <p className="text-sm text-blue-700">Per person</p>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return <div>No additional details available.</div>;
     }
@@ -225,7 +309,10 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType }) => {
         <p className="text-sm text-gray-600 mb-3">
           Ready to book? Contact us now to secure your reservation.
         </p>
-        <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+        <button 
+          onClick={onBook}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+        >
           Book Now
         </button>
       </div>
