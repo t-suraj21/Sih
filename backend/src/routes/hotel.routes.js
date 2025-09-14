@@ -7,7 +7,8 @@ import {
   addHotel,
   updateHotel,
   deleteHotel,
-  getHotelStats
+  getHotelStats,
+  getVendorHotels
 } from '../controllers/hotel.controller.js';
 import { authMiddleware, requireVendor, optionalAuth } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
@@ -104,6 +105,14 @@ router.get('/:id', optionalAuth, getHotelDetails);
 
 // Protected routes - require authentication
 router.use(authMiddleware);
+
+// Get vendor's hotels
+router.get('/my-hotels', 
+  requireVendor, 
+  searchHotelsValidation, 
+  validateRequest, 
+  getVendorHotels
+);
 
 // Vendor and Admin routes
 router.post('/', 
