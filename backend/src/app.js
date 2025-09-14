@@ -5,6 +5,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import { createServer } from 'net';
 import { connectMongoDB, connectRedis } from './config/database.js';
 import { config } from './config/config.js';
 import { ApiError } from './utils/ApiError.js';
@@ -12,10 +13,16 @@ import { ApiResponse } from './utils/ApiResponse.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/user.routes.js';
 import hotelRoutes from './routes/hotel.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import reviewRoutes from './routes/review.routes.js';
+import destinationRoutes from './routes/destination.routes.js';
+import attractionRoutes from './routes/attraction.routes.js';
+import ecoTourismRoutes from './routes/ecotourism.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import sosRoutes from './routes/sos.routes.js';
 
 const app = express();
 
@@ -89,10 +96,16 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/destinations', destinationRoutes);
+app.use('/api/attractions', attractionRoutes);
+app.use('/api/eco-tourism', ecoTourismRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/sos', sosRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -156,6 +169,17 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Function to check if port is available
+const isPortAvailable = (port) => {
+  return new Promise((resolve) => {
+    const server = createServer();
+    server.listen(port, () => {
+      server.close(() => resolve(true));
+    });
+    server.on('error', () => resolve(false));
+  });
+};
+
 // Initialize database connections
 const initializeApp = async () => {
   try {
@@ -164,12 +188,36 @@ const initializeApp = async () => {
     
     console.log('✅ All database connections established');
     
-    const PORT = config.port;
-    app.listen(PORT, () => {
+    let PORT = config.port;
+    
+    // Check if port is available
+    if (!(await isPortAvailable(PORT))) {
+      console.warn(`⚠️  Port ${PORT} is already in use. Trying port ${PORT + 1}...`);
+      PORT = PORT + 1;
+      
+      if (!(await isPortAvailable(PORT))) {
+        console.error(`❌ Port ${PORT} is also in use. Please stop other services or change PORT in .env file.`);
+        console.log('💡 Try: lsof -ti:3001 | xargs kill -9');
+        process.exit(1);
+      }
+    }
+    
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Yatra Backend Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${config.nodeEnv}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`📚 API base URL: http://localhost:${PORT}/api`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use`);
+        console.log('💡 Try: lsof -ti:3001 | xargs kill -9');
+        process.exit(1);
+      } else {
+        console.error('❌ Server error:', error);
+        process.exit(1);
+      }
     });
     
   } catch (error) {

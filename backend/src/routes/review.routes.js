@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyJWT, requireRole, optionalJWT } from '../middlewares/auth.middleware.js';
+import { authMiddleware, requireAdmin, optionalAuth } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body, query } from 'express-validator';
 
@@ -44,10 +44,10 @@ const addReviewValidation = [
 ];
 
 // Public routes
-router.get('/hotel/:hotelId', optionalJWT, getHotelReviews);
+router.get('/hotel/:hotelId', optionalAuth, getHotelReviews);
 
 // Protected routes
-router.use(verifyJWT);
+router.use(authMiddleware);
 
 router.post('/', addReviewValidation, validateRequest, addReview);
 router.put('/:id', addReviewValidation, validateRequest, updateReview);

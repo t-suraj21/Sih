@@ -8,14 +8,14 @@ import {
   getHotelBookings,
   getBookingStats
 } from '../controllers/booking.controller.js';
-import { verifyJWT, requireRole } from '../middlewares/auth.middleware.js';
+import { authMiddleware, requireAdmin, requireVendor } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body, query } from 'express-validator';
 
 const router = express.Router();
 
 // All booking routes require authentication
-router.use(verifyJWT);
+router.use(authMiddleware);
 
 // Validation schemas
 const createBookingValidation = [
@@ -93,11 +93,11 @@ router.get('/:id', getBookingDetails);
 router.put('/:id/cancel', cancelBookingValidation, validateRequest, cancelBooking);
 
 // Admin routes
-router.put('/:id', requireRole('admin'), updateBooking);
+router.put('/:id', requireAdmin, updateBooking);
 
 // Hotel owner/Admin routes
 router.get('/hotel/:hotelId', 
-  requireRole('vendor', 'admin'), 
+  requireVendor, 
   getUserBookingsValidation, 
   validateRequest, 
   getHotelBookings

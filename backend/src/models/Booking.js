@@ -142,7 +142,7 @@ bookingSchema.pre('save', async function(next) {
 // Index for efficient queries
 bookingSchema.index({ user: 1, createdAt: -1 });
 bookingSchema.index({ hotel: 1, checkIn: 1, checkOut: 1 });
-bookingSchema.index({ bookingId: 1 });
+// bookingId index is automatically created due to unique: true
 bookingSchema.index({ status: 1, paymentStatus: 1 });
 
 // Virtual for booking duration

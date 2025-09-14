@@ -9,7 +9,7 @@ import {
   deleteHotel,
   getHotelStats
 } from '../controllers/hotel.controller.js';
-import { verifyJWT, requireRole, optionalJWT } from '../middlewares/auth.middleware.js';
+import { authMiddleware, requireVendor, optionalAuth } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body, query } from 'express-validator';
 
@@ -97,36 +97,36 @@ const locationSearchValidation = [
 ];
 
 // Public routes
-router.get('/search', searchHotelsValidation, validateRequest, optionalJWT, searchHotels);
-router.get('/popular', optionalJWT, getPopularHotels);
-router.get('/nearby', locationSearchValidation, validateRequest, optionalJWT, getHotelsByLocation);
-router.get('/:id', optionalJWT, getHotelDetails);
+router.get('/search', searchHotelsValidation, validateRequest, optionalAuth, searchHotels);
+router.get('/popular', optionalAuth, getPopularHotels);
+router.get('/nearby', locationSearchValidation, validateRequest, optionalAuth, getHotelsByLocation);
+router.get('/:id', optionalAuth, getHotelDetails);
 
 // Protected routes - require authentication
-router.use(verifyJWT);
+router.use(authMiddleware);
 
 // Vendor and Admin routes
 router.post('/', 
-  requireRole('vendor', 'admin'), 
+  requireVendor, 
   addHotelValidation, 
   validateRequest, 
   addHotel
 );
 
 router.put('/:id', 
-  requireRole('vendor', 'admin'), 
+  requireVendor, 
   addHotelValidation, 
   validateRequest, 
   updateHotel
 );
 
 router.delete('/:id', 
-  requireRole('vendor', 'admin'), 
+  requireVendor, 
   deleteHotel
 );
 
 router.get('/:id/stats', 
-  requireRole('vendor', 'admin'), 
+  requireVendor, 
   getHotelStats
 );
 

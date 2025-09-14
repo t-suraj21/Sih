@@ -10,7 +10,7 @@ import {
   refreshToken,
   changePassword
 } from '../controllers/auth.controller.js';
-import { verifyJWT, sensitiveOperationLimit } from '../middlewares/auth.middleware.js';
+import { authMiddleware, rateLimitByUser } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body } from 'express-validator';
 
@@ -37,8 +37,8 @@ const registerValidation = [
     .withMessage('Please provide a valid phone number'),
   body('role')
     .optional()
-    .isIn(['tourist', 'vendor'])
-    .withMessage('Role must be either tourist or vendor')
+    .isIn(['tourist', 'vendor', 'admin'])
+    .withMessage('Role must be either tourist, vendor, or admin')
 ];
 
 // Login validation
@@ -97,7 +97,7 @@ router.post('/send-otp', phoneOTPValidation, validateRequest, sendPhoneOTP);
 router.post('/verify-otp', verifyOTPValidation, validateRequest, verifyPhoneOTP);
 
 // Protected routes
-router.use(verifyJWT); // All routes below this middleware require authentication
+router.use(authMiddleware); // All routes below this middleware require authentication
 
 router.post('/logout', logoutUser);
 router.get('/profile', getUserProfile);
@@ -105,7 +105,7 @@ router.put('/profile', updateUserProfile);
 router.post('/change-password', 
   changePasswordValidation, 
   validateRequest, 
-  sensitiveOperationLimit, 
+  rateLimitByUser(5, 15 * 60 * 1000), // 5 attempts per 15 minutes
   changePassword
 );
 

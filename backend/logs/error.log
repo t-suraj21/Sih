@@ -1,0 +1,7 @@
+2025-09-14 11:47:51 [[31merror[39m]: Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at app.listen (/Users/surajkumar/Desktop/yatra/backend/node_modules/express/lib/application.js:635:24)
+    at initializeApp (file:///Users/surajkumar/Desktop/yatra/backend/src/app.js:180:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

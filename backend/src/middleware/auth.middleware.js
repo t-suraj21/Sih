@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.js';
+import User from '../models/User.js';
 import { config } from '../config/config.js';
 import { logger } from '../utils/logger.js';
 
@@ -30,7 +30,7 @@ export const authenticate = async (req, res, next) => {
     const decoded = jwt.verify(token, config.jwt.secret);
 
     // Get user from database
-    const user = await User.findById(decoded.id);
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -126,7 +126,7 @@ export const optionalAuth = async (req, res, next) => {
         const decoded = jwt.verify(token, config.jwt.secret);
 
         // Get user from database
-        const user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.userId);
         if (user) {
           req.user = user;
           req.token = token;
@@ -163,7 +163,7 @@ export const userRateLimit = (maxRequests = 100, windowMs = 15 * 60 * 1000) => {
       return next(); // Skip rate limiting for unauthenticated users
     }
 
-    const userId = req.user.id;
+    const userId = req.user._id;
     const now = Date.now();
     const windowStart = now - windowMs;
 

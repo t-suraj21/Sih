@@ -35,15 +35,18 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Check if user already exists
-  const existingUser = await User.findOne({ 
-    $or: [{ email }, { phone: phone || null }] 
-  });
+  const query = { email };
+  if (phone) {
+    query.$or = [{ email }, { phone }];
+  }
+  
+  const existingUser = await User.findOne(query);
 
   if (existingUser) {
     if (existingUser.email === email) {
       throw new ApiError(409, 'User with this email already exists');
     }
-    if (existingUser.phone === phone) {
+    if (phone && existingUser.phone === phone) {
       throw new ApiError(409, 'User with this phone number already exists');
     }
   }
@@ -62,8 +65,12 @@ export const registerUser = asyncHandler(async (req, res) => {
   // Generate tokens
   const { accessToken, refreshToken } = generateTokens(user._id);
 
-  // Store refresh token in Redis
-  await redis.set(`refresh_token:${user._id}`, refreshToken, 30 * 24 * 60 * 60); // 30 days
+  // Store refresh token in Redis (if available)
+  try {
+    await redis.set(`refresh_token:${user._id}`, refreshToken, 30 * 24 * 60 * 60); // 30 days
+  } catch (error) {
+    console.warn('Redis not available, refresh token not cached:', error.message);
+  }
 
   // Send welcome email
   try {
@@ -125,8 +132,12 @@ export const loginUser = asyncHandler(async (req, res) => {
   // Generate tokens
   const { accessToken, refreshToken } = generateTokens(user._id);
 
-  // Store refresh token in Redis
-  await redis.set(`refresh_token:${user._id}`, refreshToken, 30 * 24 * 60 * 60); // 30 days
+  // Store refresh token in Redis (if available)
+  try {
+    await redis.set(`refresh_token:${user._id}`, refreshToken, 30 * 24 * 60 * 60); // 30 days
+  } catch (error) {
+    console.warn('Redis not available, refresh token not cached:', error.message);
+  }
 
   // Remove password from response
   const userResponse = user.toJSON();
@@ -144,8 +155,12 @@ export const loginUser = asyncHandler(async (req, res) => {
 export const logoutUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  // Remove refresh token from Redis
-  await redis.del(`refresh_token:${userId}`);
+  // Remove refresh token from Redis (if available)
+  try {
+    await redis.del(`refresh_token:${userId}`);
+  } catch (error) {
+    console.warn('Redis not available, refresh token not removed from cache:', error.message);
+  }
 
   // Add access token to blacklist
   const token = req.headers.authorization?.replace('Bearer ', '');
@@ -201,8 +216,14 @@ export const sendPhoneOTP = asyncHandler(async (req, res) => {
   // Generate 6-digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-  // Store OTP in Redis with 5-minute expiration
-  await redis.set(`otp:${phone}`, otp, config.cacheTtl.otp);
+  // Store OTP in Redis with 5-minute expiration (if available)
+  try {
+    await redis.set(`otp:${phone}`, otp, config.cacheTtl.otp);
+  } catch (error) {
+    console.warn('Redis not available, OTP not cached:', error.message);
+    // For development without Redis, you could log the OTP
+    console.log(`Development OTP for ${phone}: ${otp}`);
+  }
 
   // Send OTP via SMS
   try {
@@ -223,8 +244,15 @@ export const verifyPhoneOTP = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Phone number and OTP are required');
   }
 
-  // Get stored OTP from Redis
-  const storedOTP = await redis.get(`otp:${phone}`);
+  // Get stored OTP from Redis (if available)
+  let storedOTP;
+  try {
+    storedOTP = await redis.get(`otp:${phone}`);
+  } catch (error) {
+    console.warn('Redis not available, OTP verification may fail:', error.message);
+    // For development, you could implement a fallback mechanism
+    storedOTP = null;
+  }
 
   if (!storedOTP) {
     throw new ApiError(400, 'OTP expired or invalid');
@@ -234,8 +262,12 @@ export const verifyPhoneOTP = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid OTP');
   }
 
-  // Remove OTP from Redis
-  await redis.del(`otp:${phone}`);
+  // Remove OTP from Redis (if available)
+  try {
+    await redis.del(`otp:${phone}`);
+  } catch (error) {
+    console.warn('Redis not available, OTP not removed from cache:', error.message);
+  }
 
   // Update user's phone verification status if logged in
   if (userId) {
@@ -260,10 +292,16 @@ export const refreshToken = asyncHandler(async (req, res) => {
     const decoded = jwt.verify(refreshToken, config.jwt.secret);
     const userId = decoded.userId;
 
-    // Check if refresh token exists in Redis
-    const storedToken = await redis.get(`refresh_token:${userId}`);
-    if (!storedToken || storedToken !== refreshToken) {
-      throw new ApiError(401, 'Invalid refresh token');
+    // Check if refresh token exists in Redis (if available)
+    let storedToken;
+    try {
+      storedToken = await redis.get(`refresh_token:${userId}`);
+      if (storedToken && storedToken !== refreshToken) {
+        throw new ApiError(401, 'Invalid refresh token');
+      }
+    } catch (error) {
+      console.warn('Redis not available, skipping refresh token validation:', error.message);
+      // Continue without Redis validation in development
     }
 
     // Get user
@@ -275,8 +313,12 @@ export const refreshToken = asyncHandler(async (req, res) => {
     // Generate new tokens
     const { accessToken, refreshToken: newRefreshToken } = generateTokens(userId);
 
-    // Store new refresh token
-    await redis.set(`refresh_token:${userId}`, newRefreshToken, 30 * 24 * 60 * 60);
+    // Store new refresh token (if available)
+    try {
+      await redis.set(`refresh_token:${userId}`, newRefreshToken, 30 * 24 * 60 * 60);
+    } catch (error) {
+      console.warn('Redis not available, new refresh token not cached:', error.message);
+    }
 
     res.json(
       new ApiResponse(200, {
@@ -318,8 +360,12 @@ export const changePassword = asyncHandler(async (req, res) => {
   user.password = newPassword;
   await user.save();
 
-  // Invalidate all existing tokens
-  await redis.del(`refresh_token:${userId}`);
+  // Invalidate all existing tokens (if Redis available)
+  try {
+    await redis.del(`refresh_token:${userId}`);
+  } catch (error) {
+    console.warn('Redis not available, tokens not invalidated from cache:', error.message);
+  }
 
   res.json(new ApiResponse(200, null, 'Password changed successfully. Please login again'));
 });

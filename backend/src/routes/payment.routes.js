@@ -6,14 +6,14 @@ import {
   refundPayment,
   getPaymentStats
 } from '../controllers/payment.controller.js';
-import { verifyJWT, requireRole } from '../middlewares/auth.middleware.js';
+import { authMiddleware, requireAdmin } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body } from 'express-validator';
 
 const router = express.Router();
 
 // All payment routes require authentication
-router.use(verifyJWT);
+router.use(authMiddleware);
 
 // Validation schemas
 const createPaymentOrderValidation = [
@@ -51,12 +51,12 @@ router.get('/:id', getPaymentDetails);
 
 // Admin routes
 router.post('/:id/refund', 
-  requireRole('admin'), 
+  requireAdmin, 
   refundPaymentValidation, 
   validateRequest, 
   refundPayment
 );
 
-router.get('/admin/stats', requireRole('admin'), getPaymentStats);
+router.get('/admin/stats', requireAdmin, getPaymentStats);
 
 export default router;
