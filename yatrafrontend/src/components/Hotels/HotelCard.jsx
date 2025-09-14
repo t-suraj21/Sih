@@ -36,8 +36,8 @@ const HotelCard = ({ hotel, onBookNow, onViewDetails }) => {
       {/* Image Section */}
       <div className="relative h-64 overflow-hidden">
         <img 
-          src={hotel.image} 
-          alt={hotel.name}
+          src={hotel.image || hotel.images?.[0]?.url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop'} 
+          alt={hotel.name || 'Hotel'}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         
@@ -88,7 +88,14 @@ const HotelCard = ({ hotel, onBookNow, onViewDetails }) => {
             </h3>
             <div className="flex items-center text-gray-600 text-sm">
               <MapPin className="w-4 h-4 mr-1" />
-              <span>{hotel.location}</span>
+              <span>
+                {typeof hotel.location === 'string' 
+                  ? hotel.location 
+                  : hotel.city && hotel.state 
+                    ? `${hotel.city}, ${hotel.state}` 
+                    : 'Location not specified'
+                }
+              </span>
             </div>
           </div>
           
@@ -96,11 +103,11 @@ const HotelCard = ({ hotel, onBookNow, onViewDetails }) => {
           <div className="text-right">
             <div className="flex items-center space-x-1">
               <Star className="w-4 h-4 text-yellow-400 fill-current" />
-              <span className="font-semibold text-gray-900">{hotel.rating}</span>
-              <span className="text-gray-500 text-sm">({hotel.reviews})</span>
+              <span className="font-semibold text-gray-900">{hotel.rating || 4.0}</span>
+              <span className="text-gray-500 text-sm">({hotel.reviews || hotel.reviewCount || 0})</span>
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Hygiene: {hotel.hygieneRating}/10
+              Hygiene: {hotel.hygieneRating || 8}/10
             </div>
           </div>
         </div>
@@ -162,14 +169,14 @@ const HotelCard = ({ hotel, onBookNow, onViewDetails }) => {
         {/* Price and Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div className="flex items-center space-x-2">
-            {hotel.originalPrice > hotel.pricePerNight && (
+            {(hotel.originalPrice || hotel.price * 1.2) > (hotel.pricePerNight || hotel.price) && (
               <span className="text-gray-400 line-through text-sm">
-                ₹{hotel.originalPrice}
+                ₹{hotel.originalPrice || Math.round(hotel.price * 1.2)}
               </span>
             )}
             <div className="flex items-baseline space-x-1">
               <span className="text-2xl font-bold text-green-600">
-                ₹{hotel.pricePerNight}
+                ₹{hotel.pricePerNight || hotel.price || 0}
               </span>
               <span className="text-gray-600 text-sm">/night</span>
             </div>
@@ -198,7 +205,7 @@ const HotelCard = ({ hotel, onBookNow, onViewDetails }) => {
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
               <span className="text-yellow-800 text-xs font-medium">
-                Limited time offer - Save ₹{hotel.originalPrice - hotel.pricePerNight} per night!
+                Limited time offer - Save ₹{(hotel.originalPrice || hotel.price * 1.2) - (hotel.pricePerNight || hotel.price)} per night!
               </span>
             </div>
           </div>

@@ -94,9 +94,14 @@ class RealHotelBookingService {
   }
 
   // Get hotel details from backend API
-  async getHotelDetails(hotelId) {
+  async getHotelDetails(hotelId, city = 'london') {
     try {
-      const response = await this.hotelApi.get(`/hotels/${hotelId}`);
+      // Add city parameter for external hotels
+      const response = await this.hotelApi.get(`/hotels/${hotelId}`, {
+        params: {
+          city: city
+        }
+      });
       
       if (response.data.success) {
         return {

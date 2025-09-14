@@ -123,31 +123,18 @@ const Header = () => {
   const primaryNavigation = [
     { 
       name: 'Destinations', 
-      href: '/destinations', 
-      description: 'Explore India',
-      icon: <MapPin className="w-4 h-4" />,
-      badge: 'Hot'
+      href: '/destinations',
+      icon: <MapPin className="w-4 h-4" />
     },
     { 
       name: 'Hotels', 
-      href: '/hotels', 
-      description: 'Book & Stay',
-      icon: <Hotel className="w-4 h-4" />,
-      badge: null
+      href: '/hotels',
+      icon: <Hotel className="w-4 h-4" />
     },
     { 
       name: 'Services', 
-      href: '/services', 
-      description: 'Guides & More',
-      icon: <Award className="w-4 h-4" />,
-      badge: null
-    },
-    { 
-      name: 'Eco Tourism', 
-      href: '/eco-tourism', 
-      description: 'Green Travel',
-      icon: <Leaf className="w-4 h-4" />,
-      badge: 'New'
+      href: '/services',
+      icon: <Award className="w-4 h-4" />
     }
   ];
 
@@ -159,11 +146,11 @@ const Header = () => {
   ];
 
   const languages = [
-    { code: 'EN', name: 'English', flag: '🇺🇸' },
-    { code: 'HI', name: 'हिन्दी', flag: '🇮🇳' },
-    { code: 'BN', name: 'বাংলা', flag: '🇧🇩' },
-    { code: 'TA', name: 'தமிழ்', flag: '🇮🇳' },
-    { code: 'TE', name: 'తెలుగు', flag: '🇮🇳' }
+    { code: 'EN', name: 'English'},
+    { code: 'HI', name: 'हिन्दी'},
+    { code: 'BN', name: 'বাংলা'},
+    { code: 'TA', name: 'தமிழ்'},
+    { code: 'TE', name: 'తెలుగు'}
   ];
 
   const isActiveTab = (href) => location.pathname + location.search === href;

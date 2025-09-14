@@ -4,6 +4,7 @@ import {
   Clock, DollarSign, MapPin, Filter, Search, Download
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/api.service';
 
 const VendorBookings = () => {
   const { user } = useAuth();
@@ -12,72 +13,128 @@ const VendorBookings = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [vendorHotels, setVendorHotels] = useState([]);
 
   useEffect(() => {
-    loadBookings();
+    loadVendorData();
   }, []);
 
-  const loadBookings = async () => {
-    // Mock data - replace with actual API call
-    setBookings([
-      {
-        id: 1,
-        bookingId: 'YT001',
-        customerName: 'Raj Sharma',
-        customerEmail: 'raj@example.com',
-        customerPhone: '+91 9876543210',
-        serviceName: 'Luxury Beach Resort',
-        serviceType: 'Hotel/Resort',
-        checkIn: '2024-02-15',
-        checkOut: '2024-02-18',
-        guests: 2,
-        amount: 24000,
-        commission: 2400,
-        status: 'confirmed',
-        paymentStatus: 'paid',
-        bookingDate: '2024-01-20',
-        specialRequests: 'Ocean view room preferred',
-        customerNotes: 'Anniversary celebration'
-      },
-      {
-        id: 2,
-        bookingId: 'YT002',
-        customerName: 'Priya Singh',
-        customerEmail: 'priya@example.com',
-        customerPhone: '+91 9876543211',
-        serviceName: 'Heritage Walking Tour',
-        serviceType: 'Tour Guide',
-        checkIn: '2024-02-20',
-        checkOut: '2024-02-20',
-        guests: 4,
-        amount: 10000,
-        commission: 1000,
-        status: 'pending',
-        paymentStatus: 'pending',
-        bookingDate: '2024-01-22',
-        specialRequests: 'English speaking guide',
-        customerNotes: 'Family with elderly parents'
-      },
-      {
-        id: 3,
-        bookingId: 'YT003',
-        customerName: 'Amit Kumar',
-        customerEmail: 'amit@example.com',
-        customerPhone: '+91 9876543212',
-        serviceName: 'Adventure Trekking',
-        serviceType: 'Adventure Sports',
-        checkIn: '2024-01-25',
-        checkOut: '2024-01-27',
-        guests: 3,
-        amount: 15000,
-        commission: 1500,
-        status: 'completed',
-        paymentStatus: 'paid',
-        bookingDate: '2024-01-10',
-        specialRequests: 'Vegetarian meals',
-        customerNotes: 'First time trekkers'
+  const loadVendorData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // First, get vendor hotels (for now we'll use a mock hotel ID)
+      // In a real implementation, you'd fetch vendor's hotels first
+      const hotelsResponse = await apiService.getVendorHotels();
+      
+      if (hotelsResponse.success && hotelsResponse.data.hotels.length > 0) {
+        setVendorHotels(hotelsResponse.data.hotels);
+        
+        // Load bookings for all vendor's hotels
+        await loadAllHotelBookings(hotelsResponse.data.hotels);
+      } else {
+        // If no hotels found, show empty state
+        setBookings([]);
+        setError('No hotels found for your account. Please add a hotel first.');
       }
-    ]);
+    } catch (error) {
+      console.error('Error loading vendor data:', error);
+      setError('Failed to load vendor data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadAllHotelBookings = async (hotels) => {
+    try {
+      const allBookings = [];
+      
+      // Load bookings for each hotel
+      for (const hotel of hotels) {
+        const response = await apiService.getVendorBookings(hotel._id, {
+          page: 1,
+          limit: 50,
+          status: statusFilter || undefined
+        });
+        
+        if (response.success) {
+          // Transform backend data to match frontend expectations
+          const transformedBookings = response.data.bookings.map(booking => ({
+            id: booking._id,
+            bookingId: booking.bookingId,
+            customerName: booking.guestDetails?.primaryGuest?.name || booking.user?.name || 'N/A',
+            customerEmail: booking.guestDetails?.primaryGuest?.email || booking.user?.email || 'N/A',
+            customerPhone: booking.guestDetails?.primaryGuest?.phone || booking.user?.phone || 'N/A',
+            serviceName: booking.hotel?.name || hotel.name || 'Hotel Name',
+            serviceType: 'Hotel/Resort',
+            checkIn: new Date(booking.checkIn).toISOString().split('T')[0],
+            checkOut: new Date(booking.checkOut).toISOString().split('T')[0],
+            guests: booking.guests?.adults + (booking.guests?.children || 0) || 1,
+            amount: booking.pricing?.totalAmount || 0,
+            commission: Math.round((booking.pricing?.totalAmount || 0) * 0.1), // 10% commission
+            status: booking.status,
+            paymentStatus: booking.paymentStatus,
+            bookingDate: new Date(booking.createdAt).toISOString().split('T')[0],
+            specialRequests: booking.specialRequests || '',
+            customerNotes: booking.notes?.customer || '',
+            rooms: booking.rooms || 1,
+            roomType: booking.roomType || 'Standard'
+          }));
+          
+          allBookings.push(...transformedBookings);
+        }
+      }
+      
+      setBookings(allBookings);
+    } catch (error) {
+      console.error('Error loading bookings:', error);
+      setError('Failed to load bookings. Please try again.');
+    }
+  };
+
+  const loadBookings = async (hotelId) => {
+    try {
+      const response = await apiService.getVendorBookings(hotelId, {
+        page: 1,
+        limit: 50,
+        status: statusFilter || undefined
+      });
+      
+      if (response.success) {
+        // Transform backend data to match frontend expectations
+        const transformedBookings = response.data.bookings.map(booking => ({
+          id: booking._id,
+          bookingId: booking.bookingId,
+          customerName: booking.guestDetails?.primaryGuest?.name || booking.user?.name || 'N/A',
+          customerEmail: booking.guestDetails?.primaryGuest?.email || booking.user?.email || 'N/A',
+          customerPhone: booking.guestDetails?.primaryGuest?.phone || booking.user?.phone || 'N/A',
+          serviceName: booking.hotel?.name || 'Hotel Name',
+          serviceType: 'Hotel/Resort',
+          checkIn: new Date(booking.checkIn).toISOString().split('T')[0],
+          checkOut: new Date(booking.checkOut).toISOString().split('T')[0],
+          guests: booking.guests?.adults + (booking.guests?.children || 0) || 1,
+          amount: booking.pricing?.totalAmount || 0,
+          commission: Math.round((booking.pricing?.totalAmount || 0) * 0.1), // 10% commission
+          status: booking.status,
+          paymentStatus: booking.paymentStatus,
+          bookingDate: new Date(booking.createdAt).toISOString().split('T')[0],
+          specialRequests: booking.specialRequests || '',
+          customerNotes: booking.notes?.customer || '',
+          rooms: booking.rooms || 1,
+          roomType: booking.roomType || 'Standard'
+        }));
+        
+        setBookings(transformedBookings);
+      } else {
+        setError(response.message || 'Failed to load bookings');
+      }
+    } catch (error) {
+      console.error('Error loading bookings:', error);
+      setError('Failed to load bookings. Please try again.');
+    }
   };
 
   const getStatusColor = (status) => {
@@ -100,10 +157,26 @@ const VendorBookings = () => {
   };
 
   const handleStatusChange = async (bookingId, newStatus) => {
-    // Update booking status - API call
-    setBookings(bookings.map(booking => 
-      booking.id === bookingId ? { ...booking, status: newStatus } : booking
-    ));
+    try {
+      const response = await apiService.updateBookingStatus(bookingId, newStatus);
+      
+      if (response.success) {
+        // Update local state
+        setBookings(bookings.map(booking => 
+          booking.id === bookingId ? { ...booking, status: newStatus } : booking
+        ));
+        
+        // Close modal if booking was selected
+        if (selectedBooking && selectedBooking.id === bookingId) {
+          setSelectedBooking({ ...selectedBooking, status: newStatus });
+        }
+      } else {
+        alert(response.message || 'Failed to update booking status');
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+      alert('Failed to update booking status. Please try again.');
+    }
   };
 
   const BookingDetailsModal = ({ booking, onClose }) => {
@@ -145,6 +218,14 @@ const VendorBookings = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Guests:</span>
                     <span className="font-medium">{booking.guests} people</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Rooms:</span>
+                    <span className="font-medium">{booking.rooms || 1} room(s)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Room Type:</span>
+                    <span className="font-medium">{booking.roomType || 'Standard'}</span>
                   </div>
                 </div>
               </div>
@@ -290,6 +371,43 @@ const VendorBookings = () => {
     totalCommission: bookings.reduce((sum, b) => sum + b.commission, 0)
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading your bookings...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Unable to Load Bookings</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button 
+                onClick={loadVendorData}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -366,6 +484,13 @@ const VendorBookings = () => {
               <option value="completed">Completed</option>
               <option value="cancelled">Cancelled</option>
             </select>
+            <button 
+              onClick={loadVendorData}
+              className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors mr-2"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              Refresh
+            </button>
             <button className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export

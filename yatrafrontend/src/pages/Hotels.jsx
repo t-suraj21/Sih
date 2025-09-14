@@ -22,6 +22,7 @@ const Hotels = () => {
   const [destinationSuggestions, setDestinationSuggestions] = useState([]);
   const [showDestinationSuggestions, setShowDestinationSuggestions] = useState(false);
   const [destinationQuery, setDestinationQuery] = useState('');
+  const [error, setError] = useState(null);
 
   // Load initial data on component mount
   useEffect(() => {
@@ -70,19 +71,28 @@ const Hotels = () => {
 
   const handleSearch = async (searchDataParam) => {
     setIsLoading(true);
+    setError(null);
     const finalSearchData = {...searchDataParam, state: selectedState};
     setSearchData(finalSearchData);
     
     try {
+      console.log('Searching with params:', JSON.stringify(finalSearchData));
       const result = await realHotelBookingService.searchHotels(finalSearchData);
+      console.log('Search result:', JSON.stringify(result));
+      
       if (result.success) {
-        setHotels(result.data);
+        setHotels(result.data || []);
+        if ((result.data || []).length === 0) {
+          setError(`No hotels found for "${finalSearchData.destination}". Try a different destination or check your spelling.`);
+        }
       } else {
         console.error('Hotel search failed:', result.error);
+        setError(result.error || 'Failed to search hotels. Please try again.');
         setHotels([]);
       }
     } catch (error) {
       console.error('Hotel search error:', error);
+      setError('An error occurred while searching for hotels. Please try again.');
       setHotels([]);
     } finally {
       setIsLoading(false);
@@ -172,11 +182,17 @@ const Hotels = () => {
   const sortedHotels = [...hotels].sort((a, b) => {
     switch (sortBy) {
       case 'price_low':
-        return a.pricePerNight - b.pricePerNight;
+        const priceA = a.pricePerNight || a.price || 0;
+        const priceB = b.pricePerNight || b.price || 0;
+        return priceA - priceB;
       case 'price_high':
-        return b.pricePerNight - a.pricePerNight;
+        const priceHighA = a.pricePerNight || a.price || 0;
+        const priceHighB = b.pricePerNight || b.price || 0;
+        return priceHighB - priceHighA;
       case 'rating':
-        return b.rating - a.rating;
+        const ratingA = parseFloat(a.rating) || 0;
+        const ratingB = parseFloat(b.rating) || 0;
+        return ratingB - ratingA;
       default:
         return 0;
     }
@@ -188,7 +204,15 @@ const Hotels = () => {
         <div className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <h1 className="text-2xl font-bold text-gray-900">Complete Your Booking</h1>
-            <p className="text-gray-600">{selectedHotel.name} - {selectedHotel.location}</p>
+            <p className="text-gray-600">
+              {selectedHotel.name} - {
+                typeof selectedHotel.location === 'string' 
+                  ? selectedHotel.location 
+                  : selectedHotel.city && selectedHotel.state 
+                    ? `${selectedHotel.city}, ${selectedHotel.state}` 
+                    : 'Location not specified'
+              }
+            </p>
           </div>
         </div>
         
@@ -375,8 +399,23 @@ const Hotels = () => {
           </div>
         )}
 
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                <MapPin className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-red-900 mb-1">Search Error</h3>
+                <p className="text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* No Results */}
-        {!isLoading && hotels.length === 0 && searchData && (
+        {!isLoading && !error && hotels.length === 0 && searchData && (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-gray-400" />
@@ -385,21 +424,35 @@ const Hotels = () => {
             <p className="text-gray-600 mb-4">
               Try adjusting your search criteria or choose a different destination
             </p>
-            <button
-              onClick={() => handleSearch({ ...searchData, destination: 'Jaipur, Rajasthan' })}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Try searching in Jaipur
-            </button>
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                onClick={() => handleSearch({ ...searchData, destination: 'London' })}
+                className="text-blue-600 hover:text-blue-700 font-medium px-4 py-2 bg-blue-50 rounded-lg"
+              >
+                Try London
+              </button>
+              <button
+                onClick={() => handleSearch({ ...searchData, destination: 'Mumbai' })}
+                className="text-blue-600 hover:text-blue-700 font-medium px-4 py-2 bg-blue-50 rounded-lg"
+              >
+                Try Mumbai
+              </button>
+              <button
+                onClick={() => handleSearch({ ...searchData, destination: 'Delhi' })}
+                className="text-blue-600 hover:text-blue-700 font-medium px-4 py-2 bg-blue-50 rounded-lg"
+              >
+                Try Delhi
+              </button>
+            </div>
           </div>
         )}
 
         {/* Hotels Grid */}
         {!isLoading && sortedHotels.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sortedHotels.map((hotel) => (
+            {sortedHotels.map((hotel, index) => (
               <HotelCard
-                key={hotel.id}
+                key={hotel.id || hotel._id || `hotel-${index}`}
                 hotel={hotel}
                 onBookNow={handleBookNow}
                 onViewDetails={handleViewDetails}

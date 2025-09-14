@@ -40,7 +40,8 @@ const HotelBookingForm = ({ hotel, onBookingComplete, onCancel }) => {
 
   const calculateTotal = () => {
     const nights = Math.ceil((new Date(bookingData.checkOut) - new Date(bookingData.checkIn)) / (1000 * 60 * 60 * 24));
-    const subtotal = hotel.pricePerNight * nights * bookingData.rooms;
+    const pricePerNight = hotel.pricePerNight || hotel.price || 0;
+    const subtotal = pricePerNight * nights * bookingData.rooms;
     const taxes = Math.round(subtotal * 0.12); // 12% GST
     const serviceFee = 99;
     return { subtotal, taxes, serviceFee, total: subtotal + taxes + serviceFee, nights };

@@ -485,6 +485,86 @@ class ApiService {
     }
   }
 
+  // Vendor Booking APIs
+  async getVendorBookings(hotelId, queryParams = {}) {
+    try {
+      const response = await api.get(`/bookings/hotel/${hotelId}`, {
+        params: queryParams
+      });
+      return {
+        success: response.data.success || true,
+        data: {
+          bookings: response.data.data?.bookings || response.data.bookings || [],
+          pagination: response.data.data?.pagination || response.data.pagination || {}
+        },
+        message: response.data.message || 'Vendor bookings retrieved successfully'
+      };
+    } catch (error) {
+      console.error('Get vendor bookings error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get vendor bookings',
+        data: { bookings: [], pagination: {} }
+      };
+    }
+  }
+
+  async updateBookingStatus(bookingId, status, reason = '') {
+    try {
+      const response = await api.put(`/bookings/${bookingId}`, {
+        status,
+        reason
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Update booking status error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update booking status'
+      };
+    }
+  }
+
+  async getBookingStats() {
+    try {
+      const response = await api.get('/bookings/stats');
+      return {
+        success: response.data.success || true,
+        data: response.data.data?.stats || response.data.stats || {},
+        message: response.data.message || 'Booking statistics retrieved successfully'
+      };
+    } catch (error) {
+      console.error('Get booking stats error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get booking statistics',
+        data: {}
+      };
+    }
+  }
+
+  async getVendorHotels(queryParams = {}) {
+    try {
+      const response = await api.get('/hotels/my-hotels', {
+        params: { ...queryParams, limit: 100 } // Get all vendor's hotels
+      });
+      return {
+        success: response.data.success || true,
+        data: {
+          hotels: response.data.data?.hotels || response.data.hotels || []
+        },
+        message: response.data.message || 'Vendor hotels retrieved successfully'
+      };
+    } catch (error) {
+      console.error('Get vendor hotels error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get vendor hotels',
+        data: { hotels: [] }
+      };
+    }
+  }
+
   async updateUserProfile(profileData) {
     try {
       const response = await api.put('/users/profile', profileData);
