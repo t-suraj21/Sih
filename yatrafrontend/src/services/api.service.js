@@ -44,17 +44,23 @@ class ApiService {
   // Authentication APIs
   async register(userData) {
     try {
+      console.log('API Service: Registering user with data:', { ...userData, password: '[HIDDEN]' });
       const response = await api.post('/auth/register', userData);
+      
+      console.log('API Service: Registration response status:', response.status);
+      console.log('API Service: Registration response data:', response.data);
       
       // Backend returns: { success: true, data: { user: {...}, token: "...", refreshToken: "..." } }
       if (response.data.success && response.data.data?.token) {
         setAuthToken(response.data.data.token);
         setUserData(response.data.data.user);
+        console.log('API Service: Tokens and user data stored successfully');
       }
       
       return response.data;
     } catch (error) {
       console.error('Registration error:', error);
+      console.error('Registration error response:', error.response?.data);
       
       // Handle validation errors specifically
       if (error.response?.status === 400 && error.response?.data?.errors) {
@@ -67,27 +73,33 @@ class ApiService {
       
       return {
         success: false,
-        message: error.response?.data?.message || 'Registration failed'
+        message: error.response?.data?.message || error.message || 'Registration failed'
       };
     }
   }
 
   async login(credentials) {
     try {
+      console.log('API Service: Logging in with credentials:', { ...credentials, password: '[HIDDEN]' });
       const response = await api.post('/auth/login', credentials);
+      
+      console.log('API Service: Login response status:', response.status);
+      console.log('API Service: Login response data:', response.data);
       
       // Backend returns: { success: true, data: { user: {...}, token: "...", refreshToken: "..." } }
       if (response.data.success && response.data.data?.token) {
         setAuthToken(response.data.data.token);
         setUserData(response.data.data.user);
+        console.log('API Service: Login tokens and user data stored successfully');
       }
       
       return response.data;
     } catch (error) {
       console.error('Login error:', error);
+      console.error('Login error response:', error.response?.data);
       return {
         success: false,
-        message: error.response?.data?.message || 'Login failed'
+        message: error.response?.data?.message || error.message || 'Login failed'
       };
     }
   }
@@ -444,6 +456,51 @@ class ApiService {
   // Utility method to get current user
   getCurrentUser() {
     return getUserData();
+  }
+
+  // User Dashboard APIs
+  async getUserDashboard() {
+    try {
+      const response = await api.get('/users/dashboard');
+      return response.data;
+    } catch (error) {
+      console.error('Get user dashboard error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get dashboard data'
+      };
+    }
+  }
+
+  async getUserProfile() {
+    try {
+      const response = await api.get('/users/profile');
+      return response.data;
+    } catch (error) {
+      console.error('Get user profile error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get user profile'
+      };
+    }
+  }
+
+  async updateUserProfile(profileData) {
+    try {
+      const response = await api.put('/users/profile', profileData);
+      
+      if (response.data.success && response.data.data?.user) {
+        setUserData(response.data.data.user);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Update user profile error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update user profile'
+      };
+    }
   }
 }
 

@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
       // Try to get user profile
       try {
         const response = await apiService.getProfile();
-        if (response.success && response.data) {
+        if (response.success && response.data?.user) {
           dispatch({
             type: 'LOGIN_SUCCESS',
             payload: {
@@ -129,9 +129,15 @@ export const AuthProvider = ({ children }) => {
       if (response.success && response.data) {
         const { user, token, refreshToken } = response.data;
 
+        if (!user || !token) {
+          throw new Error('Invalid response from server');
+        }
+
         // Store tokens
         localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
+        if (refreshToken) {
+          localStorage.setItem('refreshToken', refreshToken);
+        }
 
         dispatch({
           type: 'LOGIN_SUCCESS',
@@ -148,7 +154,8 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: message };
       }
     } catch (error) {
-      const message = error.message || 'Login failed';
+      console.error('Login error:', error);
+      const message = error.response?.data?.message || error.message || 'Login failed. Please try again.';
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: message
@@ -166,9 +173,15 @@ export const AuthProvider = ({ children }) => {
       if (response.success && response.data) {
         const { user, token, refreshToken } = response.data;
 
+        if (!user || !token) {
+          throw new Error('Invalid response from server');
+        }
+
         // Store tokens
         localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
+        if (refreshToken) {
+          localStorage.setItem('refreshToken', refreshToken);
+        }
 
         dispatch({
           type: 'LOGIN_SUCCESS',
@@ -185,7 +198,8 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: message };
       }
     } catch (error) {
-      const message = error.message || 'Registration failed';
+      console.error('Registration error:', error);
+      const message = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: message
@@ -202,10 +216,12 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Logout API call failed:', error);
+      // Continue with logout even if API call fails
     } finally {
       // Clear local storage
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userData'); // Also clear user data
 
       dispatch({ type: 'LOGOUT' });
     }
@@ -225,7 +241,7 @@ export const AuthProvider = ({ children }) => {
         // Get updated user profile
         const profileResponse = await apiService.getProfile();
         
-        if (profileResponse.success) {
+        if (profileResponse.success && profileResponse.data?.user) {
           dispatch({
             type: 'LOGIN_SUCCESS',
             payload: {
@@ -246,7 +262,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (updates) => {
     try {
-      const response = await apiService.updateProfile(updates);
+      const response = await apiService.updateUserProfile(updates);
       
       if (response.success && response.data?.user) {
         dispatch({
@@ -259,7 +275,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: response.message || 'Profile update failed' };
       }
     } catch (error) {
-      const message = error.message || 'Profile update failed';
+      const message = error.response?.data?.message || error.message || 'Profile update failed';
       return { success: false, error: message };
     }
   };
@@ -269,7 +285,8 @@ export const AuthProvider = ({ children }) => {
       const response = await apiService.changePassword(passwordData);
       return response;
     } catch (error) {
-      const message = error.message || 'Password change failed';
+      console.error('Change password error:', error);
+      const message = error.response?.data?.message || error.message || 'Password change failed';
       return { success: false, error: message };
     }
   };
@@ -279,7 +296,8 @@ export const AuthProvider = ({ children }) => {
       const response = await apiService.sendOTP(phone);
       return response;
     } catch (error) {
-      const message = error.message || 'OTP sending failed';
+      console.error('Send OTP error:', error);
+      const message = error.response?.data?.message || error.message || 'OTP sending failed';
       return { success: false, error: message };
     }
   };
@@ -300,7 +318,8 @@ export const AuthProvider = ({ children }) => {
 
       return response;
     } catch (error) {
-      const message = error.message || 'OTP verification failed';
+      console.error('Verify OTP error:', error);
+      const message = error.response?.data?.message || error.message || 'OTP verification failed';
       return { success: false, error: message };
     }
   };

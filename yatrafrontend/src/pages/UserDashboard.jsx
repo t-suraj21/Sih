@@ -7,6 +7,7 @@ import {
   Edit, Plus, Eye, Download, Share2, BookOpen, Leaf, Gift
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api.service';
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
@@ -22,83 +23,96 @@ const UserDashboard = () => {
     ecoPoints: 0,
     loyaltyLevel: 'Explorer'
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Load user data and statistics
     loadDashboardData();
   }, []);
 
+  // Update profile data when user data changes
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        location: user.location || ''
+      });
+    }
+  }, [user]);
+
   const loadDashboardData = async () => {
     try {
-      // Mock data - replace with actual API calls
-      setBookings([
-        {
-          id: 1,
-          type: 'Hotel',
-          title: 'Luxury Resort Goa',
-          destination: 'Goa',
-          date: '2024-01-15',
-          status: 'confirmed',
-          amount: 15000,
-          image: '/api/placeholder/300/200'
-        },
-        {
-          id: 2,
-          type: 'Tour',
-          title: 'Golden Triangle Tour',
-          destination: 'Delhi-Agra-Jaipur',
-          date: '2024-02-10',
-          status: 'pending',
-          amount: 25000,
-          image: '/api/placeholder/300/200'
-        }
-      ]);
+      setLoading(true);
+      setError(null);
 
-      setFavorites([
-        {
-          id: 1,
-          name: 'Kerala Backwaters',
-          type: 'Destination',
-          rating: 4.8,
-          image: '/api/placeholder/300/200'
-        },
-        {
-          id: 2,
-          name: 'Rajasthan Heritage Tour',
-          type: 'Experience',
-          rating: 4.9,
-          image: '/api/placeholder/300/200'
-        }
-      ]);
+      // Fetch dashboard data from backend
+      const dashboardResponse = await apiService.getUserDashboard();
+      
+      if (dashboardResponse.success && dashboardResponse.data) {
+        const data = dashboardResponse.data;
+        
+        // Set bookings
+        setBookings(data.recentBookings || []);
+        
+        // Set stats
+        setStats(data.stats || {
+          totalBookings: 0,
+          completedTrips: 0,
+          savedDestinations: 0,
+          ecoPoints: 0,
+          loyaltyLevel: 'Explorer'
+        });
 
-      setNotifications([
-        {
+        // Set favorites
+        setFavorites(data.favorites || []);
+
+        // Set notifications
+        setNotifications(data.notifications || []);
+
+      } else {
+        // Fallback to empty data if API fails
+        console.warn('Dashboard API failed, using fallback data:', dashboardResponse.message);
+        setError('Failed to load dashboard data. Please refresh the page.');
+        
+        // Set minimal fallback data
+        setBookings([]);
+        setFavorites([]);
+        setNotifications([{
           id: 1,
-          type: 'booking',
-          title: 'Booking Confirmed',
-          message: 'Your Goa resort booking has been confirmed',
-          time: '2 hours ago',
-          read: false
-        },
-        {
-          id: 2,
-          type: 'offer',
-          title: 'Special Offer',
-          message: '20% off on Himachal Pradesh tours',
+          type: 'info',
+          title: 'Welcome to Yatra!',
+          message: 'Start exploring amazing destinations and book your perfect stay.',
           time: '1 day ago',
           read: false
-        }
-      ]);
-
-      setStats({
-        totalBookings: 12,
-        completedTrips: 8,
-        savedDestinations: 15,
-        ecoPoints: 2450,
-        loyaltyLevel: 'Explorer'
-      });
+        }]);
+        setStats({
+          totalBookings: 0,
+          completedTrips: 0,
+          savedDestinations: 0,
+          ecoPoints: 0,
+          loyaltyLevel: 'Explorer'
+        });
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
+      setError('Failed to load dashboard data. Please check your connection.');
+      
+      // Set fallback data on error
+      setBookings([]);
+      setFavorites([]);
+      setNotifications([]);
+      setStats({
+        totalBookings: 0,
+        completedTrips: 0,
+        savedDestinations: 0,
+        ecoPoints: 0,
+        loyaltyLevel: 'Explorer'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -333,6 +347,44 @@ const UserDashboard = () => {
     </div>
   );
 
+  const [profileData, setProfileData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    location: ''
+  });
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+    setProfileLoading(true);
+    
+    try {
+      const response = await apiService.updateUserProfile(profileData);
+      
+      if (response.success) {
+        // Profile updated successfully
+        alert('Profile updated successfully!');
+        // Optionally refresh dashboard data
+        loadDashboardData();
+      } else {
+        alert(response.message || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Profile update error:', error);
+      alert('Failed to update profile. Please try again.');
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleProfileChange = (field, value) => {
+    setProfileData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const renderProfile = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">Profile Settings</h2>
@@ -352,7 +404,7 @@ const UserDashboard = () => {
         </div>
         
         <div className="p-6">
-          <form className="space-y-4">
+          <form onSubmit={handleProfileSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -360,8 +412,10 @@ const UserDashboard = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue={user?.name}
+                  value={profileData.name}
+                  onChange={(e) => handleProfileChange('name', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
                 />
               </div>
               <div>
@@ -370,8 +424,10 @@ const UserDashboard = () => {
                 </label>
                 <input
                   type="email"
-                  defaultValue={user?.email}
+                  value={profileData.email}
+                  onChange={(e) => handleProfileChange('email', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
                 />
               </div>
             </div>
@@ -383,7 +439,8 @@ const UserDashboard = () => {
                 </label>
                 <input
                   type="tel"
-                  defaultValue={user?.phone}
+                  value={profileData.phone}
+                  onChange={(e) => handleProfileChange('phone', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -393,6 +450,8 @@ const UserDashboard = () => {
                 </label>
                 <input
                   type="text"
+                  value={profileData.location}
+                  onChange={(e) => handleProfileChange('location', e.target.value)}
                   placeholder="Your city"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -402,14 +461,26 @@ const UserDashboard = () => {
             <div className="flex justify-end space-x-3">
               <button
                 type="button"
+                onClick={() => {
+                  setProfileData({
+                    name: user?.name || '',
+                    email: user?.email || '',
+                    phone: user?.phone || '',
+                    location: ''
+                  });
+                }}
                 className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                disabled={profileLoading}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
               >
+                {profileLoading && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                )}
                 Save Changes
               </button>
             </div>
@@ -426,9 +497,39 @@ const UserDashboard = () => {
     { id: 'profile', name: 'Profile', icon: <Settings className="w-5 h-5" /> }
   ];
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <span className="ml-3 text-gray-600">Loading dashboard...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <AlertCircle className="w-5 h-5 text-red-600 mr-3" />
+              <p className="text-red-800">{error}</p>
+              <button 
+                onClick={loadDashboardData}
+                className="ml-auto text-red-600 hover:text-red-800 text-sm font-medium"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+        
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">

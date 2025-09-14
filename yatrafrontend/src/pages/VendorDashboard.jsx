@@ -4,9 +4,10 @@ import {
   Building, BarChart3, Users, Calendar, Star, DollarSign, 
   Plus, Edit, Eye, Trash2, Settings, Bell, Award, TrendingUp,
   MapPin, Clock, CheckCircle, AlertCircle, XCircle, Phone,
-  Mail, Camera, Upload, Download, Filter, Search, RefreshCw
+  Mail, Camera, Upload, Download, Filter, Search, RefreshCw, LogOut
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api.service';
 
 const VendorDashboard = () => {
   const { user, logout } = useAuth();
@@ -16,6 +17,8 @@ const VendorDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [analytics, setAnalytics] = useState({});
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadVendorData();
@@ -23,102 +26,82 @@ const VendorDashboard = () => {
 
   const loadVendorData = async () => {
     try {
-      // Mock data - replace with actual API calls
-      setServices([
-        {
-          id: 1,
-          name: 'Luxury Hotel Stay',
-          type: 'Hotel',
-          location: 'Goa',
-          price: 5000,
-          rating: 4.8,
-          bookings: 45,
-          status: 'active',
-          image: '/api/placeholder/300/200'
-        },
-        {
-          id: 2,
-          name: 'Heritage City Tour',
-          type: 'Tour Guide',
-          location: 'Jaipur',
-          price: 2500,
-          rating: 4.9,
-          bookings: 32,
-          status: 'active',
-          image: '/api/placeholder/300/200'
-        },
-        {
-          id: 3,
-          name: 'Adventure Trekking',
-          type: 'Adventure Sports',
-          location: 'Himachal Pradesh',
-          price: 3500,
-          rating: 4.7,
-          bookings: 28,
-          status: 'pending',
-          image: '/api/placeholder/300/200'
-        }
-      ]);
+      setLoading(true);
+      setError(null);
 
-      setBookings([
-        {
-          id: 1,
-          customerName: 'Raj Sharma',
-          serviceName: 'Luxury Hotel Stay',
-          date: '2024-01-15',
-          amount: 5000,
-          status: 'confirmed',
-          customerPhone: '+91 9876543210'
-        },
-        {
-          id: 2,
-          customerName: 'Priya Singh',
-          serviceName: 'Heritage City Tour',
-          date: '2024-01-20',
-          amount: 2500,
-          status: 'pending',
-          customerPhone: '+91 9876543211'
-        },
-        {
-          id: 3,
-          customerName: 'Amit Kumar',
-          serviceName: 'Adventure Trekking',
-          date: '2024-01-25',
-          amount: 3500,
-          status: 'completed',
-          customerPhone: '+91 9876543212'
-        }
-      ]);
+      // Load vendor bookings
+      const bookingsResponse = await apiService.getBookings();
+      if (bookingsResponse.success) {
+        setBookings(bookingsResponse.data.bookings || []);
+      }
+
+      // Load vendor services (hotels for now)
+      const servicesResponse = await apiService.searchHotels({ 
+        limit: 20 
+      });
+      if (servicesResponse.success) {
+        const hotelServices = servicesResponse.data.hotels.map(hotel => ({
+          id: hotel._id,
+          name: hotel.name,
+          type: 'Hotel',
+          location: `${hotel.city}, ${hotel.state}`,
+          price: hotel.price,
+          rating: hotel.rating || 4.5,
+          bookings: Math.floor(Math.random() * 50) + 10, // Mock booking count
+          status: hotel.isActive ? 'active' : 'inactive',
+          image: hotel.images?.[0] || '/api/placeholder/300/200'
+        }));
+        setServices(hotelServices);
+      }
+
+      // Calculate analytics from real data
+      const totalRevenue = bookingsResponse.success ? 
+        bookingsResponse.data.bookings?.reduce((sum, booking) => sum + (booking.pricing?.totalAmount || 0), 0) || 0 : 0;
+      
+      const totalBookings = bookingsResponse.success ? bookingsResponse.data.bookings?.length || 0 : 0;
+      const activeServices = servicesResponse.success ? servicesResponse.data.hotels?.filter(h => h.isActive)?.length || 0 : 0;
+      const averageRating = servicesResponse.success ? 
+        (servicesResponse.data.hotels?.reduce((sum, hotel) => sum + (hotel.rating || 0), 0) / (servicesResponse.data.hotels?.length || 1)) || 4.5 : 4.5;
 
       setAnalytics({
-        totalRevenue: 125000,
-        totalBookings: 105,
-        activeServices: 8,
-        averageRating: 4.8,
-        monthlyGrowth: 15.2,
-        pendingPayouts: 25000
+        totalRevenue,
+        totalBookings,
+        activeServices,
+        averageRating: Math.round(averageRating * 10) / 10,
+        monthlyGrowth: 15.2, // Mock growth
+        pendingPayouts: Math.floor(totalRevenue * 0.2) // Mock pending payouts (20% of revenue)
       });
 
+      // Mock notifications for now
       setNotifications([
         {
           id: 1,
           type: 'booking',
-          title: 'New Booking',
-          message: 'Raj Sharma booked your Luxury Hotel Stay',
-          time: '2 hours ago',
-          read: false
-        },
-        {
-          id: 2,
-          type: 'review',
-          title: 'New Review',
-          message: 'You received a 5-star review',
-          time: '4 hours ago',
+          title: 'Welcome to Yatra!',
+          message: 'Start managing your tourism business with our platform',
+          time: '1 day ago',
           read: false
         }
       ]);
+
     } catch (error) {
       console.error('Error loading vendor data:', error);
+      setError('Failed to load dashboard data. Please try again.');
+      
+      // Set fallback data
+      setServices([]);
+      setBookings([]);
+      setAnalytics({
+        totalRevenue: 0,
+        totalBookings: 0,
+        activeServices: 0,
+        averageRating: 0,
+        monthlyGrowth: 0,
+        pendingPayouts: 0
+      });
+      setNotifications([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -224,21 +207,36 @@ const VendorDashboard = () => {
         </div>
         <div className="p-6">
           <div className="space-y-4">
-            {bookings.slice(0, 5).map((booking) => (
-              <div key={booking.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+            {bookings.length === 0 ? (
+              <div className="text-center py-8">
+                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No bookings yet</p>
+                <p className="text-sm text-gray-400">Your bookings will appear here once customers start booking your services.</p>
+              </div>
+            ) : (
+              bookings.slice(0, 5).map((booking) => (
+              <div key={booking._id || booking.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
                     <Users className="w-6 h-6 text-green-600" />
                   </div>
                 <div>
-                    <h3 className="font-semibold text-gray-900">{booking.customerName}</h3>
-                    <p className="text-sm text-gray-600">{booking.serviceName}</p>
-                    <p className="text-xs text-gray-500">{booking.date}</p>
+                    <h3 className="font-semibold text-gray-900">
+                      {booking.guestDetails?.primaryGuest?.name || booking.customerName || 'Guest'}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {booking.hotel?.name || booking.serviceName || 'Service'}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {booking.checkIn ? new Date(booking.checkIn).toLocaleDateString() : booking.date}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <p className="font-semibold text-gray-900">₹{booking.amount.toLocaleString()}</p>
+                    <p className="font-semibold text-gray-900">
+                      ₹{(booking.pricing?.totalAmount || booking.amount || 0).toLocaleString()}
+                    </p>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>
                       {booking.status}
                     </span>
@@ -253,7 +251,8 @@ const VendorDashboard = () => {
                   </div>
                 </div>
               </div>
-            ))}
+              ))
+            )}
             </div>
         </div>
       </div>
@@ -329,7 +328,18 @@ const VendorDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {services.map((service) => (
+          {services.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg mb-2">No services listed yet</p>
+              <p className="text-sm text-gray-400 mb-6">Start by adding your tourism services to attract customers.</p>
+              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto">
+                <Plus className="w-4 h-4" />
+                <span>Add Your First Service</span>
+              </button>
+            </div>
+          ) : (
+            services.map((service) => (
             <div key={service.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
               <img 
                 src={service.image} 
@@ -372,7 +382,8 @@ const VendorDashboard = () => {
                 </div>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
@@ -410,22 +421,39 @@ const VendorDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {bookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-gray-50">
+              {bookings.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="py-12 text-center">
+                    <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No bookings found</p>
+                    <p className="text-sm text-gray-400">Customer bookings will appear here.</p>
+                  </td>
+                </tr>
+              ) : (
+                bookings.map((booking) => (
+                <tr key={booking._id || booking.id} className="hover:bg-gray-50">
                   <td className="py-4 px-6">
                           <div>
-                      <p className="font-medium text-gray-900">{booking.customerName}</p>
-                      <p className="text-sm text-gray-600">{booking.customerPhone}</p>
+                      <p className="font-medium text-gray-900">
+                        {booking.guestDetails?.primaryGuest?.name || booking.customerName || 'Guest'}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {booking.guestDetails?.primaryGuest?.phone || booking.customerPhone || 'N/A'}
+                      </p>
                           </div>
                   </td>
                   <td className="py-4 px-6">
-                    <p className="text-gray-900">{booking.serviceName}</p>
+                    <p className="text-gray-900">{booking.hotel?.name || booking.serviceName || 'Service'}</p>
                   </td>
                   <td className="py-4 px-6">
-                    <p className="text-gray-900">{booking.date}</p>
+                    <p className="text-gray-900">
+                      {booking.checkIn ? new Date(booking.checkIn).toLocaleDateString() : booking.date}
+                    </p>
                   </td>
                   <td className="py-4 px-6">
-                    <p className="font-semibold text-gray-900">₹{booking.amount.toLocaleString()}</p>
+                    <p className="font-semibold text-gray-900">
+                      ₹{(booking.pricing?.totalAmount || booking.amount || 0).toLocaleString()}
+                    </p>
                   </td>
                   <td className="py-4 px-6">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}>
@@ -446,7 +474,8 @@ const VendorDashboard = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -511,9 +540,39 @@ const VendorDashboard = () => {
     { id: 'settings', name: 'Settings', icon: <Settings className="w-5 h-5" /> }
   ];
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <span className="ml-3 text-gray-600">Loading vendor dashboard...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <AlertCircle className="w-5 h-5 text-red-600 mr-3" />
+              <p className="text-red-800">{error}</p>
+              <button 
+                onClick={loadVendorData}
+                className="ml-auto text-red-600 hover:text-red-800 text-sm font-medium"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+        
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">
