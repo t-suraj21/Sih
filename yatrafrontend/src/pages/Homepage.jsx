@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
@@ -13,8 +13,8 @@ const Homepage = () => {
   
   const scrollRef = useRef(null);
   
-  // Hero images for rotation
-  const heroImages = [
+  // Hero images for rotation - memoized to prevent re-creation on every render
+  const heroImages = useMemo(() => [
     {
       url: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&h=1080&fit=crop',
       title: 'Taj Mahal, Agra',
@@ -55,7 +55,7 @@ const Homepage = () => {
       title: 'Rajasthan Desert',
       description: 'Sand dunes and camel safaris'
     }
-  ];
+  ], []); // Empty dependency array since this data is static
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -65,12 +65,12 @@ const Homepage = () => {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % heroImages.length
       );
-    }, 4000); // Change image every 10 seconds
+    }, 4000); // Change image every 4 seconds
 
     return () => clearInterval(interval);
-  }, [heroImages.length]);
+  }, [heroImages]);
 
-  const featuredDestinations = [
+  const featuredDestinations = useMemo(() => [
     {
       id: 1,
       name: 'Jaipur',
@@ -251,9 +251,9 @@ const Homepage = () => {
       bestTime: 'May-Sep',
       startingPrice: '₹12,000'
     }
-  ];
+  ], []); // Empty dependency array since this data is static
 
-  const uspFeatures = [
+  const uspFeatures = useMemo(() => [
     {
       icon: <Shield className="w-8 h-8 text-blue-600" />,
       title: 'Fraud-Free Bookings',
@@ -279,9 +279,9 @@ const Homepage = () => {
       title: 'Eco-Friendly Travel',
       description: 'Sustainable tourism options with carbon footprint tracking'
     }
-  ];
+  ], []); // Empty dependency array since this data is static
 
-  const testimonials = [
+  const testimonials = useMemo(() => [
   {
     id: 1,
     name: 'Sonu Yadav',
@@ -306,7 +306,7 @@ const Homepage = () => {
     comment: 'Eco-tourism options were fantastic! Stayed at certified green hotels and supported local communities. The transparency was unmatched.',
     trip: 'Himachal Eco Adventure'
   }
-];
+], []); // Empty dependency array since this data is static
 
 
   const handleSearch = (e) => {

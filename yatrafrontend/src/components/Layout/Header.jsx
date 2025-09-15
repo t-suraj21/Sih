@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Menu, X, Globe, AlertTriangle, Home, MapPin, Hotel, Leaf, User, HelpCircle, Info,
@@ -120,7 +120,7 @@ const Header = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const primaryNavigation = [
+  const primaryNavigation = useMemo(() => [
     { 
       name: 'Destinations', 
       href: '/destinations',
@@ -136,22 +136,22 @@ const Header = () => {
       href: '/services',
       icon: <Award className="w-4 h-4" />
     }
-  ];
+  ], []);
 
-  const secondaryNavigation = [
+  const secondaryNavigation = useMemo(() => [
     { name: 'Home', href: '/', icon: <Home className="w-5 h-5" /> },
     { name: 'About Us', href: '/about', icon: <Info className="w-5 h-5" /> },
     { name: 'Contact', href: '/contact', icon: <HelpCircle className="w-5 h-5" /> },
     { name: 'FAQ', href: '/faq', icon: <HelpCircle className="w-5 h-5" /> }
-  ];
+  ], []);
 
-  const languages = [
+  const languages = useMemo(() => [
     { code: 'EN', name: 'English'},
     { code: 'HI', name: 'हिन्दी'},
     { code: 'BN', name: 'বাংলা'},
-    { code: 'TA', name: 'தமிழ்'},
+    { code: 'TA', name: 'தமিழ்'},
     { code: 'TE', name: 'తెలుగు'}
-  ];
+  ], []);
 
   const isActiveTab = (href) => location.pathname + location.search === href;
 
@@ -181,12 +181,12 @@ const Header = () => {
                   <div className={`text-2xl font-bold transition-colors duration-300 group-hover:scale-105 ${
                     isScrolled ? 'text-gray-800 group-hover:text-blue-700' : 'text-white'
                   }`}>
-                    Yatra
+                    BB
                   </div>
                   <div className={`text-xs font-semibold tracking-wide transition-colors ${
                     isScrolled ? 'text-blue-600' : 'text-blue-100'
                   }`}>
-                    TRUSTED TOURISM
+                    BHARAT BHRAMAN
                   </div>
                 </div>
               </Link>
