@@ -480,128 +480,136 @@ const Homepage = () => {
               From the snow-capped Himalayas to tropical beaches, explore India's diverse destinations with verified services and trusted local guides
             </p>
           </div>
+        </div>
+        
+        {/* Full-width scrollable container */}
+        <div className="relative w-full">
+          {/* Navigation Buttons */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
           
-          <div className="relative">
-            {/* Navigation Buttons */}
-            <button
-              onClick={scrollLeft}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            
-            <button
-              onClick={scrollRight}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+          <button
+            onClick={scrollRight}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
 
-            {/* Scrollable Container */}
-            <div
-              ref={scrollRef}
-              className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-12"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {featuredDestinations.map((destination) => (
-                <div
-                  key={destination.id}
-                  className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
-                >
-                  <div className="relative">
-                    <img
-                      src={destination.image}
-                      alt={destination.name}
-                      className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                    
-                    {/* Category Badge */}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
-                      {destination.icon}
-                      <span>{destination.category}</span>
-                    </div>
-                    
-                    {/* Verified Badge */}
-                    <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
-                      <CheckCircle className="w-4 h-4" />
-                      <span>Verified</span>
-                    </div>
+          {/* Scrollable Container - Full width */}
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-16"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              width: '100vw',
+              marginLeft: 'calc(-50vw + 50%)'
+            }}
+          >
+            {featuredDestinations.map((destination) => (
+              <div
+                key={destination.id}
+                className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
+              >
+                <div className="relative">
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                  
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                    {destination.icon}
+                    <span>{destination.category}</span>
+                  </div>
+                  
+                  {/* Verified Badge */}
+                  <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Verified</span>
+                  </div>
 
-                    {/* Region Tag */}
-                    <div className="absolute bottom-4 left-4 bg-blue-600/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {destination.region}
+                  {/* Region Tag */}
+                  <div className="absolute bottom-4 left-4 bg-blue-600/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {destination.region}
+                  </div>
+                </div>
+                
+                <div className="p-6">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">{destination.name}</h3>
+                      <p className="text-gray-500 text-sm">{destination.state}</p>
+                    </div>
+                    <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
+                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      <span className="text-sm font-semibold text-gray-700">{destination.rating}</span>
                     </div>
                   </div>
                   
-                  <div className="p-6">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">{destination.name}</h3>
-                        <p className="text-gray-500 text-sm">{destination.state}</p>
-                      </div>
-                      <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-semibold text-gray-700">{destination.rating}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{destination.description}</p>
-                    
-                    {/* Highlights */}
-                    <div className="mb-4">
-                      <p className="text-xs text-gray-500 mb-2 font-medium">TOP ATTRACTIONS</p>
-                      <div className="flex flex-wrap gap-1">
-                        {destination.highlights.slice(0, 3).map((highlight, index) => (
-                          <span
-                            key={index}
-                            className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
-                          >
-                            {highlight}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Info Row */}
-                    <div className="flex items-center justify-between mb-4 text-sm">
-                      <div className="flex items-center space-x-4">
-                        <span className="text-green-600 font-medium">
-                          {destination.verifiedServices} Services
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{destination.description}</p>
+                  
+                  {/* Highlights */}
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-2 font-medium">TOP ATTRACTIONS</p>
+                    <div className="flex flex-wrap gap-1">
+                      {destination.highlights.slice(0, 3).map((highlight, index) => (
+                        <span
+                          key={index}
+                          className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
+                        >
+                          {highlight}
                         </span>
-                        <span className="text-gray-500">
-                          Best: {destination.bestTime}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* Bottom Row */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs text-gray-500">Starting from</p>
-                        <p className="text-lg font-bold text-gray-900">{destination.startingPrice}</p>
-                      </div>
-                      <Link
-                        to={`/destination/${destination.name}`}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1"
-                      >
-                        <span>{t('explore')}</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </Link>
+                      ))}
                     </div>
                   </div>
+                  
+                  {/* Info Row */}
+                  <div className="flex items-center justify-between mb-4 text-sm">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-green-600 font-medium">
+                        {destination.verifiedServices} Services
+                      </span>
+                      <span className="text-gray-500">
+                        Best: {destination.bestTime}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom Row */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-gray-500">Starting from</p>
+                      <p className="text-lg font-bold text-gray-900">{destination.startingPrice}</p>
+                    </div>
+                    <Link
+                      to={`/destination/${destination.name}`}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1"
+                    >
+                      <span>{t('explore')}</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </Link>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          {/* View All Button */}
+        {/* View All Button */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mt-12">
             <Link
               to="/destinations"
@@ -619,7 +627,7 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t('whyChooseYatra')}
+              {t('Why Choose Bharat Bhraman')}
             </h2>
             <p className="text-xl text-gray-600">
               {t('safetyPriority')}

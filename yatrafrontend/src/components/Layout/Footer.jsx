@@ -10,10 +10,10 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">Y</span>
+                <span className="text-white font-bold text-lg">BB</span>
               </div>
               <div>
-                <div className="text-xl font-bold">Yatra</div>
+                <div className="text-xl font-bold">Bharat Bhraman</div>
                 <div className="text-sm text-green-400">Trusted Tourism</div>
               </div>
             </div>

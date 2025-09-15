@@ -243,7 +243,7 @@ const Signup = () => {
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-3">Choose Your Account Type</h2>
-        <p className="text-gray-600">Select how you want to use Yatra platform</p>
+        <p className="text-gray-600">Select how you want to use Bharat Bhraman platform</p>
       </div>
 
       <div className="space-y-4">
@@ -650,7 +650,7 @@ const Signup = () => {
             </div>
           </div>
           <h1 className="mt-6 text-3xl font-bold text-gray-900">
-            Join Yatra Today
+            Join Bharat Bhraman Today
           </h1>
           <p className="mt-2 text-sm text-gray-600">
             Start your verified travel journey with India's trusted platform
