@@ -85,18 +85,25 @@ class ApiService {
       
       console.log('API Service: Login response status:', response.status);
       console.log('API Service: Login response data:', response.data);
+      console.log('API Service: Full response object:', response);
       
       // Backend returns: { success: true, data: { user: {...}, token: "...", refreshToken: "..." } }
       if (response.data.success && response.data.data?.token) {
         setAuthToken(response.data.data.token);
         setUserData(response.data.data.user);
         console.log('API Service: Login tokens and user data stored successfully');
+      } else {
+        console.warn('API Service: Login response missing expected structure');
+        console.warn('Expected: response.data.success && response.data.data.token');
+        console.warn('Actual success:', response.data.success);
+        console.warn('Actual data:', response.data.data);
       }
       
       return response.data;
     } catch (error) {
       console.error('Login error:', error);
       console.error('Login error response:', error.response?.data);
+      console.error('Login error status:', error.response?.status);
       return {
         success: false,
         message: error.response?.data?.message || error.message || 'Login failed'
