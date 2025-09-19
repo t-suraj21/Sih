@@ -17,7 +17,7 @@ const Homepage = () => {
   const heroImages = useMemo(() => [
     {
       url: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&h=1080&fit=crop',
-      title: 'Taj Mahal, Agra',
+      title: 'Taj Mahal, Delhi',
       description: 'The iconic symbol of love and architectural marvel'
     },
     {
