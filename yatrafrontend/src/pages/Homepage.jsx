@@ -1,10 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine } from 'lucide-react';
-import { useTranslation } from '../hooks/useTranslation';
+import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine, Sun, Moon } from 'lucide-react';
 
 const Homepage = () => {
-  const { t } = useTranslation();
+  const [isDark, setIsDark] = useState(false);
   const [searchData, setSearchData] = useState({
     destination: '',
     date: '',
@@ -255,31 +253,31 @@ const Homepage = () => {
 
   const uspFeatures = useMemo(() => [
     {
-      icon: <Shield className="w-8 h-8 text-blue-600" />,
+      icon: <Shield className={`w-8 h-8 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />,
       title: 'Fraud-Free Bookings',
       description: 'Every service provider is government-verified with transparent pricing'
     },
     {
-      icon: <Award className="w-8 h-8 text-green-600" />,
+      icon: <Award className={`w-8 h-8 ${isDark ? 'text-green-400' : 'text-green-600'}`} />,
       title: 'Verified Guides & Hotels',
       description: 'All guides carry government IDs and hotels meet safety standards'
     },
     {
-      icon: <CheckCircle className="w-8 h-8 text-orange-600" />,
+      icon: <CheckCircle className={`w-8 h-8 ${isDark ? 'text-orange-400' : 'text-orange-600'}`} />,
       title: 'Hygiene & Safety Ratings',
       description: 'FSSAI-certified restaurants with real-time hygiene monitoring'
     },
     {
-      icon: <Phone className="w-8 h-8 text-red-600" />,
+      icon: <Phone className={`w-8 h-8 ${isDark ? 'text-red-400' : 'text-red-600'}`} />,
       title: '24x7 SOS Support',
       description: 'Instant emergency assistance with location tracking and police contact'
     },
     {
-      icon: <Leaf className="w-8 h-8 text-green-500" />,
+      icon: <Leaf className={`w-8 h-8 ${isDark ? 'text-green-400' : 'text-green-500'}`} />,
       title: 'Eco-Friendly Travel',
       description: 'Sustainable tourism options with carbon footprint tracking'
     }
-  ], []); // Empty dependency array since this data is static
+  ], [isDark]); // Added isDark dependency
 
   const testimonials = useMemo(() => [
   {
@@ -308,7 +306,6 @@ const Homepage = () => {
   }
 ], []); // Empty dependency array since this data is static
 
-
   const handleSearch = (e) => {
     e.preventDefault();
     // Redirect to appropriate page based on service type
@@ -333,10 +330,31 @@ const Homepage = () => {
     }
   };
 
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
+
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-all duration-500 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+      {/* Theme Toggle Button - Fixed Position */}
+      <button
+        onClick={toggleTheme}
+        className={`fixed top-6 right-6 z-50 p-3 rounded-full shadow-lg transition-all duration-300 ${
+          isDark 
+            ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900' 
+            : 'bg-gray-800 hover:bg-gray-700 text-white'
+        }`}
+        aria-label="Toggle theme"
+      >
+        {isDark ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+      </button>
+
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden min-h-screen">
+      <section className={`relative text-white overflow-hidden min-h-screen ${
+        isDark 
+          ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800' 
+          : 'bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900'
+      }`}>
         {/* Rotating Background Images */}
         <div className="absolute inset-0">
           {heroImages.map((image, index) => (
@@ -349,85 +367,133 @@ const Homepage = () => {
                 backgroundImage: `url("${image.url}")`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
+                backgroundRepeat: 'no-repeat',
+                filter: isDark ? 'grayscale(30%) brightness(0.8) contrast(1.2)' : 'none'
               }}
             />
           ))}
         </div>
         
         {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className={`absolute inset-0 ${
+          isDark ? 'bg-black opacity-50' : 'bg-black opacity-40'
+        }`}></div>
         
         {/* Gradient overlay for better visual effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-blue-800/40 to-indigo-900/60"></div>
+        <div className={`absolute inset-0 ${
+          isDark 
+            ? 'bg-gradient-to-br from-gray-900/80 via-black/60 to-gray-800/80' 
+            : 'bg-gradient-to-br from-blue-900/60 via-blue-800/40 to-indigo-900/60'
+        }`}></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="text-center">
             {/* Current Image Info */}
             <div className="mb-8">
-              <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
+              <div className={`inline-block backdrop-blur-sm rounded-full px-6 py-3 mb-4 ${
+                isDark 
+                  ? 'bg-gray-800/60 border border-gray-600' 
+                  : 'bg-white/20'
+              }`}>
+                <h2 className={`text-2xl md:text-3xl font-bold ${
+                  isDark ? 'text-gray-200' : 'text-white'
+                }`}>
                   {heroImages[currentImageIndex].title}
                 </h2>
-                <p className="text-lg text-gray-200 mt-1">
+                <p className={`text-lg mt-1 ${
+                  isDark ? 'text-gray-400' : 'text-gray-200'
+                }`}>
                   {heroImages[currentImageIndex].description}
                 </p>
               </div>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              {t('safeVerifiedTransparent')}
-              <span className="block text-green-400">{t('travelInIndia')}</span>
+              {isDark ? (
+                <>
+                  <span className="text-white">Safe, Verified, Transparent</span>
+                  <span className="block text-gray-300">Travel in India</span>
+                </>
+              ) : (
+                <>
+                  Safe, Verified, Transparent
+                  <span className="block text-green-400">Travel in India</span>
+                </>
+              )}
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              {t('planTripDescription')}
+            <p className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto ${
+              isDark ? 'text-gray-200' : 'text-gray-200'
+            }`}>
+              Plan your trip with verified guides, FSSAI-approved restaurants, and transparent pricing
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link
-                to="/services"
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
-              >
-                {t('planMyTrip')}
-              </Link>
-              <Link
-                to="/destinations"
-                className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
-              >
-                {t('exploreDestinations')}
-              </Link>
+              <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center ${
+                isDark
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}>
+                Plan My Trip
+              </button>
+              <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center border-2 ${
+                isDark
+                  ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
+                  : 'border-white hover:bg-white hover:text-blue-900 text-white'
+              }`}>
+                Explore Destinations
+              </button>
             </div>
 
             {/* Search Bar */}
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-6">
+            <div className={`max-w-4xl mx-auto rounded-2xl shadow-2xl p-6 ${
+              isDark ? 'bg-gray-800' : 'bg-white'
+            }`}>
               <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <MapPin className={`absolute left-3 top-3 w-5 h-5 ${
+                    isDark ? 'text-gray-400' : 'text-gray-400'
+                  }`} />
                   <input
                     type="text"
-                    placeholder={t('destination')}
+                    placeholder="Destination"
                     value={searchData.destination}
                     onChange={(e) => setSearchData({...searchData, destination: e.target.value})}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      isDark 
+                        ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' 
+                        : 'border-gray-300 text-gray-900'
+                    }`}
                   />
                 </div>
                 
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <Calendar className={`absolute left-3 top-3 w-5 h-5 ${
+                    isDark ? 'text-gray-400' : 'text-gray-400'
+                  }`} />
                   <input
                     type="date"
                     value={searchData.date}
                     onChange={(e) => setSearchData({...searchData, date: e.target.value})}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                      isDark 
+                        ? 'border-gray-600 bg-gray-700 text-white' 
+                        : 'border-gray-300 text-gray-900'
+                    }`}
                   />
                 </div>
                 
                 <div className="relative">
-                  <Users className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                  <Users className={`absolute left-3 top-3 w-5 h-5 ${
+                    isDark ? 'text-gray-400' : 'text-gray-400'
+                  }`} />
                   <select
                     value={searchData.serviceType}
                     onChange={(e) => setSearchData({...searchData, serviceType: e.target.value})}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none ${
+                      isDark 
+                        ? 'border-gray-600 bg-gray-700 text-white' 
+                        : 'border-gray-300 text-gray-900'
+                    }`}
                   >
                     <option value="hotel">Hotels & Stays</option>
                     <option value="guide">Guides</option>
@@ -441,7 +507,7 @@ const Homepage = () => {
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center space-x-2"
                 >
                   <Search className="w-5 h-5" />
-                  <span>{t('search')}</span>
+                  <span>Search</span>
                 </button>
               </form>
             </div>
@@ -456,7 +522,9 @@ const Homepage = () => {
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentImageIndex 
                     ? 'bg-white scale-125' 
-                    : 'bg-white/50 hover:bg-white/75'
+                    : isDark 
+                      ? 'bg-gray-500 hover:bg-gray-400'
+                      : 'bg-white/50 hover:bg-white/75'
                 }`}
                 aria-label={`Go to image ${index + 1}`}
               />
@@ -466,17 +534,29 @@ const Homepage = () => {
       </section>
 
       {/* Featured Destinations */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section className={`py-16 ${
+        isDark 
+          ? 'bg-gradient-to-br from-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-gray-50 to-blue-50'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <div className="text-center mb-12">
+            <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-4 ${
+              isDark 
+                ? 'bg-gray-700 text-gray-200' 
+                : 'bg-blue-100 text-blue-800'
+            }`}>
               <MapPin className="w-4 h-4 mr-2" />
-              {t('discoverIndia')}
+              Discover India
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Destinations Across India
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>
+              Featured Destinations Across Bharat
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className={`text-xl max-w-3xl mx-auto ${
+              isDark ? 'text-gray-200' : 'text-gray-600'
+            }`}>
               From the snow-capped Himalayas to tropical beaches, explore India's diverse destinations with verified services and trusted local guides
             </p>
           </div>
@@ -487,7 +567,11 @@ const Homepage = () => {
           {/* Navigation Buttons */}
           <button
             onClick={scrollLeft}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
+            className={`absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border ${
+              isDark 
+                ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
+                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200'
+            }`}
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -495,7 +579,11 @@ const Homepage = () => {
           
           <button
             onClick={scrollRight}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-gray-50 text-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
+            className={`absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border ${
+              isDark 
+                ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-600' 
+                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200'
+            }`}
             aria-label="Scroll right"
           >
             <ChevronRight className="w-6 h-6" />
@@ -515,20 +603,29 @@ const Homepage = () => {
             {featuredDestinations.map((destination) => (
               <div
                 key={destination.id}
-                className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group"
+                className={`flex-shrink-0 w-80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group ${
+                  isDark ? 'bg-gray-800' : 'bg-white'
+                }`}
               >
                 <div className="relative">
                   <img
                     src={destination.image}
                     alt={destination.name}
                     className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                    style={{
+                      filter: isDark ? 'grayscale(20%) brightness(0.9) contrast(1.3)' : 'none'
+                    }}
                   />
                   
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                   
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1">
+                  <div className={`absolute top-4 left-4 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1 ${
+                    isDark 
+                      ? 'bg-gray-800/90 text-gray-200' 
+                      : 'bg-white/90 text-gray-800'
+                  }`}>
                     {destination.icon}
                     <span>{destination.category}</span>
                   </div>
@@ -549,26 +646,42 @@ const Homepage = () => {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">{destination.name}</h3>
-                      <p className="text-gray-500 text-sm">{destination.state}</p>
+                      <h3 className={`text-xl font-bold mb-1 ${
+                        isDark ? 'text-gray-100' : 'text-gray-900'
+                      }`}>{destination.name}</h3>
+                      <p className={`text-sm ${
+                        isDark ? 'text-gray-300' : 'text-gray-500'
+                      }`}>{destination.state}</p>
                     </div>
-                    <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
+                    <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
+                      isDark ? 'bg-yellow-900/30' : 'bg-yellow-50'
+                    }`}>
                       <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span className="text-sm font-semibold text-gray-700">{destination.rating}</span>
+                      <span className={`text-sm font-semibold ${
+                        isDark ? 'text-gray-200' : 'text-gray-700'
+                      }`}>{destination.rating}</span>
                     </div>
                   </div>
                   
                   {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{destination.description}</p>
+                  <p className={`text-sm mb-4 line-clamp-2 ${
+                    isDark ? 'text-gray-200' : 'text-gray-600'
+                  }`}>{destination.description}</p>
                   
                   {/* Highlights */}
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 mb-2 font-medium">TOP ATTRACTIONS</p>
+                    <p className={`text-xs mb-2 font-medium ${
+                      isDark ? 'text-gray-300' : 'text-gray-500'
+                    }`}>TOP ATTRACTIONS</p>
                     <div className="flex flex-wrap gap-1">
                       {destination.highlights.slice(0, 3).map((highlight, index) => (
                         <span
                           key={index}
-                          className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium"
+                          className={`px-2 py-1 rounded-md text-xs font-medium ${
+                            isDark 
+                              ? 'bg-gray-600 text-gray-200' 
+                              : 'bg-blue-50 text-blue-700'
+                          }`}
                         >
                           {highlight}
                         </span>
@@ -579,10 +692,12 @@ const Homepage = () => {
                   {/* Info Row */}
                   <div className="flex items-center justify-between mb-4 text-sm">
                     <div className="flex items-center space-x-4">
-                      <span className="text-green-600 font-medium">
+                      <span className={`text-green-600 font-medium ${
+                        isDark ? 'text-green-400' : 'text-green-600'
+                      }`}>
                         {destination.verifiedServices} Services
                       </span>
-                      <span className="text-gray-500">
+                      <span className={isDark ? 'text-gray-300' : 'text-gray-500'}>
                         Best: {destination.bestTime}
                       </span>
                     </div>
@@ -591,16 +706,17 @@ const Homepage = () => {
                   {/* Bottom Row */}
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-gray-500">Starting from</p>
-                      <p className="text-lg font-bold text-gray-900">{destination.startingPrice}</p>
+                      <p className={`text-xs ${
+                        isDark ? 'text-gray-300' : 'text-gray-500'
+                      }`}>Starting from</p>
+                      <p className={`text-lg font-bold ${
+                        isDark ? 'text-gray-100' : 'text-gray-900'
+                      }`}>{destination.startingPrice}</p>
                     </div>
-                    <Link
-                      to={`/destination/${destination.name}`}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1"
-                    >
-                      <span>{t('explore')}</span>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1">
+                      <span>Explore</span>
                       <ChevronRight className="w-4 h-4" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -611,37 +727,44 @@ const Homepage = () => {
         {/* View All Button */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mt-12">
-            <Link
-              to="/destinations"
-              className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl space-x-2"
-            >
+            <button className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl space-x-2">
               <span>View All Destinations</span>
               <ChevronRight className="w-5 h-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </section>
 
       {/* USP Section */}
-      <section className="py-16 bg-white">
+      <section className={`py-16 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t('Why Choose Bharat Bhraman')}
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>
+              Why Choose Bharat Bhraman
             </h2>
-            <p className="text-xl text-gray-600">
-              {t('safetyPriority')}
+            <p className={`text-xl ${
+              isDark ? 'text-gray-200' : 'text-gray-600'
+            }`}>
+              Your safety and satisfaction is our priority
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {uspFeatures.map((feature, index) => (
-              <div key={index} className="text-center p-6 rounded-xl hover:shadow-lg transition-shadow">
+              <div key={index} className={`text-center p-6 rounded-xl transition-shadow ${
+                isDark 
+                  ? 'hover:shadow-lg hover:bg-gray-800' 
+                  : 'hover:shadow-lg'
+              }`}>
                 <div className="flex justify-center mb-4">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className={`text-xl font-bold mb-3 ${
+                  isDark ? 'text-gray-100' : 'text-gray-900'
+                }`}>{feature.title}</h3>
+                <p className={isDark ? 'text-gray-200' : 'text-gray-600'}>{feature.description}</p>
               </div>
             ))}
           </div>
@@ -649,25 +772,36 @@ const Homepage = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-blue-50">
+      <section className={`py-16 ${
+        isDark ? 'bg-gray-800' : 'bg-blue-50'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+              isDark ? 'text-gray-100' : 'text-gray-900'
+            }`}>
               What Our Travelers Say
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className={`text-xl ${
+              isDark ? 'text-gray-200' : 'text-gray-600'
+            }`}>
               Real experiences from verified travelers
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white rounded-xl shadow-lg p-6">
+              <div key={testimonial.id} className={`rounded-xl shadow-lg p-6 ${
+                isDark ? 'bg-gray-700' : 'bg-white'
+              }`}>
                 <div className="flex items-center mb-4">
-                  
                   <div>
-                    <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                    <p className="text-gray-600 text-sm">{testimonial.location}</p>
+                    <h4 className={`font-bold ${
+                      isDark ? 'text-gray-100' : 'text-gray-900'
+                    }`}>{testimonial.name}</h4>
+                    <p className={`text-sm ${
+                      isDark ? 'text-gray-200' : 'text-gray-600'
+                    }`}>{testimonial.location}</p>
                   </div>
                   <div className="ml-auto flex">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -676,8 +810,12 @@ const Homepage = () => {
                   </div>
                 </div>
                 
-                <p className="text-gray-700 mb-3">"{testimonial.comment}"</p>
-                <p className="text-blue-600 text-sm font-medium">{testimonial.trip}</p>
+                <p className={`mb-3 ${
+                  isDark ? 'text-gray-200' : 'text-gray-700'
+                }`}>"{testimonial.comment}"</p>
+                <p className={`text-sm font-medium ${
+                  isDark ? 'text-blue-400' : 'text-blue-600'
+                }`}>{testimonial.trip}</p>
               </div>
             ))}
           </div>
@@ -685,27 +823,37 @@ const Homepage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+      <section className={`py-16 text-white ${
+        isDark 
+          ? 'bg-gradient-to-r from-gray-800 to-gray-900' 
+          : 'bg-gradient-to-r from-blue-600 to-indigo-700'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
+            isDark ? 'text-gray-100' : 'text-white'
+          }`}>
             Ready to Start Your Safe Journey?
           </h2>
-          <p className="text-xl mb-8 text-blue-100">
+          <p className={`text-xl mb-8 ${
+            isDark ? 'text-gray-200' : 'text-blue-100'
+          }`}>
             Join thousands of travelers who trust us for their Indian adventures
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signup"
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
-            >
+            <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors ${
+              isDark
+                ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}>
               Get Started Today
-            </Link>
-            <Link
-              to="/services"
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
-            >
+            </button>
+            <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors border-2 ${
+              isDark
+                ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
+                : 'border-white hover:bg-white hover:text-blue-600 text-white'
+            }`}>
               Browse Services
-            </Link>
+            </button>
           </div>
         </div>
       </section>
