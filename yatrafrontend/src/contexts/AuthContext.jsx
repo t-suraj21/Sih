@@ -130,6 +130,7 @@ export const AuthProvider = ({ children }) => {
         const { user, token, refreshToken } = response.data;
 
         if (!user || !token) {
+          console.error('Invalid response structure:', response);
           throw new Error('Invalid response from server');
         }
 
@@ -147,6 +148,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user };
       } else {
         const message = response.message || 'Login failed';
+        console.error('Login failed:', response);
         dispatch({
           type: 'LOGIN_FAILURE',
           payload: message
@@ -174,6 +176,7 @@ export const AuthProvider = ({ children }) => {
         const { user, token, refreshToken } = response.data;
 
         if (!user || !token) {
+          console.error('Invalid registration response structure:', response);
           throw new Error('Invalid response from server');
         }
 
@@ -191,6 +194,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user };
       } else {
         const message = response.message || 'Registration failed';
+        console.error('Registration failed:', response);
         dispatch({
           type: 'LOGIN_FAILURE',
           payload: message

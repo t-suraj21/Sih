@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
   // Backend API base URL
-  BASE_URL: 'http://localhost:3001/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
   
   // API keys from environment variables
   PROVIDED_API_KEY: import.meta.env.VITE_PROVIDED_API_KEY || '',
