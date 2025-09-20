@@ -832,12 +832,13 @@ const Homepage = () => {
           <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${
             isDark ? 'text-gray-100' : 'text-white'
           }`}>
-            Ready to Start Your Safe Journey?
+            Go Beyond the Landmarks — Discover the Heart of India
+
           </h2>
           <p className={`text-xl mb-8 ${
             isDark ? 'text-gray-200' : 'text-blue-100'
           }`}>
-            Join thousands of travelers who trust us for their Indian adventures
+           Travel safely through real stories, rituals, and heritage with trusted cultural experiences
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors ${
