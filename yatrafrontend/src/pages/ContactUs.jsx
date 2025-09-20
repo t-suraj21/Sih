@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, Send, MessageSquare, HeadphonesIcon, AlertCircle } from 'lucide-react';
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  Send,
+  MessageSquare,
+  HeadphonesIcon,
+  AlertCircle
+} from 'lucide-react';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -16,28 +25,28 @@ const ContactUs = () => {
 
   const contactMethods = [
     {
-      icon: <Phone className="w-8 h-8 text-blue-600" />,
-      title: '24x7 Helpline',
-      details: '1800-XXX-XXXX',
+      icon: <Phone className="w-8 h-8 text-blue-400" />,
+      title: '24×7 Helpline',
+      details: '1800‑XXX‑XXXX',
       description: 'Free from any phone in India',
       availability: 'Available 24 hours'
     },
     {
-      icon: <Mail className="w-8 h-8 text-green-600" />,
+      icon: <Mail className="w-8 h-8 text-green-400" />,
       title: 'Email Support',
       details: 'support@yatra.gov.in',
       description: 'Get response within 2 hours',
-      availability: 'Business hours: 9 AM - 9 PM'
+      availability: 'Business hours: 9 AM ‑ 9 PM'
     },
     {
-      icon: <MessageSquare className="w-8 h-8 text-purple-600" />,
+      icon: <MessageSquare className="w-8 h-8 text-purple-400" />,
       title: 'Live Chat',
       details: 'Chat with our experts',
       description: 'Instant help for booking issues',
       availability: 'Available 24 hours'
     },
     {
-      icon: <AlertCircle className="w-8 h-8 text-red-600" />,
+      icon: <AlertCircle className="w-8 h‑8 text-red-400" />,
       title: 'Emergency SOS',
       details: 'Emergency assistance',
       description: 'For urgent safety concerns',
@@ -48,29 +57,29 @@ const ContactUs = () => {
   const offices = [
     {
       city: 'New Delhi',
-      address: 'Tourism Bhawan, K.G. Marg, New Delhi - 110001',
-      phone: '+91-11-2336-5358',
+      address: 'Tourism Bhawan, K.G. Marg, New Delhi ‑ 110001',
+      phone: '+91‑11‑2336‑5358',
       email: 'delhi@yatra.gov.in',
       type: 'Headquarters'
     },
     {
       city: 'Mumbai',
-      address: 'World Trade Centre, Cuffe Parade, Mumbai - 400005',
-      phone: '+91-22-2218-5000',
+      address: 'World Trade Centre, Cuffe Parade, Mumbai ‑ 400005',
+      phone: '+91‑22‑2218‑5000',
       email: 'mumbai@yatra.gov.in',
       type: 'Regional Office'
     },
     {
       city: 'Bangalore',
-      address: 'UB City Mall, Vittal Mallya Road, Bangalore - 560001',
-      phone: '+91-80-4092-5000',
+      address: 'UB City Mall, Vittal Mallya Road, Bangalore ‑ 560001',
+      phone: '+91‑80‑4092‑5000',
       email: 'bangalore@yatra.gov.in',
       type: 'Regional Office'
     },
     {
       city: 'Chennai',
-      address: 'Express Avenue Mall, Royapettah, Chennai - 600014',
-      phone: '+91-44-4224-5000',
+      address: 'Express Avenue Mall, Royapettah, Chennai ‑ 600014',
+      phone: '+91‑44‑4224‑5000',
       email: 'chennai@yatra.gov.in',
       type: 'Regional Office'
     }
@@ -104,7 +113,7 @@ const ContactUs = () => {
         'How are services verified?',
         'What is the hygiene rating system?',
         'How to become a verified provider?',
-        'What are eco-tourism points?'
+        'What are eco‑tourism points?'
       ]
     }
   ];
@@ -117,7 +126,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
@@ -127,16 +136,16 @@ const ContactUs = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Send className="w-8 h-8 text-green-600" />
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="max-w-md w-full bg-gray-800 rounded-xl shadow-lg p-8 text-center">
+          <div className="w-16 h-16 bg-green-700 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Send className="w-8 h‑8 text-green-300" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Message Sent!</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-white mb-4">Message Sent!</h2>
+          <p className="text-gray-300 mb-6">
             Thank you for contacting us. We'll get back to you within 2 hours during business hours.
           </p>
-          <div className="space-y-2 text-sm text-gray-500">
+          <div className="space-y-2 text-sm text-gray-400">
             <p>Reference ID: #YTR{Math.random().toString(36).substr(2, 6).toUpperCase()}</p>
             <p>Expected response: Within 2 hours</p>
           </div>
@@ -144,7 +153,7 @@ const ContactUs = () => {
             onClick={() => setSubmitted(false)}
             className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
           >
-            Send Another Message
+            Send Another
           </button>
         </div>
       </div>
@@ -152,64 +161,58 @@ const ContactUs = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We're here to help! Get in touch with our support team for any questions, 
-              concerns, or assistance you need with your travel plans.
-            </p>
-          </div>
+      <div className="bg-gray-800">
+        <div className="max-w-7xl mx-auto px-6 py-12 text-center">
+          <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+            We’re here for you. Let us know how we can assist with your travel plans.
+          </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         {/* Contact Methods */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {contactMethods.map((method, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="flex justify-center mb-4">
-                {method.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{method.title}</h3>
-              <p className="text-blue-600 font-medium mb-2">{method.details}</p>
-              <p className="text-gray-600 text-sm mb-2">{method.description}</p>
-              <p className="text-green-600 text-xs font-medium">{method.availability}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {contactMethods.map((method, idx) => (
+            <div key={idx} className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-700 transition-colors">
+              <div className="flex justify-center mb-4">{method.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{method.title}</h3>
+              <p className="text-blue-400 font-medium mb-2">{method.details}</p>
+              <p className="text-gray-300 text-sm mb-2">{method.description}</p>
+              <p className="text-green-400 text-xs font-semibold">{method.availability}</p>
             </div>
           ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-            
+          {/* Form */}
+          <div className="bg-gray-800 rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Full Name *</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your full name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Email Address *</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -217,24 +220,24 @@ const ContactUs = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter your phone number"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Category *</label>
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="general">General Inquiry</option>
                     <option value="booking">Booking Support</option>
@@ -247,22 +250,22 @@ const ContactUs = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Subject *</label>
                 <input
                   type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Brief subject of your message"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Subject of your message"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                <span className="block text-sm font-medium text-gray-300 mb-2">Priority</span>
                 <div className="flex space-x-4">
-                  {['low', 'normal', 'high', 'urgent'].map((priority) => (
+                  {['low','normal','high','urgent'].map((priority) => (
                     <label key={priority} className="flex items-center">
                       <input
                         type="radio"
@@ -270,35 +273,35 @@ const ContactUs = () => {
                         value={priority}
                         checked={formData.priority === priority}
                         onChange={handleInputChange}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                        className="h-4 w-4 text-blue-500 focus:ring-blue-400 border-gray-500 bg-gray-700"
                       />
-                      <span className="ml-2 text-sm text-gray-700 capitalize">{priority}</span>
+                      <span className="ml-2 text-sm text-gray-300 capitalize">{priority}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Message *</label>
                 <textarea
                   name="message"
                   value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                  rows="5"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Please describe your inquiry in detail..."
+                    onChange={handleInputChange}
+                    required
+                    rows="5"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Please describe your inquiry..."
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
+                className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="h-5 w-5 border-2 border-t-transparent border-white animate-spin rounded-full"></div>
                     <span>Sending...</span>
                   </>
                 ) : (
@@ -311,94 +314,91 @@ const ContactUs = () => {
             </form>
           </div>
 
-          {/* Office Locations & FAQ */}
-          <div className="space-y-8">
-            {/* Office Locations */}
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Offices</h2>
+          {/* Office Locations & FAQs */}
+          <div className="space-y-12">
+            {/* Offices */}
+            <div className="bg-gray-800 rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-bold mb-6">Our Offices</h2>
               <div className="space-y-6">
-                {offices.map((office, index) => (
-                  <div key={index} className="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
-                    <div className="flex items-start space-x-3">
-                      <MapPin className="w-5 h-5 text-blue-600 mt-1" />
+                {offices.map((office, i) => (
+                  <div key={i} className="border-b border-gray-700 pb-6 last:border-b-0">
+                    <div className="flex items-start space-x-4">
+                      <MapPin className="w-5 h-5 text-blue-400 mt-1" />
                       <div>
                         <div className="flex items-center space-x-2 mb-1">
-                          <h3 className="font-semibold text-gray-900">{office.city}</h3>
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                          <h3 className="text-lg font-semibold">{office.city}</h3>
+                          <span className="px-2 py-1 text-xs bg-blue-500 rounded-full text-white">
                             {office.type}
                           </span>
                         </div>
-                        <p className="text-gray-600 text-sm mb-2">{office.address}</p>
-                        <div className="space-y-1 text-sm">
+                        <p className="text-gray-300">{office.address}</p>
+                        <div className="space-y-2 text-sm text-gray-400 mt-2">
                           <div className="flex items-center space-x-2">
-                            <Phone className="w-4 h-4 text-green-600" />
-                            <span className="text-gray-700">{office.phone}</span>
+                            <Phone className="w-4 h-4 text-green-400" />
+                            <span>{office.phone}</span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Mail className="w-4 h-4 text-blue-600" />
-                            <span className="text-gray-700">{office.email}</span>
+                            <Mail className="w-4 h-4 text-blue-400" />
+                            <span>{office.email}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 ))}
-              </div>
+            </div>
             </div>
 
-            {/* Quick Help */}
-            <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Need Quick Help?</h3>
-              <div className="space-y-4">
-                {faqCategories.map((category, index) => (
-                  <div key={index} className="bg-white rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-2">
-                      {category.icon}
-                      <h4 className="font-semibold text-gray-900">{category.category}</h4>
+            {/* FAQs */}
+            <div className="bg-gray-800 rounded-lg shadow-lg p-8">
+              <h2 className="text-2xl font-bold mb-6">FAQs</h2>
+              <div className="space-y-6">
+                {faqCategories.map((cat, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      {cat.icon}
+                      <h3 className="text-lg font-semibold text-gray-200">{cat.category}</h3>
                     </div>
-                    <ul className="space-y-1">
-                      {category.questions.slice(0, 2).map((question, qIndex) => (
-                        <li key={qIndex} className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
-                          • {question}
+                    <ul className="space-y-2 text-gray-300">
+                      {cat.questions.map((q, qi) => (
+                        <li key={qi} className="cursor-pointer hover:text-blue-400">
+                          • {q}
                         </li>
                       ))}
                     </ul>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                View All FAQs
-              </button>
             </div>
           </div>
         </div>
 
         {/* Business Hours */}
-        <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center">
-              <Clock className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Phone Support</h3>
-              <p className="text-gray-600 text-sm">Available 24/7</p>
+        <div className="bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center text-gray-200">
+            <div className="">
+              <Clock className="w-8 h-8 text-blue-400 mx-auto mb-3" />
+              <h3 className="font-semibold mb-1">Phone Support</h3>
+              <p className="text-gray-400 text-sm">Available 24/7</p>
             </div>
-            <div className="text-center">
-              <Mail className="w-8 h-8 text-green-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Email Support</h3>
-              <p className="text-gray-600 text-sm">9 AM - 9 PM (IST)</p>
+            <div className="">
+              <Mail className="w-8 h-8 text-green-400 mx-auto mb-3" />
+              <h3 className="font-semibold mb-1">Email Support</h3>
+              <p className="text-gray-400 text-sm">9 AM ‑ 9 PM (IST)</p>
             </div>
-            <div className="text-center">
-              <MessageSquare className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Live Chat</h3>
-              <p className="text-gray-600 text-sm">Available 24/7</p>
+            <div className="">
+              <MessageSquare className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+              <h3 className="font-semibold mb-1">Live Chat</h3>
+              <p className="text-gray-400 text-sm">Available 24/7</p>
             </div>
-            <div className="text-center">
-              <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-2">Emergency</h3>
-              <p className="text-gray-600 text-sm">Immediate Response</p>
+            <div className="">
+              <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-3" />
+              <h3 className="font-semibold mb-1">Emergency</h3>
+              <p className="text-gray-400 text-sm">Immediate Response</p>
             </div>
           </div>
         </div>
-      </div>
+      </div> {/* end max-w container */}
     </div>
   );
 };
