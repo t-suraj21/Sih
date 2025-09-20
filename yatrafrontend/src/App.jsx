@@ -4,7 +4,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute, { AdminRoute, VendorRoute, TouristRoute, PublicRoute } from './components/ProtectedRoute';
-import Homepage from './pages/Homepage';
 import NewHomepage from './pages/NewHomepage';
 import Destinations from './pages/Destinations';
 import DestinationDetails from './pages/DestinationDetails';
@@ -43,11 +42,10 @@ function App() {
           <Router>
           <Layout>
             <Routes>
-              {/* Homepage with new design */}
+              {/* Homepage with Africa Tours design */}
               <Route path="/" element={<NewHomepage />} />
               
               {/* All other routes */}
-              <Route path="/old-home" element={<Homepage />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destination/:destinationName" element={<DestinationDetails />} />
               <Route path="/services" element={<Services />} />
