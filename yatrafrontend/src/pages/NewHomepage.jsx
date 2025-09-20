@@ -1,0 +1,897 @@
+import { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { 
+  Play, 
+  ArrowRight, 
+  Star, 
+  MapPin, 
+  Calendar, 
+  Users, 
+  Phone, 
+  ChevronLeft, 
+  ChevronRight,
+  Camera,
+  Mountain,
+  Waves,
+  TreePine,
+  Plus,
+  Instagram,
+  Facebook,
+  Twitter,
+  Youtube,
+  Linkedin
+} from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
+
+const NewHomepage = () => {
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentDestinationIndex, setCurrentDestinationIndex] = useState(2); // Center item
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activeFAQ, setActiveFAQ] = useState(0);
+  const destinationsRef = useRef(null);
+  const popularDestinationsRef = useRef(null);
+
+  // Hero video destinations
+  const heroDestinations = [
+    {
+      id: 1,
+      number: "01",
+      title: "NEVER STOP",
+      subtitle: "EXPLORING BHARAT",
+      description: "Discover the incredible diversity of India with verified guides, FSSAI-approved restaurants, and transparent pricing. From the majestic Himalayas to pristine beaches.",
+      backgroundImage: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop",
+      cta: "CONTACT US",
+      watchPromo: "WATCH PROMO"
+    }
+  ];
+
+  // Featured destinations with video thumbnails
+  const featuredDestinations = [
+    {
+      id: 1,
+      number: "01",
+      title: "Golden Temple",
+      subtitle: "January 27 12:24 Pm",
+      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=500&h=300&fit=crop",
+      hasVideo: true
+    },
+    {
+      id: 2,
+      number: "02",
+      title: "Kashmir Valley",
+      subtitle: "January 27 12:24 Pm",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=300&fit=crop",
+      hasVideo: true
+    },
+    {
+      id: 3,
+      number: "03",
+      title: "Kerala Backwaters",
+      subtitle: "January 27 12:24 Pm",
+      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=500&h=300&fit=crop",
+      hasVideo: true
+    },
+    {
+      id: 4,
+      number: "04",
+      title: "Rajasthan Desert",
+      subtitle: "January 27 12:24 Pm",
+      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=300&fit=crop",
+      hasVideo: true
+    }
+  ];
+
+  // Top destinations carousel
+  const topDestinations = [
+    {
+      id: 1,
+      name: "Goa Beaches",
+      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      price: "₹ 15,000",
+      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=500&fit=crop"
+    },
+    {
+      id: 2,
+      name: "Manali Hills",
+      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      price: "₹ 12,000",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
+    },
+    {
+      id: 3,
+      name: "Taj Mahal",
+      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      price: "₹ 8,500",
+      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=500&fit=crop"
+    },
+    {
+      id: 4,
+      name: "Udaipur Lakes",
+      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      price: "₹ 18,000",
+      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=500&fit=crop"
+    },
+    {
+      id: 5,
+      name: "Darjeeling Tea Gardens",
+      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      price: "₹ 10,000",
+      image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=400&h=500&fit=crop"
+    }
+  ];
+
+  // Excursion route
+  const excursionRoute = {
+    title: "Golden Triangle Tour",
+    day: "Day 01",
+    subtitle: "Classic India Experience",
+    description: "Experience the magnificent Golden Triangle covering Delhi, Agra, and Jaipur. Explore UNESCO World Heritage sites, royal palaces, and vibrant markets with certified guides and FSSAI-approved restaurants throughout your journey.",
+    mainImage: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop",
+      "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=300&h=200&fit=crop"
+    ],
+    currentDay: "02/07",
+    tourOperators: [
+      { name: "MakeMyTrip", logo: "🧳" },
+      { name: "Yatra", logo: "✈️" },
+      { name: "TripAdvisor", logo: "🌟" },
+      { name: "Incredible India", logo: "🇮🇳" },
+      { name: "Thomas Cook", logo: "🗺️" }
+    ]
+  };
+
+  // Tour price includes
+  const tourIncludes = [
+    "Air-conditioned vehicle",
+    "Vehicle pick up from Airport",
+    "Hotel 3 stars",
+    "Transport hotel to Airport",
+    "Transport hotel to Airport",
+    "Train tickets to destinations",
+    "Tour guide for all tours",
+    "Breakfast (4)"
+  ];
+
+  // Destination categories
+  const destinationCategories = [
+    {
+      id: 1,
+      name: "Adventure Trip",
+      count: "24 Destinations",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
+    },
+    {
+      id: 2,
+      name: "Heritage Tour",
+      count: "30 Destinations",
+      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=200&fit=crop"
+    },
+    {
+      id: 3,
+      name: "Spiritual Journey",
+      count: "45 Destinations",
+      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300&h=200&fit=crop"
+    },
+    {
+      id: 4,
+      name: "Beach Holiday",
+      count: "34 Destinations",
+      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300&h=200&fit=crop"
+    },
+    {
+      id: 5,
+      name: "Hill Station",
+      count: "49 Destinations",
+      image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=300&h=200&fit=crop"
+    },
+    {
+      id: 6,
+      name: "Cultural Experience",
+      count: "28 Destinations",
+      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop"
+    }
+  ];
+
+  // Popular destinations
+  const popularDestinations = [
+    {
+      id: 1,
+      name: "Kerala Backwaters",
+      location: "Kerala",
+      duration: "10 Days Trip",
+      price: "₹ 25,000",
+      tag: "Popular",
+      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=200&fit=crop"
+    },
+    {
+      id: 2,
+      name: "Rajasthan Royal Tour",
+      location: "Rajasthan",
+      duration: "10 Days Trip",
+      price: "₹ 35,000",
+      tag: "Heritage",
+      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop"
+    },
+    {
+      id: 3,
+      name: "Goa Beach Paradise",
+      location: "Goa",
+      duration: "10 Days Trip",
+      price: "₹ 20,000",
+      tag: "Beach",
+      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300&h=200&fit=crop"
+    },
+    {
+      id: 4,
+      name: "Himachal Adventure",
+      location: "Himachal Pradesh",
+      duration: "10 Days Trip",
+      price: "₹ 28,000",
+      tag: "Adventure",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
+    },
+    {
+      id: 5,
+      name: "Golden Triangle Classic",
+      location: "Delhi-Agra-Jaipur",
+      duration: "10 Days Trip",
+      price: "₹ 22,000",
+      tag: "Classic",
+      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=200&fit=crop"
+    },
+    {
+      id: 6,
+      name: "South India Temple Tour",
+      location: "Tamil Nadu",
+      duration: "10 Days Trip",
+      price: "₹ 18,000",
+      tag: "Spiritual",
+      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300&h=200&fit=crop"
+    },
+    {
+      id: 7,
+      name: "Kashmir Paradise",
+      location: "Kashmir",
+      duration: "10 Days Trip",
+      price: "₹ 32,000",
+      tag: "Nature",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
+    },
+    {
+      id: 8,
+      name: "Northeast Explorer",
+      location: "Meghalaya",
+      duration: "10 Days Trip",
+      price: "₹ 26,000",
+      tag: "Explorer",
+      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=200&fit=crop"
+    }
+  ];
+
+  // Statistics
+  const statistics = [
+    { number: "50K+", label: "Happy Travelers" },
+    { number: "15+", label: "Years Of Experience" },
+    { number: "200+", label: "Destinations" },
+    { number: "4.9", label: "Overall Rating" }
+  ];
+
+  // Testimonials
+  const testimonials = [
+    {
+      id: 1,
+      name: "Rajesh Kumar",
+      location: "Mumbai",
+      rating: 5,
+      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor pofout incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud poloy lop exercitationLorem minim veniam, quis nostrud poloy lop exercitationLorem",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      id: 2,
+      name: "Priya Sharma",
+      location: "Delhi",
+      rating: 5,
+      comment: "Amazing experience with Bharat Bhraman! The guides were knowledgeable and all arrangements were perfect. Highly recommended for anyone looking for authentic Indian travel experiences.",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      id: 3,
+      name: "Amit Patel",
+      location: "Bangalore",
+      rating: 5,
+      comment: "Excellent service and attention to detail. The Golden Triangle tour was perfectly organized with verified guides and safe accommodations throughout.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+    }
+  ];
+
+  // Photo gallery
+  const photoGallery = [
+    {
+      id: 1,
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
+      title: "Himalayan Trek"
+    },
+    {
+      id: 2,
+      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=300&fit=crop",
+      title: "Backwater Journey"
+    },
+    {
+      id: 3,
+      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=300&fit=crop",
+      title: "Heritage Sites"
+    },
+    {
+      id: 4,
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
+      title: "Mountain Adventure"
+    }
+  ];
+
+  // FAQ data
+  const faqs = [
+    {
+      id: 1,
+      question: "What makes Bharat Bhraman different from other travel companies?",
+      answer: "Bharat Bhraman focuses on verified, safe, and transparent travel experiences. All our guides are government-certified, restaurants are FSSAI-approved, and we provide 24/7 SOS support with real-time location tracking."
+    },
+    {
+      id: 2,
+      question: "Are all your tour guides certified?",
+      answer: "Yes, all our tour guides carry valid government IDs and are certified by the respective state tourism boards. They undergo regular training and background verification for your safety and authentic experience."
+    },
+    {
+      id: 3,
+      question: "How do you ensure food safety during tours?",
+      answer: "We partner only with FSSAI-certified restaurants and food outlets. Our team regularly monitors hygiene standards and we provide real-time hygiene ratings for all dining options."
+    },
+    {
+      id: 4,
+      question: "What is included in your SOS support service?",
+      answer: "Our 24/7 SOS support includes emergency assistance, location tracking, direct police contact, medical emergency support, and immediate travel assistance in case of any unforeseen circumstances."
+    }
+  ];
+
+  // Navigation functions
+  const scrollDestinations = (direction) => {
+    if (destinationsRef.current) {
+      const scrollAmount = 320;
+      destinationsRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollPopularDestinations = (direction) => {
+    if (popularDestinationsRef.current) {
+      const scrollAmount = 320;
+      popularDestinationsRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const nextDestination = () => {
+    setCurrentDestinationIndex((prev) => 
+      prev >= topDestinations.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevDestination = () => {
+    setCurrentDestinationIndex((prev) => 
+      prev <= 0 ? topDestinations.length - 1 : prev - 1
+    );
+  };
+
+  return (
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-black text-white'}`}>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center overflow-hidden -mt-20">
+        {/* Background */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url("${heroDestinations[0].backgroundImage}")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.4)'
+          }}
+        />
+        
+        {/* Green overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 via-green-800/60 to-transparent z-10" />
+        
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center min-h-screen">
+          {/* Left Content */}
+          <div className="flex-1 max-w-2xl">
+            <div className="text-8xl md:text-9xl font-bold text-white/20 mb-4">
+              01
+            </div>
+            <div className="mb-8">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                NEVER STOP
+                <br />
+                <span className="text-green-400">EXPLORING BHARAT</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-300 max-w-xl leading-relaxed">
+                Discover the incredible diversity of India with verified guides, FSSAI-approved restaurants, and transparent pricing. From the majestic Himalayas to pristine beaches.
+              </p>
+            </div>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4 mb-12">
+              <button 
+                onClick={() => navigate('/contact')}
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-300 hover:scale-105"
+              >
+                <span>CONTACT US</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              
+              <button className="bg-green-600/20 hover:bg-green-600/30 border border-green-600 text-white px-8 py-4 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-300 hover:scale-105">
+                <Play className="w-5 h-5" />
+                <span>WATCH PROMO</span>
+              </button>
+            </div>
+            
+            {/* User Avatars and Rating */}
+            <div className="flex items-center space-x-4">
+              <div className="flex -space-x-3">
+                {[1,2,3,4,5,6,7,8].map((i) => (
+                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center text-white font-bold">
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center space-x-2">
+                <Star className="w-6 h-6 text-yellow-400 fill-current" />
+                <span className="text-2xl font-bold">4.9</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Right Content - Video Thumbnails */}
+          <div className="hidden lg:flex flex-col space-y-6 max-w-sm">
+            {featuredDestinations.map((destination, index) => (
+              <div
+                key={destination.id}
+                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                  index === currentVideoIndex ? 'scale-105 ring-4 ring-green-400' : 'hover:scale-102'
+                }`}
+                onClick={() => setCurrentVideoIndex(index)}
+              >
+                <img
+                  src={destination.image}
+                  alt={destination.title}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute top-4 right-4 text-4xl font-bold text-white/50">
+                  {destination.number}
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-white font-bold text-lg mb-1">{destination.title}</h3>
+                  <p className="text-gray-300 text-sm">{destination.subtitle}</p>
+                </div>
+                {destination.hasVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                      <Play className="w-6 h-6 text-white ml-1" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Top Destinations Section */}
+      <section className="py-20 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Top Destinations
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Discover India's most breathtaking destinations with verified guides and authentic experiences. From heritage sites to natural wonders.
+            </p>
+          </div>
+          
+          {/* Destinations Carousel */}
+          <div className="relative">
+            <button
+              onClick={prevDestination}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300"
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+            
+            <button
+              onClick={nextDestination}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300"
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
+            
+            <div className="flex justify-center items-center space-x-8 overflow-hidden">
+              {[-2, -1, 0, 1, 2].map((offset) => {
+                const index = (currentDestinationIndex + offset + topDestinations.length) % topDestinations.length;
+                const destination = topDestinations[index];
+                const isCenter = offset === 0;
+                
+                return (
+                  <div
+                    key={`${destination.id}-${offset}`}
+                    className={`transition-all duration-500 ${
+                      isCenter 
+                        ? 'scale-110 z-10' 
+                        : Math.abs(offset) === 1 
+                          ? 'scale-90 opacity-70' 
+                          : 'scale-75 opacity-40'
+                    }`}
+                  >
+                    <div className="relative w-80 h-96 rounded-3xl overflow-hidden group cursor-pointer">
+                      <img
+                        src={destination.image}
+                        alt={destination.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      
+                      {isCenter && (
+                        <div className="absolute bottom-8 left-6 right-6">
+                          <h3 className="text-2xl font-bold text-white mb-2">{destination.name}</h3>
+                          <p className="text-gray-300 mb-4">{destination.description}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl font-bold text-green-400">{destination.price}</span>
+                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                              Book Now
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Pagination dots */}
+            <div className="flex justify-center space-x-2 mt-8">
+              {topDestinations.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentDestinationIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentDestinationIndex 
+                      ? 'bg-green-400 scale-125' 
+                      : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Excursion Route Section */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Excursion Route
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Experience carefully curated multi-day journeys through India's most iconic destinations with expert guides and premium accommodations.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div>
+              <div className="mb-6">
+                <span className="text-green-400 font-semibold text-lg">{excursionRoute.day}</span>
+                <div className="w-20 h-1 bg-green-400 mt-2 mb-4"></div>
+              </div>
+              
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                {excursionRoute.subtitle}
+              </h3>
+              
+              <p className="text-gray-300 text-lg leading-relaxed mb-8">
+                {excursionRoute.description}
+              </p>
+              
+              <button className="flex items-center space-x-3 text-white hover:text-green-400 transition-colors group">
+                <span className="text-lg font-semibold">See More Details</span>
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+              </button>
+            </div>
+            
+            {/* Right Content - Images */}
+            <div className="relative">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <img
+                    src={excursionRoute.mainImage}
+                    alt="Main destination"
+                    className="w-full h-80 object-cover rounded-2xl"
+                  />
+                </div>
+                <div className="space-y-4 mt-8">
+                  {excursionRoute.galleryImages.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`Gallery ${index + 1}`}
+                      className="w-full h-36 object-cover rounded-2xl"
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Tour Operators Timeline */}
+          <div className="mt-16 flex items-center justify-between">
+            <div className="flex items-center space-x-8">
+              {excursionRoute.tourOperators.map((operator, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-2 ${
+                    index === 2 ? 'bg-green-600' : 'bg-gray-700'
+                  }`}>
+                    {operator.logo}
+                  </div>
+                  <span className={`text-sm font-medium ${
+                    index === 2 ? 'text-green-400' : 'text-gray-400'
+                  }`}>
+                    {operator.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <button className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
+              <span className="text-white font-semibold text-lg">{excursionRoute.currentDay}</span>
+              <button className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tour Price Includes Section */}
+      <section className="py-12 bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-6">Tour Price Includes</h3>
+              <p className="text-gray-400 mb-6">
+                Our comprehensive packages include everything you need for a hassle-free journey through incredible India.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {tourIncludes.map((item, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Destinations Category Section */}
+      <section className="py-20 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Destinations Category
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Choose your perfect Indian adventure from our carefully curated travel categories, each offering unique experiences and memories.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {destinationCategories.map((category) => (
+              <div
+                key={category.id}
+                className="group cursor-pointer"
+                onClick={() => navigate(`/destinations?category=${category.name.toLowerCase().replace(' ', '-')}`)}
+              >
+                <div className="relative rounded-2xl overflow-hidden mb-4 aspect-square">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-green-400 transition-colors">
+                  {category.name}
+                </h3>
+                <p className="text-gray-400 text-sm">{category.count}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Destinations For Your Trip Plans */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Popular Destinations For Your<br />Trip Plans
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Discover the most sought-after destinations in India, carefully selected based on traveler reviews and authentic experiences.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {popularDestinations.map((destination) => (
+              <div
+                key={destination.id}
+                className="group cursor-pointer"
+                onClick={() => navigate(`/destination/${destination.name.toLowerCase().replace(/\s+/g, '-')}`)}
+              >
+                <div className="relative rounded-2xl overflow-hidden mb-4">
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  
+                  {/* Tag */}
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {destination.tag}
+                    </span>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-white font-bold text-lg mb-1">{destination.name}</h3>
+                    <div className="flex items-center text-gray-300 text-sm mb-2">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      <span>{destination.location}</span>
+                    </div>
+                    <div className="flex items-center text-gray-300 text-sm mb-3">
+                      <Calendar className="w-4 h-4 mr-1" />
+                      <span>{destination.duration}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-green-400">{destination.price}</span>
+                      <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors">
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="py-16 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {statistics.slice(0, 4).map((stat, index) => (
+              <div
+                key={index}
+                className={`text-center p-8 rounded-2xl ${
+                  index === 1 ? 'bg-green-600' : 'bg-gray-800'
+                }`}
+              >
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-gray-300 font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Happy Trip Section */}
+          <div className="grid md:grid-cols-2 gap-12 items-center mt-20">
+            <div>
+              <div className="mb-6">
+                <span className="text-green-400 font-semibold text-lg">Happy Trip</span>
+                <div className="w-20 h-1 bg-green-400 mt-2 mb-4"></div>
+              </div>
+              
+              <p className="text-gray-300 text-lg leading-relaxed">
+                Experience the joy of authentic Indian travel with thousands of satisfied customers who have explored incredible destinations with complete safety and transparency. Join our community of happy travelers and create unforgettable memories across beautiful Bharat.
+              </p>
+            </div>
+            
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&h=400&fit=crop"
+                alt="Happy travelers"
+                className="w-full h-80 object-cover rounded-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-gray-900 relative">
+        {/* Background */}
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              F.A.Q
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Find answers to commonly asked questions about traveling with Bharat Bhraman and our verified services.
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={faq.id}
+                className="bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden"
+              >
+                <button
+                  onClick={() => setActiveFAQ(activeFAQ === index ? -1 : index)}
+                  className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors"
+                >
+                  <span className="text-white font-semibold text-lg pr-8">
+                    {faq.question}
+                  </span>
+                  <Plus
+                    className={`w-6 h-6 text-white transition-transform duration-300 ${
+                      activeFAQ === index ? 'rotate-45' : ''
+                    }`}
+                  />
+                </button>
+                
+                {activeFAQ === index && (
+                  <div className="px-8 pb-6">
+                    <p className="text-gray-300 leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+    </div>
+  );
+};
+
+export default NewHomepage;

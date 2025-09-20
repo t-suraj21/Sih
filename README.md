@@ -1,4 +1,4 @@
-# 🌟 Bharat Bhraman
+# 🌟 Yatra - Bharat Bhraman
 
 **India's Trusted Tourism & Hotel Booking Platform**
 

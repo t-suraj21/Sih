@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute, { AdminRoute, VendorRoute, TouristRoute, PublicRoute } from './components/ProtectedRoute';
 import Homepage from './pages/Homepage';
+import NewHomepage from './pages/NewHomepage';
 import Destinations from './pages/Destinations';
 import DestinationDetails from './pages/DestinationDetails';
 import Services from './pages/Services';
@@ -35,13 +37,17 @@ import './App.css';
 
 function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <Router>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <Router>
           <Layout>
             <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Homepage />} />
+              {/* Homepage with new design */}
+              <Route path="/" element={<NewHomepage />} />
+              
+              {/* All other routes */}
+              <Route path="/old-home" element={<Homepage />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destination/:destinationName" element={<DestinationDetails />} />
               <Route path="/services" element={<Services />} />
@@ -145,9 +151,10 @@ function App() {
               } />
             </Routes>
           </Layout>
-        </Router>
-      </AuthProvider>
-    </LanguageProvider>
+          </Router>
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 
