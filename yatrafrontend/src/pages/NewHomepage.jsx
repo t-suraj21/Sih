@@ -806,21 +806,6 @@ const NewHomepage = () => {
                 <span>WATCH PROMO</span>
               </button>
             </div>
-            
-            {/* User Avatars and Rating */}
-            <div className="flex items-center space-x-4">
-              <div className="flex -space-x-3">
-                {[1,2,3,4,5,6,7,8].map((i) => (
-                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center text-white font-bold">
-                    {String.fromCharCode(65 + i)}
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Star className="w-6 h-6 text-yellow-400 fill-current" />
-                <span className="text-2xl font-bold">4.9</span>
-              </div>
-            </div>
           </div>
           
           {/* Right Content - Video Thumbnails */}
@@ -962,7 +947,7 @@ const NewHomepage = () => {
                       <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                         <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
                           <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                          <span className="text-white font-medium">4.9</span>
+                          <span className="text-white font-medium">5</span>
                         </div>
                       </div>
                       
@@ -1109,61 +1094,6 @@ const NewHomepage = () => {
               </div>
             </div>
           </div>
-          
-          {/* Itinerary Timeline */}
-          <div className="mt-16">
-            <h4 className="text-2xl font-bold text-white mb-8 text-center">7-Day Itinerary</h4>
-            <div className="flex flex-wrap justify-center gap-4">
-              {excursionRoute.itinerary.map((day, index) => (
-                <div 
-                  key={index} 
-                  className={`bg-gray-800/70 rounded-xl p-4 min-w-[200px] transition-all duration-300 hover:bg-gray-700/70 ${
-                    index === 1 ? 'ring-2 ring-green-400 bg-green-900/20' : ''
-                  }`}
-                >
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                      index === 1 ? 'bg-green-600 text-white' : 'bg-gray-600 text-white'
-                    }`}>
-                      {day.day}
-                    </span>
-                    <span className="text-green-400 font-semibold">{day.city}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm">{day.activity}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Enhanced Tour Operators */}
-          <div className="mt-16">
-            <h4 className="text-2xl font-bold text-white mb-8 text-center">Trusted Tour Partners</h4>
-            <div className="flex flex-wrap justify-center gap-6">
-              {excursionRoute.tourOperators.map((operator, index) => (
-                <div 
-                  key={index} 
-                  className={`bg-gray-800/70 rounded-xl p-6 text-center transition-all duration-300 hover:bg-gray-700/70 hover:scale-105 min-w-[150px] ${
-                    index === 2 ? 'ring-2 ring-green-400 bg-green-900/20' : ''
-                  }`}
-                >
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-3 mx-auto ${
-                    index === 2 ? 'bg-green-600' : 'bg-gray-700'
-                  }`}>
-                    {operator.logo}
-                  </div>
-                  <h5 className={`font-semibold mb-1 ${
-                    index === 2 ? 'text-green-400' : 'text-white'
-                  }`}>
-                    {operator.name}
-                  </h5>
-                  <div className="flex items-center justify-center space-x-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-gray-400 text-sm">{operator.rating}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1230,61 +1160,173 @@ const NewHomepage = () => {
         </div>
       </section>
 
-      {/* Popular Destinations For Your Trip Plans */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Popular Destinations For Your<br />Trip Plans
+      {/* Why Choose India Section */}
+      <section className="py-24 bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-96 h-96 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-400/20 to-emerald-500/20 backdrop-blur-sm border border-green-400/30 rounded-full px-6 py-3 mb-8">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-400 font-semibold text-sm tracking-wider uppercase">Incredible India</span>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8">
+              <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                Why Choose India for
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Your Next Adventure?
+              </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Discover the most sought-after destinations in India, carefully selected based on traveler reviews and authentic experiences.
+            
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Discover a land where ancient traditions meet modern wonders, where every journey tells a story, 
+              and where unforgettable experiences await at every turn.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularDestinations.map((destination) => (
-              <div
-                key={destination.id}
-                className="group cursor-pointer"
-                onClick={() => navigate(`/destination/${destination.name.toLowerCase().replace(/\s+/g, '-')}`)}
-              >
-                <div className="relative rounded-2xl overflow-hidden mb-4">
-                  <img
-                    src={destination.image}
-                    alt={destination.name}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+          {/* Interactive Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {[
+              {
+                icon: "🏛️",
+                title: "5000+ Years of History",
+                description: "Explore UNESCO World Heritage sites, ancient temples, and architectural marvels that span millennia",
+                highlight: "29 UNESCO Sites"
+              },
+              {
+                icon: "🍛",
+                title: "Culinary Paradise",
+                description: "Savor authentic flavors from 28 states, each with unique spices, recipes, and culinary traditions",
+                highlight: "1000+ Dishes"
+              },
+              {
+                icon: "🏔️",
+                title: "Diverse Landscapes",
+                description: "From Himalayan peaks to tropical beaches, deserts to rainforests - all in one incredible country",
+                highlight: "7 Climate Zones"
+              },
+              {
+                icon: "🎭",
+                title: "Rich Cultural Heritage",
+                description: "Experience vibrant festivals, classical arts, traditional crafts, and warm hospitality",
+                highlight: "22 Languages"
+              },
+              {
+                icon: "🐅",
+                title: "Wildlife & Nature",
+                description: "Home to tigers, elephants, and exotic species across 104 national parks and sanctuaries",
+                highlight: "45,000+ Species"
+              },
+              {
+                icon: "💰",
+                title: "Incredible Value",
+                description: "Luxury experiences at affordable prices - get more for your travel budget than anywhere else",
+                highlight: "Best ROI Destination"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="group relative">
+                {/* Glow Effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-green-400/20 via-emerald-500/20 to-teal-400/20 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                
+                <div className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-green-400/30 transition-all duration-300 hover:scale-105">
+                  {/* Icon */}
+                  <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
                   
-                  {/* Tag */}
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {destination.tag}
-                    </span>
+                  {/* Highlight Badge */}
+                  <div className="inline-block bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold mb-4 border border-green-400/30">
+                    {feature.highlight}
                   </div>
                   
                   {/* Content */}
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white font-bold text-lg mb-1">{destination.name}</h3>
-                    <div className="flex items-center text-gray-300 text-sm mb-2">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      <span>{destination.location}</span>
-                    </div>
-                    <div className="flex items-center text-gray-300 text-sm mb-3">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      <span>{destination.duration}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-green-400">{destination.price}</span>
-                      <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors">
-                        Book Now
-                      </button>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Hover Arrow */}
+                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Impressive Statistics */}
+          <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-sm rounded-3xl p-12 border border-green-400/20">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                India by the Numbers
+              </h3>
+              <p className="text-green-400 text-lg font-semibold">
+                Incredible facts that make India extraordinary
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { number: "1.4B+", label: "People", description: "Diverse cultures united" },
+                { number: "28", label: "States", description: "Each unique & beautiful" },
+                { number: "40+", label: "Languages", description: "Rich linguistic heritage" },
+                { number: "#1", label: "Yoga Origin", description: "Birthplace of wellness" }
+              ].map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    {stat.number}
+                  </div>
+                  <div className="text-white font-bold text-lg mb-1 group-hover:text-green-400 transition-colors duration-300">
+                    {stat.label}
+                  </div>
+                  <div className="text-gray-400 text-sm">
+                    {stat.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center mt-16">
+            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-12 border border-green-400/20">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Experience Incredible India?
+              </h3>
+              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                Join millions of travelers who have discovered the magic of India. 
+                Your extraordinary journey begins with just one click.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
+                  onClick={() => navigate('/destinations')}
+                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 hover:from-green-500 hover:via-emerald-500 hover:to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-green-500/25 border border-green-400/20"
+                >
+                  Explore Destinations
+                </button>
+                <button 
+                  onClick={() => navigate('/contact')}
+                  className="bg-transparent hover:bg-green-600/20 border-2 border-green-600 hover:border-green-500 text-green-400 hover:text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105"
+                >
+                  Plan My Trip
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
