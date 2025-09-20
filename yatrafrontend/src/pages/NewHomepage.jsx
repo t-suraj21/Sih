@@ -30,8 +30,12 @@ const NewHomepage = () => {
   const [currentDestinationIndex, setCurrentDestinationIndex] = useState(2); // Center item
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeFAQ, setActiveFAQ] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollStartX, setScrollStartX] = useState(0);
+  const [scrollStartY, setScrollStartY] = useState(0);
   const destinationsRef = useRef(null);
   const popularDestinationsRef = useRef(null);
+  const topDestinationsRef = useRef(null);
 
   // Hero video destinations
   const heroDestinations = [
@@ -388,6 +392,51 @@ const NewHomepage = () => {
     );
   };
 
+  // Cursor-based scrolling functions
+  const handleMouseDown = (e) => {
+    setIsScrolling(true);
+    setScrollStartX(e.clientX);
+    setScrollStartY(e.clientY);
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isScrolling || !topDestinationsRef.current) return;
+    
+    const deltaX = e.clientX - scrollStartX;
+    const deltaY = e.clientY - scrollStartY;
+    
+    // Only scroll horizontally if horizontal movement is greater
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      const scrollAmount = deltaX * 0.5; // Adjust sensitivity
+      topDestinationsRef.current.scrollLeft -= scrollAmount;
+      setScrollStartX(e.clientX);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsScrolling(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsScrolling(false);
+  };
+
+  // Add event listeners for cursor scrolling
+  useEffect(() => {
+    if (isScrolling) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [isScrolling, scrollStartX, scrollStartY]);
+
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-black text-white'}`}>
       {/* Hero Section */}
@@ -408,7 +457,7 @@ const NewHomepage = () => {
         
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center min-h-screen">
           {/* Left Content */}
-          <div className="flex-1 max-w-2xl">
+          <div className="flex-1 max-w-2xl lg:pr-16">
             <div className="text-8xl md:text-9xl font-bold text-white/20 mb-4">
               01
             </div>
@@ -456,7 +505,7 @@ const NewHomepage = () => {
           </div>
           
           {/* Right Content - Video Thumbnails */}
-          <div className="hidden lg:flex flex-col space-y-6 max-w-sm">
+          <div className="hidden lg:flex flex-col space-y-6 max-w-sm ml-8">
             {featuredDestinations.map((destination, index) => (
               <div
                 key={destination.id}
@@ -519,7 +568,14 @@ const NewHomepage = () => {
               <ChevronRight className="w-6 h-6 text-white" />
             </button>
             
-            <div className="flex justify-center items-center space-x-8 overflow-hidden">
+            <div 
+              ref={topDestinationsRef}
+              className={`flex justify-center items-center space-x-8 overflow-hidden ${
+                isScrolling ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
+              onMouseDown={handleMouseDown}
+              style={{ userSelect: 'none' }}
+            >
               {[-2, -1, 0, 1, 2].map((offset) => {
                 const index = (currentDestinationIndex + offset + topDestinations.length) % topDestinations.length;
                 const destination = topDestinations[index];
@@ -537,25 +593,58 @@ const NewHomepage = () => {
                     }`}
                   >
                     <div className="relative w-80 h-96 rounded-3xl overflow-hidden group cursor-pointer">
+                      {/* Background Image */}
                       <img
                         src={destination.image}
                         alt={destination.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        draggable={false}
                       />
+                      
+                      {/* Gradient Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                       
-                      {isCenter && (
-                        <div className="absolute bottom-8 left-6 right-6">
-                          <h3 className="text-2xl font-bold text-white mb-2">{destination.name}</h3>
-                          <p className="text-gray-300 mb-4">{destination.description}</p>
+                      {/* Hover Effect - Glow Outside */}
+                      <div className="absolute -inset-4 bg-gradient-to-r from-green-400/20 via-green-500/20 to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl -z-10" />
+                      
+                      {/* Content Overlay */}
+                      <div className="absolute inset-0 flex flex-col justify-end p-6">
+                        {/* Destination Info */}
+                        <div className="text-white">
+                          <h3 className="text-2xl font-bold mb-2 group-hover:text-green-400 transition-colors duration-300">
+                            {destination.name}
+                          </h3>
+                          <p className="text-gray-300 mb-4 text-sm leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+                            {destination.description}
+                          </p>
+                          
+                          {/* Price and Button */}
                           <div className="flex items-center justify-between">
-                            <span className="text-2xl font-bold text-green-400">{destination.price}</span>
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                            <span className="text-2xl font-bold text-green-400 group-hover:text-green-300 transition-colors duration-300">
+                              {destination.price}
+                            </span>
+                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-green-500/25">
                               Book Now
                             </button>
                           </div>
                         </div>
-                      )}
+                        
+                        {/* Additional Hover Elements */}
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          <div className="flex items-center space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-white text-sm font-medium">4.9</span>
+                          </div>
+                        </div>
+                        
+                        {/* Location Badge */}
+                        <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                          <div className="flex items-center space-x-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+                            <MapPin className="w-4 h-4 text-green-400" />
+                            <span className="text-white text-sm font-medium">India</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
