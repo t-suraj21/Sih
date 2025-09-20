@@ -374,8 +374,8 @@ const NewHomepage = () => {
   // Navigation items for navbar
   const navigationItems = [
     { name: 'HOME', href: '/' },
-    { name: 'TOURS', href: '/destinations' },
-    { name: 'CATEGORY', href: '/services' },
+    { name: 'Destination', href: '/destinations' },
+    { name: 'Service', href: '/services' },
     { name: 'ABOUT US', href: '/about' },
     { name: 'CONTACT', href: '/contact' }
   ];
