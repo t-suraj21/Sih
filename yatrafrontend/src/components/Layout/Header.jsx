@@ -3,11 +3,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Menu, X, Globe, AlertTriangle, Home, MapPin, Hotel, Leaf, User, HelpCircle, Info,
   ChevronDown, Search, Bell, Heart, ShoppingBag, UserCircle, LogOut, Settings,
-  Sparkles, Zap, Star, Shield, Award, Users
+  Sparkles, Zap, Star, Shield, Award, Users, Moon, Sun, Palette
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,6 +22,7 @@ const Header = () => {
   const { language, changeLanguage } = useLanguage();
   const { t } = useTranslation();
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
@@ -162,8 +164,12 @@ const Header = () => {
       {/* Main Header */}
       <div className={`backdrop-blur-xl transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/90 shadow-xl border-b border-gray-200/50' 
-          : 'bg-gradient-to-r from-blue-600/95 via-purple-600/95 to-indigo-600/95 shadow-2xl'
+          ? isDark
+            ? 'bg-slate-900/95 shadow-xl border-b border-slate-700/50'
+            : 'bg-white/95 shadow-xl border-b border-gray-200/50'
+          : isDark
+            ? 'bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-700/95 shadow-2xl'
+            : 'bg-gradient-to-r from-blue-600/95 via-purple-600/95 to-indigo-600/95 shadow-2xl'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
@@ -172,19 +178,33 @@ const Header = () => {
               <Link to="/" className="flex items-center space-x-3 group">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 ${
                   isScrolled 
-                    ? 'bg-gradient-to-br from-blue-500 to-purple-600' 
-                    : 'bg-white/20 backdrop-blur-sm'
+                    ? isDark
+                      ? 'bg-gradient-to-br from-blue-500 to-purple-600'
+                      : 'bg-gradient-to-br from-blue-500 to-purple-600'
+                    : isDark
+                      ? 'bg-slate-700/50 backdrop-blur-sm border border-slate-600/50'
+                      : 'bg-white/20 backdrop-blur-sm'
                 }`}>
                   <Sparkles className={`w-6 h-6 ${isScrolled ? 'text-white' : 'text-white'}`} />
                 </div>
                 <div className="hidden sm:block">
                   <div className={`text-2xl font-bold transition-colors duration-300 group-hover:scale-105 ${
-                    isScrolled ? 'text-gray-800 group-hover:text-blue-700' : 'text-white'
+                    isScrolled 
+                      ? isDark 
+                        ? 'text-white group-hover:text-blue-400'
+                        : 'text-gray-800 group-hover:text-blue-700'
+                      : 'text-white'
                   }`}>
                     BB
                   </div>
                   <div className={`text-xs font-semibold tracking-wide transition-colors ${
-                    isScrolled ? 'text-blue-600' : 'text-blue-100'
+                    isScrolled 
+                      ? isDark
+                        ? 'text-blue-400'
+                        : 'text-blue-600'
+                      : isDark
+                        ? 'text-blue-300'
+                        : 'text-blue-100'
                   }`}>
                     BHARAT BHRAMAN
                   </div>
@@ -201,11 +221,19 @@ const Header = () => {
                     className={`group flex items-center space-x-2 px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105 ${
                       isActiveTab(item.href)
                         ? isScrolled
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-white/20 text-white shadow-lg backdrop-blur-sm'
+                          ? isDark
+                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                            : 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                          : isDark
+                            ? 'bg-slate-700/50 text-white shadow-lg backdrop-blur-sm border border-slate-600/50'
+                            : 'bg-white/20 text-white shadow-lg backdrop-blur-sm'
                         : isScrolled
-                        ? 'text-gray-700 hover:bg-gray-100 hover:text-blue-700'
-                        : 'text-white/90 hover:bg-white/10 hover:text-white'
+                        ? isDark
+                          ? 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-blue-700'
+                        : isDark
+                          ? 'text-slate-300 hover:bg-slate-700/30 hover:text-white'
+                          : 'text-white/90 hover:bg-white/10 hover:text-white'
                     }`}
                   >
                     <span className="transition-transform duration-300 group-hover:rotate-12">
@@ -224,8 +252,12 @@ const Header = () => {
                       </div>
                       <div className={`text-xs transition-colors ${
                         isActiveTab(item.href)
-                          ? isScrolled ? 'text-blue-100' : 'text-white/80'
-                          : isScrolled ? 'text-gray-500 group-hover:text-blue-600' : 'text-white/70 group-hover:text-white/90'
+                          ? isScrolled 
+                            ? isDark ? 'text-blue-200' : 'text-blue-100'
+                            : isDark ? 'text-slate-300' : 'text-white/80'
+                          : isScrolled 
+                            ? isDark ? 'text-slate-400 group-hover:text-slate-300' : 'text-gray-500 group-hover:text-blue-600'
+                            : isDark ? 'text-slate-400 group-hover:text-slate-300' : 'text-white/70 group-hover:text-white/90'
                       }`}>
                         {item.description}
                       </div>
@@ -235,7 +267,11 @@ const Header = () => {
                   {/* Hover Effect */}
                   <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0.5 transition-all duration-300 ${
                     isActiveTab(item.href) || 'group-hover:w-8'
-                  } ${isScrolled ? 'bg-blue-600' : 'bg-white'} rounded-full`} />
+                  } ${
+                    isScrolled 
+                      ? isDark ? 'bg-blue-400' : 'bg-blue-600'
+                      : isDark ? 'bg-slate-300' : 'bg-white'
+                  } rounded-full`} />
                 </div>
               ))}
             </nav>
@@ -247,11 +283,39 @@ const Header = () => {
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-110 ${
                   isScrolled 
-                    ? 'text-gray-600 hover:bg-gray-100 hover:text-blue-600' 
-                    : 'text-white hover:bg-white/10'
+                    ? isDark
+                      ? 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+                    : isDark
+                      ? 'text-slate-300 hover:bg-slate-700/30'
+                      : 'text-white hover:bg-white/10'
                 }`}
               >
                 <Search className="w-5 h-5" />
+              </button>
+
+              {/* Theme Toggle Button */}
+              <button
+                onClick={toggleTheme}
+                className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-110 group ${
+                  isScrolled 
+                    ? isDark
+                      ? 'text-slate-300 hover:bg-slate-800/50 hover:text-yellow-400'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-purple-600'
+                    : isDark
+                      ? 'text-slate-300 hover:bg-slate-700/30 hover:text-yellow-400'
+                      : 'text-white hover:bg-white/10 hover:text-yellow-300'
+                }`}
+                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                <div className="relative w-5 h-5">
+                  <Sun className={`absolute inset-0 w-5 h-5 transition-all duration-300 ${
+                    isDark ? 'opacity-0 rotate-90 scale-75' : 'opacity-100 rotate-0 scale-100'
+                  }`} />
+                  <Moon className={`absolute inset-0 w-5 h-5 transition-all duration-300 ${
+                    isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-75'
+                  }`} />
+                </div>
               </button>
 
               {/* SOS Button */}
@@ -272,8 +336,12 @@ const Header = () => {
                     onChange={(e) => changeLanguage(e.target.value)}
                     className={`appearance-none border rounded-xl px-4 py-2.5 pr-8 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 hover:scale-105 transition-all duration-300 shadow-sm ${
                       isScrolled 
-                        ? 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50' 
-                        : 'bg-white/20 border-white/30 text-white backdrop-blur-sm'
+                        ? isDark
+                          ? 'bg-slate-800 border-slate-600 text-slate-200 hover:bg-slate-700'
+                          : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                        : isDark
+                          ? 'bg-slate-700/50 border-slate-600/50 text-slate-200 backdrop-blur-sm'
+                          : 'bg-white/20 border-white/30 text-white backdrop-blur-sm'
                     }`}
                   >
                     {languages.map((lang) => (
@@ -283,7 +351,9 @@ const Header = () => {
                     ))}
                   </select>
                   <Globe className={`absolute right-2 top-3 w-4 h-4 pointer-events-none ${
-                    isScrolled ? 'text-gray-600' : 'text-white'
+                    isScrolled 
+                      ? isDark ? 'text-slate-400' : 'text-gray-600'
+                      : isDark ? 'text-slate-300' : 'text-white'
                   }`} />
                 </div>
 
@@ -294,8 +364,12 @@ const Header = () => {
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       className={`flex items-center space-x-2 p-2 rounded-xl transition-all duration-300 hover:scale-105 ${
                         isScrolled 
-                          ? 'text-gray-700 hover:bg-gray-100' 
-                          : 'text-white hover:bg-white/10'
+                          ? isDark
+                            ? 'text-slate-300 hover:bg-slate-800/50'
+                            : 'text-gray-700 hover:bg-gray-100'
+                          : isDark
+                            ? 'text-slate-300 hover:bg-slate-700/30'
+                            : 'text-white hover:bg-white/10'
                       }`}
                     >
                       <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -311,17 +385,33 @@ const Header = () => {
 
                     {/* User Dropdown */}
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-200 py-2 animate-in slide-in-from-top-2 duration-300">
-                        <div className="px-4 py-3 border-b border-gray-100">
-                          <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                          <p className="text-sm text-gray-500">{user?.email}</p>
-                          <p className="text-xs text-blue-600 capitalize">{user?.role}</p>
+                      <div className={`absolute right-0 mt-2 w-56 rounded-2xl shadow-2xl border py-2 animate-in slide-in-from-top-2 duration-300 ${
+                        isDark 
+                          ? 'bg-slate-800 border-slate-700'
+                          : 'bg-white border-gray-200'
+                      }`}>
+                        <div className={`px-4 py-3 border-b ${
+                          isDark ? 'border-slate-700' : 'border-gray-100'
+                        }`}>
+                          <p className={`text-sm font-medium ${
+                            isDark ? 'text-slate-100' : 'text-gray-900'
+                          }`}>{user?.name}</p>
+                          <p className={`text-sm ${
+                            isDark ? 'text-slate-400' : 'text-gray-500'
+                          }`}>{user?.email}</p>
+                          <p className={`text-xs capitalize ${
+                            isDark ? 'text-blue-400' : 'text-blue-600'
+                          }`}>{user?.role}</p>
                         </div>
                         <div className="py-2">
                           {/* Dashboard Link - Role-based */}
                           <Link
                             to={user?.role === 'admin' ? '/dashboard/admin' : user?.role === 'vendor' ? '/dashboard/vendor' : '/dashboard/user'}
-                            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             <User className="w-4 h-4" />
@@ -337,7 +427,11 @@ const Header = () => {
                             <>
                               <Link
                                 to="/vendor/services"
-                                className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                                 onClick={() => setIsUserMenuOpen(false)}
                               >
                                 <Award className="w-4 h-4" />
@@ -345,7 +439,11 @@ const Header = () => {
                               </Link>
                               <Link
                                 to="/vendor/bookings"
-                                className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                                 onClick={() => setIsUserMenuOpen(false)}
                               >
                                 <Bell className="w-4 h-4" />
@@ -358,7 +456,11 @@ const Header = () => {
                             <>
                               <Link
                                 to="/admin/users"
-                                className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                                 onClick={() => setIsUserMenuOpen(false)}
                               >
                                 <Users className="w-4 h-4" />
@@ -366,7 +468,11 @@ const Header = () => {
                               </Link>
                               <Link
                                 to="/admin/content"
-                                className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                                 onClick={() => setIsUserMenuOpen(false)}
                               >
                                 <Settings className="w-4 h-4" />
@@ -378,7 +484,11 @@ const Header = () => {
                           {/* Common Links */}
                           <Link
                             to="/profile"
-                            className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                              isDark 
+                                ? 'text-slate-300 hover:bg-slate-700/50'
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             <Settings className="w-4 h-4" />
@@ -389,7 +499,11 @@ const Header = () => {
 
                           <button
                             onClick={handleLogout}
-                            className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            className={`flex items-center space-x-3 w-full px-4 py-2 text-sm transition-colors ${
+                              isDark
+                                ? 'text-red-400 hover:bg-red-900/20'
+                                : 'text-red-600 hover:bg-red-50'
+                            }`}
                           >
                             <LogOut className="w-4 h-4" />
                             <span>Logout</span>
@@ -404,8 +518,12 @@ const Header = () => {
                       to="/login" 
                       className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 ${
                         isScrolled 
-                          ? 'text-gray-700 hover:bg-gray-100 hover:text-blue-700' 
-                          : 'text-white hover:bg-white/10'
+                          ? isDark
+                            ? 'text-slate-300 hover:bg-slate-800/50 hover:text-blue-400'
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-blue-700'
+                          : isDark
+                            ? 'text-slate-300 hover:bg-slate-700/30'
+                            : 'text-white hover:bg-white/10'
                       }`}
                     >
                       Login
@@ -414,8 +532,10 @@ const Header = () => {
                       to="/signup" 
                       className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg ${
                         isScrolled 
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl' 
-                          : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30'
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl hover:shadow-blue-500/25'
+                          : isDark
+                            ? 'bg-slate-700/50 backdrop-blur-sm text-white hover:bg-slate-600/50 border border-slate-600/50'
+                            : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30'
                       }`}
                     >
                       Sign Up
@@ -429,8 +549,12 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-110 lg:hidden ${
                   isScrolled 
-                    ? 'text-gray-600 hover:bg-gray-100' 
-                    : 'text-white hover:bg-white/10'
+                    ? isDark
+                      ? 'text-slate-300 hover:bg-slate-800/50'
+                      : 'text-gray-600 hover:bg-gray-100'
+                    : isDark
+                      ? 'text-slate-300 hover:bg-slate-700/30'
+                      : 'text-white hover:bg-white/10'
                 }`}
               >
                 <div className="relative w-6 h-6">
@@ -456,8 +580,12 @@ const Header = () => {
                   placeholder="Search destinations, hotels, attractions..."
                   className={`w-full px-4 py-3 pr-12 rounded-2xl text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg ${
                     isScrolled 
-                      ? 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500' 
-                      : 'bg-white/90 border border-white/30 text-gray-900 placeholder-gray-600 backdrop-blur-sm'
+                      ? isDark
+                        ? 'bg-slate-800 border border-slate-600 text-slate-100 placeholder-slate-400'
+                        : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500'
+                      : isDark
+                        ? 'bg-slate-800/90 border border-slate-600/50 text-slate-100 placeholder-slate-400 backdrop-blur-sm'
+                        : 'bg-white/90 border border-white/30 text-gray-900 placeholder-gray-600 backdrop-blur-sm'
                   }`}
                   autoFocus
                 />
@@ -471,7 +599,9 @@ const Header = () => {
               
               {/* Quick Search Suggestions */}
               <div className="mt-3 space-y-2">
-                <div className="text-xs font-semibold text-gray-600 mb-2">Popular Searches:</div>
+                <div className={`text-xs font-semibold mb-2 ${
+                  isDark ? 'text-slate-400' : 'text-gray-600'
+                }`}>Popular Searches:</div>
                 <div className="flex flex-wrap gap-2">
                   {['Taj Mahal', 'Goa Beaches', 'Kerala Backwaters', 'Rajasthan Palace', 'Himalayas', 'Golden Triangle'].map((suggestion, index) => (
                     <button
@@ -479,8 +609,12 @@ const Header = () => {
                       onClick={() => handleQuickSearch(suggestion)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${
                         isScrolled 
-                          ? 'bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700' 
-                          : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
+                          ? isDark
+                            ? 'bg-slate-700 text-slate-300 hover:bg-blue-600/20 hover:text-blue-400'
+                            : 'bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700'
+                          : isDark
+                            ? 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 backdrop-blur-sm'
+                            : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
                       }`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
@@ -504,17 +638,27 @@ const Header = () => {
           />
 
           {/* Menu */}
-          <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-all duration-500 ease-out animate-in slide-in-from-right-2">
+          <div className={`fixed top-0 right-0 h-full w-80 shadow-2xl z-50 transform transition-all duration-500 ease-out animate-in slide-in-from-right-2 ${
+            isDark ? 'bg-slate-900' : 'bg-white'
+          }`}>
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              <div className={`flex items-center justify-between p-6 border-b text-white ${
+                isDark 
+                  ? 'border-slate-700 bg-gradient-to-r from-slate-800 to-slate-700'
+                  : 'border-gray-100 bg-gradient-to-r from-blue-600 to-purple-600'
+              }`}>
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <div className={`w-10 h-10 backdrop-blur-sm rounded-xl flex items-center justify-center ${
+                    isDark ? 'bg-slate-700/50' : 'bg-white/20'
+                  }`}>
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <div className="text-lg font-bold">Yatra Menu</div>
-                    <div className="text-xs text-blue-100">Explore India</div>
+                    <div className={`text-xs ${
+                      isDark ? 'text-slate-300' : 'text-blue-100'
+                    }`}>Explore India</div>
                   </div>
                 </div>
                 <button 
@@ -526,7 +670,9 @@ const Header = () => {
               </div>
 
               {/* Primary Navigation */}
-              <div className="px-6 py-4 border-b border-gray-100">
+              <div className={`px-6 py-4 border-b ${
+                isDark ? 'border-slate-700' : 'border-gray-100'
+              }`}>
                 <div className="space-y-2">
                   {primaryNavigation.map((item, index) => (
                     <Link
@@ -534,8 +680,10 @@ const Header = () => {
                       to={item.href}
                       className={`flex items-center space-x-3 p-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                         isActiveTab(item.href) 
-                          ? 'bg-blue-600 text-white shadow-lg' 
-                          : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                          ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25'
+                          : isDark
+                            ? 'text-slate-300 hover:bg-slate-800/50 hover:text-blue-400'
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                       style={{ animationDelay: `${index * 100}ms` }}
@@ -554,7 +702,11 @@ const Header = () => {
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
+                        <div className={`text-xs mt-0.5 ${
+                          isActiveTab(item.href)
+                            ? 'text-blue-200'
+                            : isDark ? 'text-slate-400' : 'text-gray-500'
+                        }`}>{item.description}</div>
                       </div>
                     </Link>
                   ))}
@@ -570,8 +722,12 @@ const Header = () => {
                       to={item.href}
                       className={`flex items-center space-x-3 p-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                         isActiveTab(item.href) 
-                          ? 'bg-gray-100 text-blue-600' 
-                          : 'text-gray-700 hover:bg-gray-50'
+                          ? isDark
+                            ? 'bg-slate-800 text-blue-400'
+                            : 'bg-gray-100 text-blue-600'
+                          : isDark
+                            ? 'text-slate-400 hover:bg-slate-800/30 hover:text-slate-300'
+                            : 'text-gray-700 hover:bg-gray-50'
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                       style={{ animationDelay: `${(index + 4) * 100}ms` }}
@@ -586,22 +742,38 @@ const Header = () => {
               </div>
 
               {/* Footer */}
-              <div className="p-6 border-t border-gray-100 bg-gray-50">
+              <div className={`p-6 border-t ${
+                isDark 
+                  ? 'border-slate-700 bg-slate-800/50'
+                  : 'border-gray-100 bg-gray-50'
+              }`}>
                 {isAuthenticated ? (
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 p-3 bg-white rounded-xl">
+                    <div className={`flex items-center space-x-3 p-3 rounded-xl ${
+                      isDark ? 'bg-slate-800' : 'bg-white'
+                    }`}>
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                         <UserCircle className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900">{user?.name}</div>
-                        <div className="text-xs text-gray-500">{user?.email}</div>
-                        <div className="text-xs text-blue-600 capitalize">{user?.role}</div>
+                        <div className={`font-semibold ${
+                          isDark ? 'text-slate-100' : 'text-gray-900'
+                        }`}>{user?.name}</div>
+                        <div className={`text-xs ${
+                          isDark ? 'text-slate-400' : 'text-gray-500'
+                        }`}>{user?.email}</div>
+                        <div className={`text-xs capitalize ${
+                          isDark ? 'text-blue-400' : 'text-blue-600'
+                        }`}>{user?.role}</div>
                       </div>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                      className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-colors ${
+                        isDark 
+                          ? 'text-red-400 hover:bg-red-900/20'
+                          : 'text-red-600 hover:bg-red-50'
+                      }`}
                     >
                       <LogOut className="w-5 h-5" />
                       <span>Logout</span>
@@ -611,7 +783,11 @@ const Header = () => {
                   <div className="space-y-3">
                     <Link
                       to="/login"
-                      className="w-full flex items-center justify-center space-x-2 p-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-colors"
+                      className={`w-full flex items-center justify-center space-x-2 p-3 rounded-xl transition-colors ${
+                        isDark 
+                          ? 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                          : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <User className="w-5 h-5" />
@@ -619,7 +795,7 @@ const Header = () => {
                     </Link>
                     <Link
                       to="/signup"
-                      className="w-full flex items-center justify-center space-x-2 p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl transition-all duration-300 hover:scale-105"
+                      className="w-full flex items-center justify-center space-x-2 p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <Star className="w-5 h-5" />

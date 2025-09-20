@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Shield, Award, Leaf, Phone, Star, CheckCircle, ChevronLeft, ChevronRight, Camera, Mountain, Waves, TreePine, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Homepage = () => {
-  const [isDark, setIsDark] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const [searchData, setSearchData] = useState({
     destination: '',
     date: '',
@@ -330,8 +333,33 @@ const Homepage = () => {
     }
   };
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
+  // Handle explore destination
+  const handleExploreDestination = (destinationName) => {
+    // Convert destination name to URL-friendly format
+    const urlName = destinationName.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/destination/${urlName}`);
+  };
+
+  // Handle view all destinations
+  const handleViewAllDestinations = () => {
+    navigate('/destinations');
+  };
+
+  // Handle other button actions
+  const handlePlanTrip = () => {
+    navigate('/destinations');
+  };
+
+  const handleExploreDestinationsButton = () => {
+    navigate('/destinations');
+  };
+
+  const handleGetStarted = () => {
+    navigate('/signup');
+  };
+
+  const handleBrowseServices = () => {
+    navigate('/services');
   };
 
   return (
@@ -428,18 +456,24 @@ const Homepage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center ${
-                isDark
-                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                  : 'bg-green-600 hover:bg-green-700 text-white'
-              }`}>
+              <button 
+                onClick={handlePlanTrip}
+                className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center ${
+                  isDark
+                    ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
+              >
                 Plan My Trip
               </button>
-              <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center border-2 ${
-                isDark
-                  ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
-                  : 'border-white hover:bg-white hover:text-blue-900 text-white'
-              }`}>
+              <button 
+                onClick={handleExploreDestinationsButton}
+                className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center border-2 ${
+                  isDark
+                    ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
+                    : 'border-white hover:bg-white hover:text-blue-900 text-white'
+                }`}
+              >
                 Explore Destinations
               </button>
             </div>
@@ -603,9 +637,10 @@ const Homepage = () => {
             {featuredDestinations.map((destination) => (
               <div
                 key={destination.id}
-                className={`flex-shrink-0 w-80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group ${
+                className={`flex-shrink-0 w-80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group cursor-pointer ${
                   isDark ? 'bg-gray-800' : 'bg-white'
                 }`}
+                onClick={() => handleExploreDestination(destination.name)}
               >
                 <div className="relative">
                   <img
@@ -713,7 +748,13 @@ const Homepage = () => {
                         isDark ? 'text-gray-100' : 'text-gray-900'
                       }`}>{destination.startingPrice}</p>
                     </div>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleExploreDestination(destination.name);
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1 hover:scale-105 transform duration-200"
+                    >
                       <span>Explore</span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -727,7 +768,10 @@ const Homepage = () => {
         {/* View All Button */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mt-12">
-            <button className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl space-x-2">
+            <button 
+              onClick={handleViewAllDestinations}
+              className="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl space-x-2 hover:scale-105 transform"
+            >
               <span>View All Destinations</span>
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -840,18 +884,24 @@ const Homepage = () => {
             Join thousands of travelers who trust us for their Indian adventures
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors ${
-              isDark
-                ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                : 'bg-green-600 hover:bg-green-700 text-white'
-            }`}>
+            <button 
+              onClick={handleGetStarted}
+              className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors hover:scale-105 transform duration-200 ${
+                isDark
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+              }`}
+            >
               Get Started Today
             </button>
-            <button className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors border-2 ${
-              isDark
-                ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
-                : 'border-white hover:bg-white hover:text-blue-600 text-white'
-            }`}>
+            <button 
+              onClick={handleBrowseServices}
+              className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors border-2 hover:scale-105 transform duration-200 ${
+                isDark
+                  ? 'border-gray-400 hover:bg-gray-400 hover:text-gray-900 text-gray-300'
+                  : 'border-white hover:bg-white hover:text-blue-600 text-white'
+              }`}
+            >
               Browse Services
             </button>
           </div>
