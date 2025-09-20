@@ -57,7 +57,7 @@ const AboutUs = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">About Yatra</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">About Bharat Bhraman</h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Transforming Indian tourism through trust, transparency, and technology
           </p>
@@ -180,7 +180,7 @@ const AboutUs = () => {
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Government Partnership</h2>
             <p className="text-xl text-blue-200 mb-6">
-              Yatra is an official initiative backed by the Ministry of Tourism, Government of India, 
+              Bharat Bhraman is an official initiative backed by the Ministry of Tourism, Government of India, 
               working in collaboration with state tourism boards and regulatory authorities.
             </p>
             <div className="space-y-4">
