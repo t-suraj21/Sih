@@ -13,6 +13,9 @@ const Homepage = () => {
   });
   
   const scrollRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollStartX, setScrollStartX] = useState(0);
+  const [scrollLeftPosition, setScrollLeftPosition] = useState(0);
   
   // Hero images for rotation - memoized to prevent re-creation on every render
   const heroImages = useMemo(() => [
@@ -333,6 +336,39 @@ const Homepage = () => {
  }
  };
 
+ // Cursor-based scrolling functions
+ const handleMouseDown = (e) => {
+   setIsScrolling(true);
+   setScrollStartX(e.pageX - scrollRef.current.offsetLeft);
+   setScrollLeftPosition(scrollRef.current.scrollLeft);
+   scrollRef.current.style.cursor = 'grabbing';
+   scrollRef.current.style.userSelect = 'none';
+ };
+
+ const handleMouseLeave = () => {
+   setIsScrolling(false);
+   if (scrollRef.current) {
+     scrollRef.current.style.cursor = 'grab';
+     scrollRef.current.style.userSelect = 'auto';
+   }
+ };
+
+ const handleMouseUp = () => {
+   setIsScrolling(false);
+   if (scrollRef.current) {
+     scrollRef.current.style.cursor = 'grab';
+     scrollRef.current.style.userSelect = 'auto';
+   }
+ };
+
+ const handleMouseMove = (e) => {
+   if (!isScrolling || !scrollRef.current) return;
+   e.preventDefault();
+   const x = e.pageX - scrollRef.current.offsetLeft;
+   const walk = (x - scrollStartX) * 2; // Scroll speed multiplier
+   scrollRef.current.scrollLeft = scrollLeftPosition - walk;
+ };
+
   // Handle explore destination
   const handleExploreDestination = (destinationName) => {
     // Convert destination name to URL-friendly format
@@ -417,8 +453,8 @@ const Homepage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="text-center">
             {/* Current Image Info */}
-            <div className="mb-8">
-              <div className={`inline-block backdrop-blur-sm rounded-full px-6 py-3 mb-4 ${
+            <div className="mb-12">
+              <div className={`inline-block backdrop-blur-sm rounded-full px-6 py-3 mb-6 ${
                 isDark 
                   ? 'bg-gray-800/60 border border-gray-600' 
                   : 'bg-white/20'
@@ -436,7 +472,7 @@ const Homepage = () => {
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold mb-8">
               {isDark ? (
                 <>
                   <span className="text-white">Safe, Verified, Transparent</span>
@@ -449,7 +485,7 @@ const Homepage = () => {
                 </>
               )}
             </h1>
-            <p className={`text-xl md:text-2xl mb-8 max-w-3xl mx-auto ${
+            <p className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto ${
               isDark ? 'text-gray-200' : 'text-gray-200'
             }`}>
               Plan your trip with verified guides, FSSAI-approved restaurants, and transparent pricing
@@ -626,21 +662,29 @@ const Homepage = () => {
           {/* Scrollable Container - Full width */}
           <div
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-16"
+            className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-16 cursor-grab select-none"
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
               width: '100vw',
               marginLeft: 'calc(-50vw + 50%)'
             }}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
           >
             {featuredDestinations.map((destination) => (
               <div
                 key={destination.id}
-                className={`flex-shrink-0 w-80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group cursor-pointer ${
+                className={`flex-shrink-0 w-80 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group ${
                   isDark ? 'bg-gray-800' : 'bg-white'
                 }`}
-                onClick={() => handleExploreDestination(destination.name)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExploreDestination(destination.name);
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
               >
                 <div className="relative">
                   <img
@@ -753,7 +797,8 @@ const Homepage = () => {
                         e.stopPropagation();
                         handleExploreDestination(destination.name);
                       }}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1 hover:scale-105 transform duration-200"
+                      onMouseDown={(e) => e.stopPropagation()}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium text-sm transition-colors inline-flex items-center space-x-1 hover:scale-105 transform duration-200 cursor-pointer"
                     >
                       <span>Explore</span>
                       <ChevronRight className="w-4 h-4" />
