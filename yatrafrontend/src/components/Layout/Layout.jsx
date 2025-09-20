@@ -1,4 +1,4 @@
-import Header from './Header';
+import NewNavbar from './NewNavbar';
 import Footer from './Footer';
 
 import { useTheme } from '../../contexts/ThemeContext';
@@ -12,8 +12,8 @@ const Layout = ({ children }) => {
         ? 'bg-slate-900 text-slate-100' 
         : 'bg-white text-gray-900'
     }`}>
-      <Header />
-      <main className="flex-grow pt-16 lg:pt-20">
+      <NewNavbar />
+      <main className="flex-grow pt-20">
         {children}
       </main>
       <Footer />

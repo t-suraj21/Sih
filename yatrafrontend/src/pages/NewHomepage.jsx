@@ -22,7 +22,6 @@ import {
   Linkedin
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
-import NewNavbar from '../components/Layout/NewNavbar';
 
 const NewHomepage = () => {
   const { isDark } = useTheme();
@@ -391,9 +390,6 @@ const NewHomepage = () => {
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-black text-white'}`}>
-      {/* Custom Navbar */}
-      <NewNavbar />
-      
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden -mt-20">
         {/* Background */}

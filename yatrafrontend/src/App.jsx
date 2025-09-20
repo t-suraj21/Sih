@@ -3,7 +3,6 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/Layout/Layout';
-import MinimalLayout from './components/Layout/MinimalLayout';
 import ProtectedRoute, { AdminRoute, VendorRoute, TouristRoute, PublicRoute } from './components/ProtectedRoute';
 import Homepage from './pages/Homepage';
 import NewHomepage from './pages/NewHomepage';
@@ -44,10 +43,10 @@ function App() {
           <Router>
           <Layout>
             <Routes>
-              {/* Special route with custom navbar */}
+              {/* Homepage with new design */}
               <Route path="/" element={<NewHomepage />} />
               
-              {/* All other routes use default layout */}
+              {/* All other routes */}
               <Route path="/old-home" element={<Homepage />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destination/:destinationName" element={<DestinationDetails />} />
