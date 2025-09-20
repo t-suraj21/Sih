@@ -1,4 +1,3 @@
-import NewNavbar from './NewNavbar';
 import Footer from './Footer';
 
 import { useTheme } from '../../contexts/ThemeContext';
@@ -12,8 +11,7 @@ const Layout = ({ children }) => {
         ? 'bg-slate-900 text-slate-100' 
         : 'bg-white text-gray-900'
     }`}>
-      <NewNavbar />
-      <main className="flex-grow pt-20">
+      <main className="flex-grow">
         {children}
       </main>
       <Footer />
