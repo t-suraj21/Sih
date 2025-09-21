@@ -9,6 +9,7 @@ import seedUsers from './users.seed.js';
 import seedAttractions from './attractions.seed.js';
 import seedReviews from './reviews.seed.js';
 import { seedEcoTourism } from './ecotourism.seed.js';
+import { seedServices } from './services.seed.js';
 
 const runAllSeeds = async () => {
   try {
@@ -44,6 +45,10 @@ const runAllSeeds = async () => {
     const ecoTourism = await seedEcoTourism();
     console.log(`✅ Seeded ${ecoTourism.length} eco-tourism options\n`);
 
+    console.log('7️⃣ Seeding services...');
+    const services = await seedServices();
+    console.log(`✅ Seeded ${services.length} services\n`);
+
     console.log('🎉 Database seeding completed successfully!');
     console.log('=====================================');
     console.log(`📊 Summary:`);
@@ -53,6 +58,7 @@ const runAllSeeds = async () => {
     console.log(`   • Hotels: ${hotels.length}`);
     console.log(`   • Reviews: ${reviews.length}`);
     console.log(`   • Eco-Tourism: ${ecoTourism.length}`);
+    console.log(`   • Services: ${services.length}`);
     console.log('=====================================\n');
 
     console.log('🚀 Your Yatra database is now ready with real data!');

@@ -21,6 +21,7 @@ import reviewRoutes from './routes/review.routes.js';
 import destinationRoutes from './routes/destination.routes.js';
 import attractionRoutes from './routes/attraction.routes.js';
 import ecoTourismRoutes from './routes/ecotourism.routes.js';
+import serviceRoutes from './routes/service.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import sosRoutes from './routes/sos.routes.js';
 
@@ -104,6 +105,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/attractions', attractionRoutes);
 app.use('/api/eco-tourism', ecoTourismRoutes);
+app.use('/api/services', serviceRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/sos', sosRoutes);
 
