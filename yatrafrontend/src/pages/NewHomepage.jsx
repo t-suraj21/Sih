@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Play, 
   ArrowRight, 
@@ -19,13 +19,26 @@ import {
   Facebook,
   Twitter,
   Youtube,
-  Linkedin
+  Linkedin,
+  Menu,
+  X,
+  Leaf,
+  CheckCircle
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const NewHomepage = () => {
   const { isDark } = useTheme();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Navbar states
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Existing states
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [currentDestinationIndex, setCurrentDestinationIndex] = useState(2); // Center item
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -92,37 +105,72 @@ const NewHomepage = () => {
     {
       id: 1,
       name: "Goa Beaches",
-      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      description: "Experience pristine beaches, vibrant nightlife, and Portuguese heritage in India's coastal paradise",
       price: "₹ 15,000",
       image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=500&fit=crop"
     },
     {
       id: 2,
-      name: "Manali Hills",
-      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
-      price: "₹ 12,000",
+      name: "Kashmir Valley",
+      description: "Discover the 'Paradise on Earth' with stunning lakes, snow-capped mountains, and houseboats",
+      price: "₹ 25,000",
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
     },
     {
       id: 3,
-      name: "Taj Mahal",
-      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
+      name: "Taj Mahal, Agra",
+      description: "Marvel at the world's most beautiful monument to love, a UNESCO World Heritage Site",
       price: "₹ 8,500",
       image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=500&fit=crop"
     },
     {
       id: 4,
-      name: "Udaipur Lakes",
-      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
-      price: "₹ 18,000",
+      name: "Rajasthan Royal Tour",
+      description: "Explore majestic palaces, desert landscapes, and rich cultural heritage of the Land of Kings",
+      price: "₹ 22,000",
       image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=500&fit=crop"
     },
     {
       id: 5,
-      name: "Darjeeling Tea Gardens",
-      description: "Lorem ipsum dolor sit amet consecte. Ufermentum masullamcorconvallis",
-      price: "₹ 10,000",
+      name: "Kerala Backwaters",
+      description: "Cruise through serene backwaters, lush greenery, and experience God's Own Country",
+      price: "₹ 18,000",
+      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=500&fit=crop"
+    },
+    {
+      id: 6,
+      name: "Himachal Pradesh",
+      description: "Adventure in the Himalayas with trekking, skiing, and breathtaking mountain views",
+      price: "₹ 16,500",
       image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=400&h=500&fit=crop"
+    },
+    {
+      id: 7,
+      name: "Golden Temple, Amritsar",
+      description: "Visit the holiest Sikh shrine with its golden architecture and spiritual serenity",
+      price: "₹ 12,000",
+      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=500&fit=crop"
+    },
+    {
+      id: 8,
+      name: "Leh Ladakh",
+      description: "Experience high-altitude desert landscapes, ancient monasteries, and adventure sports",
+      price: "₹ 28,000",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
+    },
+    {
+      id: 9,
+      name: "Andaman Islands",
+      description: "Dive into crystal-clear waters, pristine beaches, and vibrant coral reefs",
+      price: "₹ 32,000",
+      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=500&fit=crop"
+    },
+    {
+      id: 10,
+      name: "Varanasi",
+      description: "Witness ancient spiritual traditions along the sacred Ganges River in India's oldest city",
+      price: "₹ 10,000",
+      image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=400&h=500&fit=crop"
     }
   ];
 
@@ -130,20 +178,54 @@ const NewHomepage = () => {
   const excursionRoute = {
     title: "Golden Triangle Tour",
     day: "Day 01",
-    subtitle: "Classic India Experience",
-    description: "Experience the magnificent Golden Triangle covering Delhi, Agra, and Jaipur. Explore UNESCO World Heritage sites, royal palaces, and vibrant markets with certified guides and FSSAI-approved restaurants throughout your journey.",
+    subtitle: "Classic India Heritage Circuit",
+    description: "Embark on India's most iconic journey through the Golden Triangle - Delhi, Agra, and Jaipur. This carefully curated 7-day expedition takes you through UNESCO World Heritage sites, magnificent Mughal architecture, and vibrant Rajasthani culture. Experience authentic Indian hospitality with government-certified guides, FSSAI-approved restaurants, and luxury accommodations.",
+    duration: "7 Days / 6 Nights",
+    price: "₹ 35,000",
+    rating: 4.8,
+    reviews: 2847,
     mainImage: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
     galleryImages: [
-      "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop",
-      "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=300&h=200&fit=crop"
+      {
+        image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop",
+        title: "Red Fort, Delhi",
+        description: "Explore Mughal architecture"
+      },
+      {
+        image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=300&fit=crop",
+        title: "Hawa Mahal, Jaipur",
+        description: "Pink City's iconic palace"
+      },
+      {
+        image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop",
+        title: "Taj Mahal, Agra",
+        description: "Monument of eternal love"
+      }
+    ],
+    highlights: [
+      "UNESCO World Heritage Sites",
+      "Government Certified Guides",
+      "FSSAI Approved Restaurants",
+      "Luxury Transportation",
+      "24/7 Support",
+      "Cultural Experiences"
+    ],
+    itinerary: [
+      { day: 1, city: "Delhi", activity: "Arrival & Red Fort" },
+      { day: 2, city: "Delhi", activity: "India Gate & Lotus Temple" },
+      { day: 3, city: "Agra", activity: "Taj Mahal & Agra Fort" },
+      { day: 4, city: "Agra", activity: "Fatehpur Sikri" },
+      { day: 5, city: "Jaipur", activity: "Amber Fort & City Palace" },
+      { day: 6, city: "Jaipur", activity: "Hawa Mahal & Local Markets" },
+      { day: 7, city: "Delhi", activity: "Departure" }
     ],
     currentDay: "02/07",
     tourOperators: [
-      { name: "MakeMyTrip", logo: "🧳" },
-      { name: "Yatra", logo: "✈️" },
-      { name: "TripAdvisor", logo: "🌟" },
-      { name: "Incredible India", logo: "🇮🇳" },
-      { name: "Thomas Cook", logo: "🗺️" }
+      { name: "Incredible India", logo: "🇮🇳", rating: 4.9 },
+      { name: "Heritage Tours", logo: "🏛️", rating: 4.8 },
+      { name: "Royal Rajasthan", logo: "👑", rating: 4.7 },
+      { name: "Golden Triangle Co.", logo: "🔶", rating: 4.8 },
+      { name: "India Discovery", logo: "🗺️", rating: 4.6 }
     ]
   };
 
@@ -359,11 +441,57 @@ const NewHomepage = () => {
     }
   ];
 
+  // Navigation items for navbar
+  const navigationItems = [
+    { name: 'HOME', href: '/' },
+    { name: 'DESTINATION', href: '/destinations' },
+    { name: 'SERVICE', href: '/services' },
+    { name: 'ABOUT US', href: '/about' },
+    { name: 'CONTACT', href: '/contact' }
+  ];
+
+  // Navbar functions
+  const isActiveLink = (href) => {
+    if (href === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(href);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Navigation functions
   const scrollDestinations = (direction) => {
     if (destinationsRef.current) {
       const scrollAmount = 320;
       destinationsRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollTopDestinations = (direction) => {
+    if (topDestinationsRef.current) {
+      const scrollAmount = 450; // Match card width + gap
+      topDestinationsRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
@@ -392,15 +520,15 @@ const NewHomepage = () => {
     );
   };
 
-  // Cursor-based scrolling functions
-  const handleMouseDown = (e) => {
+  // Cursor-based scrolling functions for top destinations
+  const handleTopDestinationsMouseDown = (e) => {
     setIsScrolling(true);
     setScrollStartX(e.clientX);
     setScrollStartY(e.clientY);
     e.preventDefault();
   };
 
-  const handleMouseMove = (e) => {
+  const handleTopDestinationsMouseMove = (e) => {
     if (!isScrolling || !topDestinationsRef.current) return;
     
     const deltaX = e.clientX - scrollStartX;
@@ -408,37 +536,228 @@ const NewHomepage = () => {
     
     // Only scroll horizontally if horizontal movement is greater
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      const scrollAmount = deltaX * 0.5; // Adjust sensitivity
+      const scrollAmount = deltaX * 2; // Increased sensitivity for better control
       topDestinationsRef.current.scrollLeft -= scrollAmount;
       setScrollStartX(e.clientX);
     }
   };
 
-  const handleMouseUp = () => {
+  const handleTopDestinationsMouseUp = () => {
     setIsScrolling(false);
   };
 
-  const handleMouseLeave = () => {
+  const handleTopDestinationsMouseLeave = () => {
     setIsScrolling(false);
+  };
+
+  // Handle booking functionality
+  const handleBookNow = (destination) => {
+    if (!isAuthenticated) {
+      // If user is not authenticated, redirect to login with return URL
+      navigate('/login', { 
+        state: { 
+          from: '/booking',
+          destination: destination
+        }
+      });
+      return;
+    }
+
+    // If authenticated, navigate to booking page with destination data
+    navigate('/booking', {
+      state: {
+        destination: {
+          id: destination.id,
+          name: destination.name,
+          description: destination.description,
+          price: destination.price,
+          image: destination.image,
+          type: 'destination'
+        }
+      }
+    });
   };
 
   // Add event listeners for cursor scrolling
   useEffect(() => {
     if (isScrolling) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('mouseleave', handleMouseLeave);
+      document.addEventListener('mousemove', handleTopDestinationsMouseMove);
+      document.addEventListener('mouseup', handleTopDestinationsMouseUp);
+      document.addEventListener('mouseleave', handleTopDestinationsMouseLeave);
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mousemove', handleTopDestinationsMouseMove);
+      document.removeEventListener('mouseup', handleTopDestinationsMouseUp);
+      document.removeEventListener('mouseleave', handleTopDestinationsMouseLeave);
     };
   }, [isScrolling, scrollStartX, scrollStartY]);
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-black text-white'}`}>
+      {/* Navbar */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-black/95 backdrop-blur-md shadow-2xl' 
+          : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <Leaf className="w-8 h-8 text-green-500 transform group-hover:rotate-12 transition-transform duration-300" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-white">
+                  <div className="text-2xl font-bold tracking-tight">
+                    BHARAT
+                  </div>
+                  <div className="text-xs font-medium tracking-widest text-green-400 -mt-1">
+                    BHRAMAN
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`relative px-6 py-2 text-sm font-semibold tracking-wider transition-all duration-300 group ${
+                    isActiveLink(item.href)
+                      ? 'text-green-400'
+                      : 'text-white hover:text-green-400'
+                  }`}
+                >
+                  {item.name}
+                  
+                  {/* Active/Hover underline */}
+                  <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-green-400 transition-all duration-300 ${
+                    isActiveLink(item.href) 
+                      ? 'w-8' 
+                      : 'w-0 group-hover:w-8'
+                  }`} />
+                </Link>
+              ))}
+            </div>
+
+            {/* Auth Section - Desktop */}
+            <div className="hidden lg:flex items-center space-x-4">
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-3">
+                  <Link
+                    to={user?.role === 'admin' ? '/dashboard/admin' : user?.role === 'vendor' ? '/dashboard/vendor' : '/dashboard/user'}
+                    className="text-white hover:text-green-400 transition-colors text-sm font-medium"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Link
+                    to="/login"
+                    className="text-white hover:text-green-400 transition-colors text-sm font-medium px-4 py-2"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-t border-green-500/20">
+            <div className="px-4 py-6 space-y-4">
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-3 text-base font-semibold tracking-wider transition-all duration-300 rounded-lg ${
+                    isActiveLink(item.href)
+                      ? 'text-green-400 bg-green-500/10'
+                      : 'text-white hover:text-green-400 hover:bg-white/5'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              
+              {/* Mobile Auth */}
+              <div className="pt-4 border-t border-green-500/20 space-y-3">
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      to={user?.role === 'admin' ? '/dashboard/admin' : user?.role === 'vendor' ? '/dashboard/vendor' : '/dashboard/user'}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block px-4 py-3 text-white hover:text-green-400 transition-colors font-medium rounded-lg hover:bg-white/5"
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block px-4 py-3 text-white hover:text-green-400 transition-colors font-medium rounded-lg hover:bg-white/5"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold text-center transition-colors"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </nav>
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden -mt-20">
         {/* Background */}
@@ -453,11 +772,11 @@ const NewHomepage = () => {
         />
         
         {/* Green overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 via-green-800/60 to-transparent z-10" />
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 via-green-800/60 to-transparent z-10" /> */}
         
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center min-h-screen">
           {/* Left Content */}
-          <div className="flex-1 max-w-2xl lg:pr-16">
+          <div className="flex-1 max-w-3xl lg:pr-30">
             <div className="text-8xl md:text-9xl font-bold text-white/20 mb-4">
               01
             </div>
@@ -487,25 +806,10 @@ const NewHomepage = () => {
                 <span>WATCH PROMO</span>
               </button>
             </div>
-            
-            {/* User Avatars and Rating */}
-            <div className="flex items-center space-x-4">
-              <div className="flex -space-x-3">
-                {[1,2,3,4,5,6,7,8].map((i) => (
-                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center text-white font-bold">
-                    {String.fromCharCode(65 + i)}
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Star className="w-6 h-6 text-yellow-400 fill-current" />
-                <span className="text-2xl font-bold">4.9</span>
-              </div>
-            </div>
           </div>
           
           {/* Right Content - Video Thumbnails */}
-          <div className="hidden lg:flex flex-col space-y-6 max-w-sm ml-8">
+          <div className="hidden lg:flex flex-col space-y-6 max-w-sm ml-4">
             {featuredDestinations.map((destination, index) => (
               <div
                 key={destination.id}
@@ -542,7 +846,7 @@ const NewHomepage = () => {
 
       {/* Top Destinations Section */}
       <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Top Destinations
@@ -552,117 +856,118 @@ const NewHomepage = () => {
             </p>
           </div>
           
-          {/* Destinations Carousel */}
+          {/* Full Display Scrollable Destinations */}
           <div className="relative">
+            {/* Navigation Buttons */}
             <button
-              onClick={prevDestination}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300"
+              onClick={() => scrollTopDestinations('left')}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-black/80 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group shadow-2xl"
+              aria-label="Scroll left"
             >
-              <ChevronLeft className="w-6 h-6 text-white" />
+              <ChevronLeft className="w-7 h-7 text-white group-hover:text-green-400 transition-colors duration-300" />
             </button>
             
             <button
-              onClick={nextDestination}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300"
+              onClick={() => scrollTopDestinations('right')}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-black/80 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group shadow-2xl"
+              aria-label="Scroll right"
             >
-              <ChevronRight className="w-6 h-6 text-white" />
+              <ChevronRight className="w-7 h-7 text-white group-hover:text-green-400 transition-colors duration-300" />
             </button>
+
+            {/* Scroll indicator */}
+            <div className="text-center mb-8">
+              <p className="text-gray-400 text-sm">← Drag to scroll or use arrow buttons →</p>
+            </div>
             
             <div 
               ref={topDestinationsRef}
-              className={`flex justify-center items-center space-x-8 overflow-hidden ${
+              className={`flex gap-8 overflow-x-auto scrollbar-hide pb-6 ${
                 isScrolling ? 'cursor-grabbing' : 'cursor-grab'
               }`}
-              onMouseDown={handleMouseDown}
-              style={{ userSelect: 'none' }}
+              onMouseDown={handleTopDestinationsMouseDown}
+              onMouseMove={handleTopDestinationsMouseMove}
+              onMouseUp={handleTopDestinationsMouseUp}
+              onMouseLeave={handleTopDestinationsMouseLeave}
+              style={{ 
+                userSelect: 'none',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
+              }}
             >
-              {[-2, -1, 0, 1, 2].map((offset) => {
-                const index = (currentDestinationIndex + offset + topDestinations.length) % topDestinations.length;
-                const destination = topDestinations[index];
-                const isCenter = offset === 0;
-                
-                return (
-                  <div
-                    key={`${destination.id}-${offset}`}
-                    className={`transition-all duration-500 ${
-                      isCenter 
-                        ? 'scale-110 z-10' 
-                        : Math.abs(offset) === 1 
-                          ? 'scale-90 opacity-70' 
-                          : 'scale-75 opacity-40'
-                    }`}
-                  >
-                    <div className="relative w-80 h-96 rounded-3xl overflow-hidden group cursor-pointer">
-                      {/* Background Image */}
-                      <img
-                        src={destination.image}
-                        alt={destination.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        draggable={false}
-                      />
-                      
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                      
-                      {/* Hover Effect - Glow Outside */}
-                      <div className="absolute -inset-4 bg-gradient-to-r from-green-400/20 via-green-500/20 to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-xl -z-10" />
-                      
-                      {/* Content Overlay */}
-                      <div className="absolute inset-0 flex flex-col justify-end p-6">
-                        {/* Destination Info */}
-                        <div className="text-white">
-                          <h3 className="text-2xl font-bold mb-2 group-hover:text-green-400 transition-colors duration-300">
-                            {destination.name}
-                          </h3>
-                          <p className="text-gray-300 mb-4 text-sm leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
-                            {destination.description}
-                          </p>
-                          
-                          {/* Price and Button */}
-                          <div className="flex items-center justify-between">
-                            <span className="text-2xl font-bold text-green-400 group-hover:text-green-300 transition-colors duration-300">
-                              {destination.price}
-                            </span>
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-green-500/25">
-                              Book Now
-                            </button>
-                          </div>
-                        </div>
+              {topDestinations.map((destination, index) => (
+                <div
+                  key={destination.id}
+                  className="flex-shrink-0 w-96 lg:w-[450px] transition-all duration-200 hover:scale-105"
+                >
+                  <div className="relative h-[350px] lg:h-[500px] rounded-3xl overflow-hidden group cursor-pointer shadow-2xl">
+                    {/* Background Image */}
+                    <img
+                      src={destination.image}
+                      alt={destination.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      draggable={false}
+                    />
+                    
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    
+                    {/* Hover Effect - Glow Outside */}
+                    <div className="absolute -inset-6 bg-gradient-to-r from-green-400/30 via-green-500/30 to-green-400/30 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-2xl -z-10" />
+                    
+                    {/* Content Overlay */}
+                    <div className="absolute inset-0 flex flex-col justify-end p-8">
+                      {/* Destination Info */}
+                      <div className="text-white">
+                        <h3 className="text-3xl lg:text-4xl font-bold mb-3 group-hover:text-green-400 transition-colors duration-300">
+                          {destination.name}
+                        </h3>
+                        <p className="text-gray-200 mb-6 text-base lg:text-lg leading-relaxed group-hover:text-gray-100 transition-colors duration-300">
+                          {destination.description}
+                        </p>
                         
-                        {/* Additional Hover Elements */}
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                          <div className="flex items-center space-x-2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                            <span className="text-white text-sm font-medium">4.9</span>
-                          </div>
+                        {/* Price and Button */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-3xl lg:text-4xl font-bold text-green-400 group-hover:text-green-300 transition-colors duration-300">
+                            {destination.price}
+                          </span>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleBookNow(destination);
+                            }}
+                            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-green-500/25 hover:shadow-2xl"
+                          >
+                            Book Now
+                          </button>
                         </div>
-                        
-                        {/* Location Badge */}
-                        <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                          <div className="flex items-center space-x-1 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-                            <MapPin className="w-4 h-4 text-green-400" />
-                            <span className="text-white text-sm font-medium">India</span>
-                          </div>
+                      </div>
+                      
+                      {/* Additional Hover Elements */}
+                      <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
+                          <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                          <span className="text-white font-medium">5</span>
                         </div>
+                      </div>
+                      
+                      {/* Location Badge */}
+                      <div className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
+                          <MapPin className="w-5 h-5 text-green-400" />
+                          <span className="text-white font-medium">India</span>
+                        </div>
+                      </div>
+                      
+                      {/* Destination Number */}
+                      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 opacity-20 group-hover:opacity-30 transition-opacity duration-300">
+                        <span className="text-8xl lg:text-9xl font-bold text-white">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-            
-            {/* Pagination dots */}
-            <div className="flex justify-center space-x-2 mt-8">
-              {topDestinations.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentDestinationIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentDestinationIndex 
-                      ? 'bg-green-400 scale-125' 
-                      : 'bg-white/30 hover:bg-white/50'
-                  }`}
-                />
+                </div>
               ))}
             </div>
           </div>
@@ -670,90 +975,123 @@ const NewHomepage = () => {
       </section>
 
       {/* Excursion Route Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-20 w-32 h-32 bg-green-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-20 w-40 h-40 bg-green-600 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Excursion Route
+            <span className="text-green-400 font-semibold text-lg tracking-wider uppercase">Featured Journey</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 mt-4">
+              Premium Excursion Routes
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Experience carefully curated multi-day journeys through India's most iconic destinations with expert guides and premium accommodations.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Discover India's most iconic destinations through carefully curated multi-day journeys with expert guides, luxury accommodations, and authentic cultural experiences.
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div>
-              <div className="mb-6">
-                <span className="text-green-400 font-semibold text-lg">{excursionRoute.day}</span>
-                <div className="w-20 h-1 bg-green-400 mt-2 mb-4"></div>
-              </div>
-              
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                {excursionRoute.subtitle}
-              </h3>
-              
-              <p className="text-gray-300 text-lg leading-relaxed mb-8">
-                {excursionRoute.description}
-              </p>
-              
-              <button className="flex items-center space-x-3 text-white hover:text-green-400 transition-colors group">
-                <span className="text-lg font-semibold">See More Details</span>
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-              </button>
-            </div>
-            
-            {/* Right Content - Images */}
-            <div className="relative">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <img
-                    src={excursionRoute.mainImage}
-                    alt="Main destination"
-                    className="w-full h-80 object-cover rounded-2xl"
-                  />
+          {/* Main Content Card */}
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-2xl border border-gray-700/50">
+            <div className="grid lg:grid-cols-5 gap-12 items-center">
+              {/* Left Content */}
+              <div className="lg:col-span-3">
+                <div className="flex items-center space-x-4 mb-6">
+                  <span className="bg-green-600 text-white px-4 py-2 rounded-full font-semibold text-sm">
+                    {excursionRoute.day}
+                  </span>
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    <span className="text-white font-semibold">{excursionRoute.rating}</span>
+                    <span className="text-gray-400">({excursionRoute.reviews} reviews)</span>
+                  </div>
                 </div>
-                <div className="space-y-4 mt-8">
-                  {excursionRoute.galleryImages.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Gallery ${index + 1}`}
-                      className="w-full h-36 object-cover rounded-2xl"
-                    />
+                
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  {excursionRoute.title}
+                </h3>
+                
+                <p className="text-green-400 text-lg font-semibold mb-6">
+                  {excursionRoute.subtitle}
+                </p>
+                
+                <p className="text-gray-300 text-lg leading-relaxed mb-8">
+                  {excursionRoute.description}
+                </p>
+                
+                {/* Tour Highlights */}
+                <div className="grid grid-cols-2 gap-3 mb-8">
+                  {excursionRoute.highlights.map((highlight, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-gray-300 text-sm">{highlight}</span>
+                    </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Tour Operators Timeline */}
-          <div className="mt-16 flex items-center justify-between">
-            <div className="flex items-center space-x-8">
-              {excursionRoute.tourOperators.map((operator, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl mb-2 ${
-                    index === 2 ? 'bg-green-600' : 'bg-gray-700'
-                  }`}>
-                    {operator.logo}
+                
+                {/* Price and CTA */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-3xl font-bold text-green-400">{excursionRoute.price}</span>
+                    <span className="text-gray-400 ml-2">per person</span>
+                    <div className="text-sm text-gray-400">{excursionRoute.duration}</div>
                   </div>
-                  <span className={`text-sm font-medium ${
-                    index === 2 ? 'text-green-400' : 'text-gray-400'
-                  }`}>
-                    {operator.name}
-                  </span>
+                  <button 
+                    onClick={() => handleBookNow({
+                      id: 'golden-triangle',
+                      name: excursionRoute.title,
+                      description: excursionRoute.description,
+                      price: excursionRoute.price,
+                      image: excursionRoute.mainImage,
+                      type: 'tour'
+                    })}
+                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl"
+                  >
+                    Book This Journey
+                  </button>
                 </div>
-              ))}
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
-                <ChevronLeft className="w-6 h-6 text-white" />
-              </button>
-              <span className="text-white font-semibold text-lg">{excursionRoute.currentDay}</span>
-              <button className="w-12 h-12 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
-                <ChevronRight className="w-6 h-6 text-white" />
-              </button>
+              </div>
+              
+              {/* Right Content - Enhanced Images */}
+              <div className="lg:col-span-2">
+                <div className="relative">
+                  {/* Main Featured Image */}
+                  <div className="relative rounded-2xl overflow-hidden mb-4 group">
+                    <img
+                      src={excursionRoute.mainImage}
+                      alt={excursionRoute.title}
+                      className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        Main Destination
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Gallery Images */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {excursionRoute.galleryImages.map((item, index) => (
+                      <div key={index} className="relative rounded-xl overflow-hidden group cursor-pointer">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-24 object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-white text-xs font-medium text-center px-2">
+                            {item.title}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -822,61 +1160,173 @@ const NewHomepage = () => {
         </div>
       </section>
 
-      {/* Popular Destinations For Your Trip Plans */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Popular Destinations For Your<br />Trip Plans
+      {/* Why Choose India Section */}
+      <section className="py-24 bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-96 h-96 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-400/20 to-emerald-500/20 backdrop-blur-sm border border-green-400/30 rounded-full px-6 py-3 mb-8">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-400 font-semibold text-sm tracking-wider uppercase">Incredible India</span>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8">
+              <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                Why Choose India for
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Your Next Adventure?
+              </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Discover the most sought-after destinations in India, carefully selected based on traveler reviews and authentic experiences.
+            
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Discover a land where ancient traditions meet modern wonders, where every journey tells a story, 
+              and where unforgettable experiences await at every turn.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {popularDestinations.map((destination) => (
-              <div
-                key={destination.id}
-                className="group cursor-pointer"
-                onClick={() => navigate(`/destination/${destination.name.toLowerCase().replace(/\s+/g, '-')}`)}
-              >
-                <div className="relative rounded-2xl overflow-hidden mb-4">
-                  <img
-                    src={destination.image}
-                    alt={destination.name}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+          {/* Interactive Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            {[
+              {
+                icon: "🏛️",
+                title: "5000+ Years of History",
+                description: "Explore UNESCO World Heritage sites, ancient temples, and architectural marvels that span millennia",
+                highlight: "29 UNESCO Sites"
+              },
+              {
+                icon: "🍛",
+                title: "Culinary Paradise",
+                description: "Savor authentic flavors from 28 states, each with unique spices, recipes, and culinary traditions",
+                highlight: "1000+ Dishes"
+              },
+              {
+                icon: "🏔️",
+                title: "Diverse Landscapes",
+                description: "From Himalayan peaks to tropical beaches, deserts to rainforests - all in one incredible country",
+                highlight: "7 Climate Zones"
+              },
+              {
+                icon: "🎭",
+                title: "Rich Cultural Heritage",
+                description: "Experience vibrant festivals, classical arts, traditional crafts, and warm hospitality",
+                highlight: "22 Languages"
+              },
+              {
+                icon: "🐅",
+                title: "Wildlife & Nature",
+                description: "Home to tigers, elephants, and exotic species across 104 national parks and sanctuaries",
+                highlight: "45,000+ Species"
+              },
+              {
+                icon: "💰",
+                title: "Incredible Value",
+                description: "Luxury experiences at affordable prices - get more for your travel budget than anywhere else",
+                highlight: "Best ROI Destination"
+              }
+            ].map((feature, index) => (
+              <div key={index} className="group relative">
+                {/* Glow Effect */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-green-400/20 via-emerald-500/20 to-teal-400/20 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                
+                <div className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-green-400/30 transition-all duration-300 hover:scale-105">
+                  {/* Icon */}
+                  <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
                   
-                  {/* Tag */}
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {destination.tag}
-                    </span>
+                  {/* Highlight Badge */}
+                  <div className="inline-block bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold mb-4 border border-green-400/30">
+                    {feature.highlight}
                   </div>
                   
                   {/* Content */}
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white font-bold text-lg mb-1">{destination.name}</h3>
-                    <div className="flex items-center text-gray-300 text-sm mb-2">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      <span>{destination.location}</span>
-                    </div>
-                    <div className="flex items-center text-gray-300 text-sm mb-3">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      <span>{destination.duration}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-green-400">{destination.price}</span>
-                      <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors">
-                        Book Now
-                      </button>
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Hover Arrow */}
+                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Impressive Statistics */}
+          <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-sm rounded-3xl p-12 border border-green-400/20">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                India by the Numbers
+              </h3>
+              <p className="text-green-400 text-lg font-semibold">
+                Incredible facts that make India extraordinary
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { number: "1.4B+", label: "People", description: "Diverse cultures united" },
+                { number: "28", label: "States", description: "Each unique & beautiful" },
+                { number: "40+", label: "Languages", description: "Rich linguistic heritage" },
+                { number: "#1", label: "Yoga Origin", description: "Birthplace of wellness" }
+              ].map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+                    {stat.number}
+                  </div>
+                  <div className="text-white font-bold text-lg mb-1 group-hover:text-green-400 transition-colors duration-300">
+                    {stat.label}
+                  </div>
+                  <div className="text-gray-400 text-sm">
+                    {stat.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center mt-16">
+            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-12 border border-green-400/20">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Experience Incredible India?
+              </h3>
+              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                Join millions of travelers who have discovered the magic of India. 
+                Your extraordinary journey begins with just one click.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button 
+                  onClick={() => navigate('/destinations')}
+                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 hover:from-green-500 hover:via-emerald-500 hover:to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-green-500/25 border border-green-400/20"
+                >
+                  Explore Destinations
+                </button>
+                <button 
+                  onClick={() => navigate('/contact')}
+                  className="bg-transparent hover:bg-green-600/20 border-2 border-green-600 hover:border-green-500 text-green-400 hover:text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105"
+                >
+                  Plan My Trip
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

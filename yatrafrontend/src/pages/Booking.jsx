@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   CreditCard, 
   Shield, 
@@ -17,11 +18,16 @@ import {
 } from 'lucide-react';
 
 const Booking = () => {
+  const location = useLocation();
   const [step, setStep] = useState(1); // 1: Details, 2: Payment, 3: Confirmation
+  
+  // Get destination data from navigation state
+  const destinationData = location.state?.destination;
+  
   const [bookingData, setBookingData] = useState({
-    serviceType: 'hotel',
-    serviceName: 'Heritage Palace Hotel',
-    location: 'Jaipur, Rajasthan',
+    serviceType: destinationData?.type || 'destination',
+    serviceName: destinationData?.name || 'Heritage Palace Hotel',
+    location: destinationData?.location || 'India',
     checkIn: '2024-12-25',
     checkOut: '2024-12-28',
     guests: 2,
@@ -38,26 +44,20 @@ const Booking = () => {
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [serviceDetails, setServiceDetails] = useState(null);
+  const [serviceDetails, setServiceDetails] = useState(destinationData || null);
 
   useEffect(() => {
-    // Load service details from URL params or API
-    const serviceId = searchParams.get('serviceId');
-    if (serviceId) {
-      loadServiceDetails(serviceId);
+    // Update booking data if destination data is available
+    if (destinationData) {
+      setBookingData(prev => ({
+        ...prev,
+        serviceType: destinationData.type || 'destination',
+        serviceName: destinationData.name,
+        location: destinationData.name // Use destination name as location
+      }));
+      setServiceDetails(destinationData);
     }
-  }, [searchParams]);
-
-  const loadServiceDetails = async (serviceId) => {
-    try {
-      const response = await apiService.getHotelDetails(serviceId);
-      if (response.success && response.data?.hotel) {
-        setServiceDetails(response.data.hotel);
-      }
-    } catch (error) {
-      console.error('Error loading service details:', error);
-    }
-  };
+  }, [destinationData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -65,6 +65,18 @@ const Booking = () => {
   };
 
   const calculateTotal = () => {
+    if (destinationData?.price) {
+      // Parse the price from the destination (remove ₹ and convert to number)
+      const basePrice = parseInt(destinationData.price.replace(/[₹,\s]/g, ''));
+      const guestMultiplier = bookingData.guests || 1;
+      const subtotal = basePrice * guestMultiplier;
+      const tax = subtotal * 0.18; // 18% GST
+      return {
+        subtotal,
+        tax,
+        total: subtotal + tax
+      };
+    }
     if (!serviceDetails) return { subtotal: 0, taxes: 0, serviceFee: 0, total: 0, nights: 0 };
     
     const nights = Math.ceil((new Date(bookingData.checkOut) - new Date(bookingData.checkIn)) / (1000 * 60 * 60 * 24));
