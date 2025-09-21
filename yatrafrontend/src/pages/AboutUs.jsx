@@ -55,26 +55,6 @@ const AboutUs = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen bg-gray-900 text-gray-200 font-sans">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-16 text-center">
-        <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">About Yatra</h1>
-        <p className="text-gray-300 max-w-2xl mx-auto">Transforming Indian tourism with trust, safety, and cutting-edge technology for unforgettable journeys.</p>
-      </section>
-
-      {/* Stats */}
-      <section className="py-16 bg-gray-950 text-center">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {stats.map((stat, idx) => (
-            <div key={idx} className="bg-gray-800 p-8 rounded-xl hover:scale-105 transform transition-all border border-gray-700">
-              <div className="flex justify-center mb-4">{stat.icon}</div>
-              <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">{stat.number}</h3>
-              <p className="text-gray-400 mb-2">{stat.label}</p>
-              <p className="text-gray-400 text-sm">{stat.description}</p>
-            </div>
-          ))}
-=======
     <div className="min-h-screen bg-gray-900 text-gray-200">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20">
@@ -87,60 +67,9 @@ const AboutUs = () => {
             <CheckCircle className="w-6 h-6" />
             <span className="text-lg font-semibold">Government of India Initiative</span>
           </div>
->>>>>>> 24f9ec0bee453ed4dd9fe0ecf9b8b6b4876cef74
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-16 bg-gray-900 text-center">
-        <h2 className="text-3xl font-semibold mb-12">Our Core Values</h2>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {values.map((val, idx) => (
-            <div key={idx} className="bg-gray-800 p-8 rounded-xl hover:scale-105 transform transition-all border border-gray-700">
-              <div className="flex justify-center mb-6">{val.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{val.title}</h3>
-              <p className="text-gray-400">{val.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Leadership */}
-      <section className="py-16 bg-gray-950">
-        <h2 className="text-3xl font-semibold text-center mb-8">Leadership Team</h2>
-        <div className="flex justify-center mb-6 gap-4">
-          <button onClick={scrollLeft} disabled={!canScrollLeft} className={`p-3 rounded-full border ${canScrollLeft ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' : 'border-gray-600 text-gray-600 cursor-not-allowed'}`}>
-            <ChevronLeft className="w-5 h-5"/>
-          </button>
-          <button onClick={scrollRight} disabled={!canScrollRight} className={`p-3 rounded-full border ${canScrollRight ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' : 'border-gray-600 text-gray-600 cursor-not-allowed'}`}>
-            <ChevronRight className="w-5 h-5"/>
-          </button>
-        </div>
-        <div ref={scrollContainerRef} onScroll={checkScrollButtons} className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-          {team.map((member, idx) => (
-            <div key={idx} className="min-w-[280px] max-w-[280px] bg-gray-800 rounded-2xl shadow-xl flex-shrink-0 snap-center hover:scale-105 transform transition-all border border-gray-700">
-              <img src={member.image} alt={member.name} className="w-full h-64 object-cover rounded-t-2xl"/>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
-                <p className="text-blue-400 font-semibold mb-2">{member.role}</p>
-                <p className="text-gray-400 text-sm">{member.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-<<<<<<< HEAD
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-=======
       {/* Stats Section */}
       <section className="py-16 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -187,13 +116,48 @@ const AboutUs = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Leadership Team</h2>
           <p className="text-xl text-gray-400 mb-12">Experienced professionals dedicated to transforming Indian tourism</p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Navigation Buttons */}
+          <div className="flex justify-center mb-6 gap-4">
+            <button 
+              onClick={scrollLeft} 
+              disabled={!canScrollLeft} 
+              className={`p-3 rounded-full border transition-all ${
+                canScrollLeft 
+                  ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' 
+                  : 'border-gray-600 text-gray-600 cursor-not-allowed'
+              }`}
+            >
+              <ChevronLeft className="w-5 h-5"/>
+            </button>
+            <button 
+              onClick={scrollRight} 
+              disabled={!canScrollRight} 
+              className={`p-3 rounded-full border transition-all ${
+                canScrollRight 
+                  ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' 
+                  : 'border-gray-600 text-gray-600 cursor-not-allowed'
+              }`}
+            >
+              <ChevronRight className="w-5 h-5"/>
+            </button>
+          </div>
+          
+          {/* Scrollable Team Cards */}
+          <div 
+            ref={scrollContainerRef} 
+            onScroll={checkScrollButtons} 
+            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
+          >
             {team.map((member, index) => (
-              <div key={index} className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
-                <img src={member.image} alt={member.name} className="w-full h-64 object-cover" />
+              <div key={index} className="min-w-[280px] max-w-[280px] bg-gray-800 rounded-2xl shadow-xl flex-shrink-0 snap-center hover:scale-105 transform transition-all border border-gray-700">
+                <img src={member.image} alt={member.name} className="w-full h-64 object-cover rounded-t-2xl"/>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
-                  <p className="text-blue-400 font-medium mb-3">{member.role}</p>
+                  <p className="text-blue-400 font-semibold mb-2">{member.role}</p>
                   <p className="text-gray-400 text-sm">{member.description}</p>
                 </div>
               </div>
@@ -263,7 +227,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
->>>>>>> 24f9ec0bee453ed4dd9fe0ecf9b8b6b4876cef74
     </div>
   );
 };
