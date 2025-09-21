@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, MapPin, Star, Shield, Utensils, Users, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Search, Filter, MapPin, Star, Shield, Utensils, Users, CheckCircle, ArrowLeft, Sparkles } from 'lucide-react';
 import { indianDestinations } from '../data/indianDestinations';
+
+/**
+ * Destinations.jsx
+ * Component for showing all travel destinations in India
+ * Includes filters, sorting, and service exploration navigation
+ * Managed by [Your Name]
+ */
 
 const Destinations = () => {
   const navigate = useNavigate();
+
+  // ---------------- Filters State ----------------
   const [filters, setFilters] = useState({
     search: '',
     state: '',
@@ -13,15 +22,21 @@ const Destinations = () => {
     sortBy: 'rating'
   });
 
+  // ---------------- Data State ----------------
   const [destinations, setDestinations] = useState([]);
 
-  const states = ['All States', ...Array.from(new Set(indianDestinations.map(d => d.state)))];
+  // ---------------- Static Lists ----------------
+  const allStates = ['All States', ...Array.from(new Set(indianDestinations.map(d => d.state)))];
   const budgetRanges = ['All Budgets', ...Array.from(new Set(indianDestinations.map(d => d.budget)))];
   const tourismTypes = ['All Types', ...Array.from(new Set(indianDestinations.map(d => d.type)))];
 
+  // ---------------- Effect: Apply Filters ----------------
   useEffect(() => {
+    console.log("Filters updated:", filters); // Debugging purpose, shows active filters
+
     let filtered = indianDestinations;
 
+    // Search Filter
     if (filters.search) {
       filtered = filtered.filter(dest => 
         dest.name.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -29,18 +44,22 @@ const Destinations = () => {
       );
     }
 
+    // State Filter
     if (filters.state && filters.state !== 'All States') {
       filtered = filtered.filter(dest => dest.state === filters.state);
     }
 
+    // Budget Filter
     if (filters.budget && filters.budget !== 'All Budgets') {
       filtered = filtered.filter(dest => dest.budget === filters.budget);
     }
 
+    // Tourism Type Filter
     if (filters.tourismType && filters.tourismType !== 'All Types') {
       filtered = filtered.filter(dest => dest.type === filters.tourismType);
     }
 
+    // Sorting
     if (filters.sortBy === 'rating') {
       filtered.sort((a, b) => b.rating - a.rating);
     } else if (filters.sortBy === 'name') {
@@ -52,6 +71,7 @@ const Destinations = () => {
     setDestinations(filtered);
   }, [filters]);
 
+  // ---------------- Utility Functions ----------------
   const getBudgetColor = (budget) => {
     switch (budget) {
       case 'Low': return 'text-green-400 bg-green-800/20';
@@ -74,50 +94,61 @@ const Destinations = () => {
     navigate(`/destination/${encodeURIComponent(destination.name)}/services`);
   };
 
+  // ---------------- Extra Feature: Fun Travel Facts ----------------
+  const travelFacts = [
+    "India is home to the world’s highest motorable road at Umling La Pass, Ladakh.",
+    "The Sundarbans in West Bengal is the world’s largest mangrove forest.",
+    "Mawsynram in Meghalaya holds the record for being the wettest place on Earth.",
+    "Shani Shingnapur village in Maharashtra has houses with no doors — crime-free for centuries.",
+    "Lonar Lake in Maharashtra was created by a meteor impact around 50,000 years ago."
+  ];
+  const randomFact = travelFacts[Math.floor(Math.random() * travelFacts.length)];
+
+  // ---------------- UI Rendering ----------------
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 relative">
-{/* Back Arrow */}
-<div className="absolute top-6 left-6 z-50">
-  <button
-    onClick={() => navigate('/NewHomepage')}
-    className="flex items-center gap-2 p-2 rounded hover:bg-gray-800/50 transition-colors"
-  >
-    <ArrowLeft className="w-6 h-6 text-gray-100 hover:text-gray-300" />
-    <span className="text-gray-100 font-medium hover:text-gray-300">Back</span>
-  </button>
-</div>
 
-
+      {/* Back Arrow Navigation */}
+      <div className="absolute top-6 left-6 z-50">
+        <button
+          onClick={() => navigate('/NewHomepage')}
+          className="flex items-center gap-2 p-2 rounded hover:bg-gray-800/50 transition-colors"
+        >
+          <ArrowLeft className="w-6 h-6 text-gray-100 hover:text-gray-300" />
+          <span className="text-gray-100 font-medium hover:text-gray-300">Back</span>
+        </button>
+      </div>
 
       {/* Hero Section */}
       <div className="relative z-10 bg-gray-800/90 backdrop-blur-sm text-white shadow-2xl rounded-b-3xl">
-  <div className="absolute inset-0 bg-gray-700/20 rounded-b-3xl" />
-  <div className="relative max-w-7xl mx-auto px-6 py-20 text-center">
-    <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
-      Explore <span className="text-yellow-400">India's Destinations</span>
-    </h1>
-    <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-      Discover {indianDestinations.length}+ verified and safe travel destinations across Bharat with trusted guides and transparent services.
-    </p>
+        <div className="absolute inset-0 bg-gray-700/20 rounded-b-3xl" />
+        <div className="relative max-w-7xl mx-auto px-6 py-20 text-center">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight">
+            Explore <span className="text-yellow-400">India's Destinations</span>
+          </h1>
+          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Discover {indianDestinations.length}+ verified and safe travel destinations across Bharat with trusted guides and transparent services.
+          </p>
 
-    <div className="flex flex-wrap justify-center gap-6 text-sm">
-      <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
-        <CheckCircle className="w-5 h-5 mr-2 text-yellow-400" />
-        <span className="font-semibold">Verified Services</span>
+          {/* Trust Badges */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm">
+            <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
+              <CheckCircle className="w-5 h-5 mr-2 text-yellow-400" />
+              <span className="font-semibold">Verified Services</span>
+            </div>
+            <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
+              <Shield className="w-5 h-5 mr-2 text-yellow-400" />
+              <span className="font-semibold">Safety Guaranteed</span>
+            </div>
+            <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
+              <Star className="w-5 h-5 mr-2 text-yellow-400" />
+              <span className="font-semibold">Quality Assured</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
-        <Shield className="w-5 h-5 mr-2 text-yellow-400" />
-        <span className="font-semibold">Safety Guaranteed</span>
-      </div>
-      <div className="flex items-center bg-gray-700/50 px-6 py-3 rounded-full shadow-xl border border-gray-600">
-        <Star className="w-5 h-5 mr-2 text-yellow-400" />
-        <span className="font-semibold">Quality Assured</span>
-      </div>
-    </div>
-  </div>
-</div>
 
-      {/* Quick Stats */}
+      {/* Quick Stats Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 grid grid-cols-2 md:grid-cols-4 gap-6">
         {[
           { value: indianDestinations.length, label: 'Total Destinations', color: 'text-green-400' },
@@ -134,7 +165,7 @@ const Destinations = () => {
 
       {/* Filters & Destinations */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 pb-20 flex flex-col lg:flex-row gap-12">
-        {/* Filters */}
+        {/* Filters Sidebar */}
         <div className="lg:w-1/3">
           <div className="bg-gray-800/85 backdrop-blur-md rounded-2xl shadow-xl p-10 sticky top-32 border border-gray-700 space-y-6">
             <h2 className="text-xl font-semibold text-gray-100 flex items-center mb-6">
@@ -142,7 +173,7 @@ const Destinations = () => {
               Filters
             </h2>
 
-            {/* Search */}
+            {/* Search Input */}
             <div className="flex flex-col space-y-2">
               <label className="text-gray-300 text-sm font-medium">Search</label>
               <input
@@ -162,7 +193,7 @@ const Destinations = () => {
                 onChange={(e) => setFilters({ ...filters, state: e.target.value })}
                 className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400"
               >
-                {states.map((state, idx) => (
+                {allStates.map((state, idx) => (
                   <option key={idx} value={state}>{state}</option>
                 ))}
               </select>
@@ -196,7 +227,7 @@ const Destinations = () => {
               </select>
             </div>
 
-            {/* Sort By */}
+            {/* Sort By Filter */}
             <div className="flex flex-col space-y-2">
               <label className="text-gray-300 text-sm font-medium">Sort By</label>
               <select
@@ -305,6 +336,7 @@ const Destinations = () => {
             ))}
           </div>
 
+          {/* Empty State */}
           {destinations.length === 0 && (
             <div className="text-center py-12">
               <MapPin className="w-16 h-16 mx-auto text-gray-500 mb-4" />
@@ -312,6 +344,16 @@ const Destinations = () => {
               <p className="text-gray-400">Try adjusting your filters to see more results</p>
             </div>
           )}
+
+          {/* Did You Know Section - Travel Fact */}
+          <div className="mt-12 bg-gradient-to-r from-green-700/30 to-emerald-600/20 rounded-2xl shadow-xl border border-green-800 p-8 flex items-start gap-4">
+            <Sparkles className="w-10 h-10 text-yellow-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-bold text-green-300 mb-2">🌍 Did You Know?</h3>
+              <p className="text-gray-200 leading-relaxed">{randomFact}</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
