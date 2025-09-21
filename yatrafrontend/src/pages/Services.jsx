@@ -126,23 +126,16 @@ const Services = () => {
           break;
 
         case 'guides':
-          // Mock tour guides data for now
-          serviceData = generateMockGuides();
-          break;
-
         case 'transport':
-          // Mock transport data for now
-          serviceData = generateMockTransport();
-          break;
-
         case 'food':
-          // Mock food data for now
-          serviceData = generateMockFood();
-          break;
-
         case 'activities':
-          // Mock activities data for now
-          serviceData = generateMockActivities();
+          // Load real vendor services from backend
+          const serviceResponse = await apiService.searchServices({
+            type: getServiceTypeMapping(activeTab),
+            location: selectedDestination ? selectedDestination.name : filters.location,
+            limit: 20
+          });
+          serviceData = serviceResponse.success ? (serviceResponse.data?.services || []) : [];
           break;
 
         default:
@@ -159,75 +152,15 @@ const Services = () => {
     }
   };
 
-  // Mock data generators for services not yet integrated with APIs
-  const generateMockGuides = () => {
-    const baseNames = ['Rajesh', 'Priya', 'Amit', 'Sunita', 'Vikram', 'Deepa'];
-    const specialties = ['Historical Tours', 'Cultural Heritage', 'Food Tours', 'Adventure Tours', 'Photography Tours', 'Spiritual Tours'];
-    
-    return baseNames.map((name, index) => ({
-      id: `guide_${index + 1}`,
-      name: `${name} Kumar`,
-      specialty: specialties[index % specialties.length],
-      rating: 4.2 + (index * 0.1),
-      experience: `${3 + index} years`,
-      languages: ['Hindi', 'English', 'Local Language'],
-      price: `₹${2000 + (index * 500)}/day`,
-      image: `https://images.unsplash.com/photo-${1500000000000 + index}?w=400&h=300&fit=crop`,
-      description: `Professional tour guide specializing in ${specialties[index % specialties.length].toLowerCase()}.`,
-      verified: true
-    }));
-  };
-
-  const generateMockTransport = () => {
-    const types = ['Cab Service', 'Bus Service', 'Bike Rental', 'Car Rental', 'Airport Transfer', 'City Tour Bus'];
-    const companies = ['Yatra Cabs', 'City Transport', 'Royal Travels', 'Express Tours', 'Comfort Rides', 'Premium Travel'];
-    
-    return types.map((type, index) => ({
-      id: `transport_${index + 1}`,
-      name: companies[index],
-      type: type,
-      rating: 4.0 + (index * 0.1),
-      price: `₹${500 + (index * 200)}/day`,
-      image: `https://images.unsplash.com/photo-${1600000000000 + index}?w=400&h=300&fit=crop`,
-      description: `Reliable ${type.toLowerCase()} service with professional drivers.`,
-      features: ['AC Vehicle', 'GPS Tracking', '24/7 Support'],
-      verified: true
-    }));
-  };
-
-  const generateMockFood = () => {
-    const cuisines = ['North Indian', 'South Indian', 'Street Food', 'Fine Dining', 'Local Delicacies', 'International'];
-    const restaurants = ['Spice Garden', 'Royal Kitchen', 'Local Bites', 'Heritage Restaurant', 'Food Court', 'Cafe Corner'];
-    
-    return cuisines.map((cuisine, index) => ({
-      id: `food_${index + 1}`,
-      name: restaurants[index],
-      cuisine: cuisine,
-      rating: 4.3 + (index * 0.1),
-      price: `₹${300 + (index * 100)}/person`,
-      image: `https://images.unsplash.com/photo-${1700000000000 + index}?w=400&h=300&fit=crop`,
-      description: `Authentic ${cuisine.toLowerCase()} cuisine with fresh ingredients.`,
-      specialties: ['Traditional Recipes', 'Vegetarian Options', 'Fresh Ingredients'],
-      verified: true
-    }));
-  };
-
-  const generateMockActivities = () => {
-    const activities = ['Adventure Sports', 'Cultural Shows', 'Wildlife Safari', 'Trekking', 'Water Sports', 'Photography Tours'];
-    const operators = ['Adventure Zone', 'Cultural Hub', 'Nature Tours', 'Peak Adventures', 'Aqua Sports', 'Photo Walks'];
-    
-    return activities.map((activity, index) => ({
-      id: `activity_${index + 1}`,
-      name: operators[index],
-      activity: activity,
-      rating: 4.4 + (index * 0.1),
-      price: `₹${1500 + (index * 300)}/person`,
-      duration: `${2 + index} hours`,
-      image: `https://images.unsplash.com/photo-${1800000000000 + index}?w=400&h=300&fit=crop`,
-      description: `Exciting ${activity.toLowerCase()} experience with professional instructors.`,
-      features: ['Equipment Provided', 'Expert Guide', 'Safety First'],
-      verified: true
-    }));
+  // Map frontend service types to backend service types
+  const getServiceTypeMapping = (frontendType) => {
+    const mapping = {
+      'guides': 'Tour Guide',
+      'transport': 'Transport Service', 
+      'food': 'Restaurant/Food',
+      'activities': 'Adventure Sports'
+    };
+    return mapping[frontendType] || frontendType;
   };
 
   const handleFilterChange = (key, value) => {
@@ -354,61 +287,43 @@ const Services = () => {
             </div>
           )}
           
-          {activeTab === 'guides' && (
+          {(activeTab === 'guides' || activeTab === 'transport' || activeTab === 'food' || activeTab === 'activities') && (
             <div className="space-y-2 mb-3">
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">{service.specialty}</span>
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-gray-600 text-sm">
+                  <span className="font-medium">{service.type}</span>
+                </p>
+                {service.verification?.isVerified && (
+                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                    Verified
+                  </span>
+                )}
+              </div>
               <p className="text-gray-600 text-sm flex items-center">
-                <Users className="w-4 h-4 mr-1" />
-                {service.experience} experience
+                <MapPin className="w-4 h-4 mr-1" />
+                {service.location?.city ? `${service.location.city}, ${service.location.state}` : service.location}
               </p>
-            </div>
-          )}
-          
-          {activeTab === 'transport' && (
-            <div className="space-y-2 mb-3">
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">{service.type}</span>
-              </p>
-              {service.features && (
+              {service.features?.amenities && service.features.amenities.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {service.features.slice(0, 2).map((feature, index) => (
+                  {service.features.amenities.slice(0, 3).map((amenity, index) => (
                     <span key={index} className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
-                      {feature}
+                      {amenity}
                     </span>
                   ))}
                 </div>
               )}
-            </div>
-          )}
-          
-          {activeTab === 'food' && (
-            <div className="space-y-2 mb-3">
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">{service.cuisine}</span>
-              </p>
-              {service.specialties && (
-                <div className="flex flex-wrap gap-1">
-                  {service.specialties.slice(0, 2).map((specialty, index) => (
-                    <span key={index} className="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs">
-                      {specialty}
-                    </span>
-                  ))}
-                </div>
+              {service.features?.duration && (
+                <p className="text-gray-600 text-sm flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  {service.features.duration}
+                </p>
               )}
-            </div>
-          )}
-          
-          {activeTab === 'activities' && (
-            <div className="space-y-2 mb-3">
-              <p className="text-gray-600 text-sm">
-                <span className="font-medium">{service.activity}</span>
-              </p>
-              <p className="text-gray-600 text-sm flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                {service.duration}
-              </p>
+              {service.features?.capacity && (
+                <p className="text-gray-600 text-sm flex items-center">
+                  <Users className="w-4 h-4 mr-1" />
+                  Capacity: {service.features.capacity} people
+                </p>
+              )}
             </div>
           )}
 
@@ -424,8 +339,11 @@ const Services = () => {
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold text-blue-600">
-                  {service.price}
+                  {service.pricing?.basePrice ? `₹${service.pricing.basePrice}` : service.price}
                 </div>
+                {service.pricing?.unit && (
+                  <div className="text-xs text-gray-500">{service.pricing.unit}</div>
+                )}
               </div>
             </div>
           </div>

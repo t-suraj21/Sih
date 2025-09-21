@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Plus, Edit, Eye, Trash2, Search, Filter, MapPin, Star, 
-  DollarSign, Calendar, Users, Camera, Upload, Save, X
+  DollarSign, Calendar, Users, Camera, Upload, Save, X, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import apiService from '../../services/api.service';
 
 const VendorServices = () => {
   const { user } = useAuth();
@@ -13,6 +14,9 @@ const VendorServices = () => {
   const [editingService, setEditingService] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const serviceTypes = [
     'Hotel/Resort', 'Tour Guide', 'Transport Service', 'Restaurant/Food',
@@ -24,37 +28,39 @@ const VendorServices = () => {
   }, []);
 
   const loadServices = async () => {
-    // Mock data - replace with actual API call
-    setServices([
-      {
-        id: 1,
-        name: 'Luxury Beach Resort',
-        type: 'Hotel/Resort',
-        location: 'Goa',
-        price: 8000,
-        rating: 4.8,
-        bookings: 45,
-        status: 'active',
-        description: 'Luxury beachfront resort with world-class amenities',
-        images: ['/api/placeholder/400/300'],
-        amenities: ['WiFi', 'Pool', 'Spa', 'Restaurant'],
-        capacity: 100
-      },
-      {
-        id: 2,
-        name: 'Heritage Walking Tour',
-        type: 'Tour Guide',
-        location: 'Jaipur',
-        price: 2500,
-        rating: 4.9,
-        bookings: 32,
-        status: 'active',
-        description: 'Explore the rich heritage of Pink City',
-        images: ['/api/placeholder/400/300'],
-        duration: '4 hours',
-        groupSize: 15
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiService.getVendorServices();
+      
+      if (response.success) {
+        // Transform backend data to match frontend expectations
+        const transformedServices = response.data.services.map(service => ({
+          id: service._id,
+          name: service.name,
+          type: service.type,
+          location: `${service.location.city}, ${service.location.state}`,
+          price: service.pricing.basePrice,
+          rating: service.ratings?.average || 0,
+          bookings: service.stats?.bookings || 0,
+          status: service.status,
+          description: service.description,
+          images: service.images && service.images.length > 0 ? service.images : ['/api/placeholder/400/300'],
+          amenities: service.features?.amenities || [],
+          capacity: service.features?.capacity || 0,
+          duration: service.features?.duration || '',
+          groupSize: service.features?.groupSize || 0
+        }));
+        setServices(transformedServices);
+      } else {
+        setError(response.message || 'Failed to load services');
       }
-    ]);
+    } catch (err) {
+      console.error('Error loading services:', err);
+      setError('Failed to load services');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const ServiceCard = ({ service }) => (
@@ -123,7 +129,10 @@ const VendorServices = () => {
             <Eye className="w-4 h-4 mr-1" />
             View
           </button>
-          <button className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+          <button 
+            onClick={() => handleDeleteService(service.id)}
+            className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
             <Trash2 className="w-4 h-4" />
           </button>
         </div>
@@ -131,7 +140,7 @@ const VendorServices = () => {
     </div>
   );
 
-  const ServiceModal = ({ service, onClose, onSave }) => {
+  const ServiceModal = ({ service, onClose, onSave, loadServices }) => {
     const [formData, setFormData] = useState(
       service || {
         name: '',
@@ -147,9 +156,57 @@ const VendorServices = () => {
       }
     );
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      onSave(formData);
+      
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Transform form data to backend format
+        const serviceData = {
+          name: formData.name,
+          description: formData.description,
+          type: formData.type,
+          location: {
+            city: formData.location.split(',')[0]?.trim() || formData.location,
+            state: formData.location.split(',')[1]?.trim() || 'India'
+          },
+          pricing: {
+            basePrice: parseFloat(formData.price),
+            unit: 'per booking'
+          },
+          features: {
+            amenities: Array.isArray(formData.amenities) ? formData.amenities : [],
+            capacity: formData.capacity ? parseInt(formData.capacity) : undefined,
+            duration: formData.duration || undefined,
+            groupSize: formData.groupSize ? parseInt(formData.groupSize) : undefined
+          },
+          images: formData.images || []
+        };
+
+        let response;
+        if (service) {
+          // Update existing service
+          response = await apiService.updateService(service.id, serviceData);
+        } else {
+          // Create new service
+          response = await apiService.createService(serviceData);
+        }
+
+        if (response.success) {
+          setSuccess(service ? 'Service updated successfully!' : 'Service created successfully!');
+          onSave(response.data.service);
+          loadServices(); // Reload services list
+        } else {
+          setError(response.message || 'Failed to save service');
+        }
+      } catch (err) {
+        console.error('Error saving service:', err);
+        setError('Failed to save service');
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (
@@ -279,6 +336,31 @@ const VendorServices = () => {
     );
   };
 
+  const handleDeleteService = async (serviceId) => {
+    if (!window.confirm('Are you sure you want to delete this service?')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await apiService.deleteService(serviceId);
+      
+      if (response.success) {
+        setSuccess('Service deleted successfully!');
+        loadServices(); // Reload services list
+      } else {
+        setError(response.message || 'Failed to delete service');
+      }
+    } catch (err) {
+      console.error('Error deleting service:', err);
+      setError('Failed to delete service');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredServices = services.filter(service => {
     const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          service.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -297,12 +379,45 @@ const VendorServices = () => {
           </div>
           <button
             onClick={() => setShowAddModal(true)}
-            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+            disabled={loading}
+            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
           >
             <Plus className="w-5 h-5 mr-2" />
             Add New Service
           </button>
         </div>
+
+        {/* Success Message */}
+        {success && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <div className="w-5 h-5 text-green-600 mr-3">✓</div>
+              <p className="text-green-800">{success}</p>
+              <button 
+                onClick={() => setSuccess(null)}
+                className="ml-auto text-green-600 hover:text-green-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="flex items-center">
+              <AlertCircle className="w-5 h-5 text-red-600 mr-3" />
+              <p className="text-red-800">{error}</p>
+              <button 
+                onClick={() => setError(null)}
+                className="ml-auto text-red-600 hover:text-red-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
@@ -334,14 +449,24 @@ const VendorServices = () => {
           </div>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredServices.map(service => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
-        </div>
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span className="ml-3 text-gray-600">Loading services...</span>
+          </div>
+        )}
 
-        {filteredServices.length === 0 && (
+        {/* Services Grid */}
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredServices.map(service => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        )}
+
+        {!loading && filteredServices.length === 0 && (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Plus className="w-8 h-8 text-gray-400" />
@@ -362,22 +487,30 @@ const VendorServices = () => {
         {/* Modals */}
         {showAddModal && (
           <ServiceModal
-            onClose={() => setShowAddModal(false)}
-            onSave={(data) => {
-              console.log('Save service:', data);
+            onClose={() => {
+              setShowAddModal(false);
+              setError(null);
+              setSuccess(null);
+            }}
+            onSave={() => {
               setShowAddModal(false);
             }}
+            loadServices={loadServices}
           />
         )}
 
         {editingService && (
           <ServiceModal
             service={editingService}
-            onClose={() => setEditingService(null)}
-            onSave={(data) => {
-              console.log('Update service:', data);
+            onClose={() => {
+              setEditingService(null);
+              setError(null);
+              setSuccess(null);
+            }}
+            onSave={() => {
               setEditingService(null);
             }}
+            loadServices={loadServices}
           />
         )}
       </div>

@@ -465,6 +465,111 @@ class ApiService {
     return getUserData();
   }
 
+  // Services APIs
+  async getAllServices(params = {}) {
+    try {
+      const response = await api.get('/services', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Get all services error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get services'
+      };
+    }
+  }
+
+  async searchServices(searchParams = {}) {
+    try {
+      const response = await api.get('/services/search', { params: searchParams });
+      return response.data;
+    } catch (error) {
+      console.error('Search services error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to search services'
+      };
+    }
+  }
+
+  async getServiceById(serviceId) {
+    try {
+      const response = await api.get(`/services/${serviceId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Get service by ID error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get service details'
+      };
+    }
+  }
+
+  async createService(serviceData) {
+    try {
+      const response = await api.post('/services', serviceData);
+      return response.data;
+    } catch (error) {
+      console.error('Create service error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to create service'
+      };
+    }
+  }
+
+  async updateService(serviceId, serviceData) {
+    try {
+      const response = await api.put(`/services/${serviceId}`, serviceData);
+      return response.data;
+    } catch (error) {
+      console.error('Update service error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update service'
+      };
+    }
+  }
+
+  async deleteService(serviceId) {
+    try {
+      const response = await api.delete(`/services/${serviceId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Delete service error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to delete service'
+      };
+    }
+  }
+
+  async getVendorServices(params = {}) {
+    try {
+      const response = await api.get('/services/vendor', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Get vendor services error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get vendor services'
+      };
+    }
+  }
+
+  async getServiceStats() {
+    try {
+      const response = await api.get('/services/stats/overview');
+      return response.data;
+    } catch (error) {
+      console.error('Get service stats error:', error);
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to get service statistics'
+      };
+    }
+  }
+
   // User Dashboard APIs
   async getUserDashboard() {
     try {
