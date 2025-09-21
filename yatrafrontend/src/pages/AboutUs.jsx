@@ -27,7 +27,7 @@ const AboutUs = () => {
     { name: 'Vedika Shivhare', role: 'Technology Director', image: '/images/team/vedika.jpg', description: 'Tech innovator creating seamless travel experiences.' },
     { name: 'Sonu Yadav', role: 'Marketing Head', image: '/images/team/sonu.jpg', description: 'Expert in digital campaigns and brand growth.' },
     { name: 'Vivek Singh Chauhan', role: 'Product Manager', image: '/images/team/vivek.jpg', description: 'Specializes in travel product innovation and UX design.' },
-    { name: 'Bharat Sharma', role: 'Finance Director', image: '/images/team/bharat.jpg', description: 'Handles budgeting, investments and revenue growth.' },
+    { name: 'Shubham Bhagat', role: 'Finance Director', image: '/images/team/shubham.jpg', description: 'Handles budgeting, investments and revenue growth.' },
   ];
 
   const checkScrollButtons = () => {
