@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "test": "jest",
     "migrate": "node scripts/migrate.js",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "delete-users": "node delete-all-users.js"
   },
   "keywords": [
     "tourism",

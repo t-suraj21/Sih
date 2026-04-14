@@ -369,3 +369,37 @@ export const changePassword = asyncHandler(async (req, res) => {
 
   res.json(new ApiResponse(200, null, 'Password changed successfully. Please login again'));
 });
+
+// Google OAuth Callback
+export const googleAuthCallback = asyncHandler(async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      throw new ApiError(401, 'Authentication failed');
+    }
+
+    // Generate tokens
+    const { accessToken, refreshToken } = generateTokens(user._id);
+
+    // Store refresh token in Redis (if available)
+    try {
+      await redis.set(`refresh_token:${user._id}`, refreshToken, 30 * 24 * 60 * 60); // 30 days
+    } catch (error) {
+      console.warn('Redis not available, refresh token not cached:', error.message);
+    }
+
+    // Remove password from response
+    const userResponse = user.toJSON();
+
+    // Redirect to frontend with tokens
+    const frontendUrl = config.frontendUrl;
+    const redirectUrl = `${frontendUrl}/auth/callback?token=${accessToken}&refreshToken=${refreshToken}&user=${encodeURIComponent(JSON.stringify(userResponse))}`;
+    
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.error('Google OAuth callback error:', error);
+    const frontendUrl = config.frontendUrl;
+    res.redirect(`${frontendUrl}/login?error=authentication_failed`);
+  }
+});

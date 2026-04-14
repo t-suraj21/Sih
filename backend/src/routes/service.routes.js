@@ -10,7 +10,7 @@ import {
   getServiceStats,
   searchServices
 } from '../controllers/service.controller.js';
-import { authMiddleware, requireRole } from '../middlewares/auth.middleware.js';
+import { authMiddleware, requireVendor, requireAdmin, authorize } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
 import { body, param, query } from 'express-validator';
 
@@ -80,7 +80,7 @@ router.get('/:serviceId',
 // Vendor routes (require authentication and vendor role)
 router.post('/', 
   authMiddleware,
-  requireRole(['vendor']),
+  requireVendor,
   createServiceValidation,
   validateRequest,
   createService
@@ -88,7 +88,7 @@ router.post('/',
 
 router.put('/:serviceId',
   authMiddleware,
-  requireRole(['vendor', 'admin']),
+  authorize('vendor', 'admin'),
   updateServiceValidation,
   validateRequest,
   updateService
@@ -96,7 +96,7 @@ router.put('/:serviceId',
 
 router.delete('/:serviceId',
   authMiddleware,
-  requireRole(['vendor', 'admin']),
+  authorize('vendor', 'admin'),
   param('serviceId').isMongoId().withMessage('Invalid service ID'),
   validateRequest,
   deleteService
@@ -112,7 +112,7 @@ router.get('/vendor/:vendorId?',
 // Admin routes
 router.patch('/:serviceId/status',
   authMiddleware,
-  requireRole(['admin']),
+  requireAdmin,
   param('serviceId').isMongoId().withMessage('Invalid service ID'),
   body('status')
     .isIn(['draft', 'pending', 'active', 'suspended', 'rejected'])
@@ -123,7 +123,7 @@ router.patch('/:serviceId/status',
 
 router.get('/stats/overview',
   authMiddleware,
-  requireRole(['vendor', 'admin']),
+  authorize('vendor', 'admin'),
   getServiceStats
 );
 

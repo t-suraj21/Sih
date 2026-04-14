@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from '../config/passport.js';
 import {
   registerUser,
   loginUser,
@@ -8,7 +9,8 @@ import {
   sendPhoneOTP,
   verifyPhoneOTP,
   refreshToken,
-  changePassword
+  changePassword,
+  googleAuthCallback
 } from '../controllers/auth.controller.js';
 import { authMiddleware, rateLimitByUser } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
@@ -91,6 +93,36 @@ const changePasswordValidation = [
 router.post('/register', registerValidation, validateRequest, registerUser);
 router.post('/login', loginValidation, validateRequest, loginUser);
 router.post('/refresh-token', refreshToken);
+
+// Google OAuth routes - Only enable if configured
+import { config } from '../config/config.js';
+
+if (config.googleOAuth.clientId && config.googleOAuth.clientSecret) {
+  router.get('/google', passport.authenticate('google', { 
+    scope: ['profile', 'email'],
+    session: false 
+  }));
+
+  router.get('/google/callback', 
+    passport.authenticate('google', { 
+      session: false,
+      failureRedirect: '/login?error=google_auth_failed'
+    }),
+    googleAuthCallback
+  );
+} else {
+  // Fallback routes when Google OAuth is not configured
+  router.get('/google', (req, res) => {
+    res.status(503).json({
+      success: false,
+      message: 'Google OAuth is not configured. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to backend/.env file.'
+    });
+  });
+
+  router.get('/google/callback', (req, res) => {
+    res.redirect(`${config.frontendUrl}/login?error=oauth_not_configured`);
+  });
+}
 
 // OTP routes
 router.post('/send-otp', phoneOTPValidation, validateRequest, sendPhoneOTP);

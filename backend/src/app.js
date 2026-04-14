@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'net';
+import passport from './config/passport.js';
 import { connectMongoDB, connectRedis } from './config/database.js';
 import { config } from './config/config.js';
 import { ApiError } from './utils/ApiError.js';
@@ -22,6 +23,7 @@ import destinationRoutes from './routes/destination.routes.js';
 import attractionRoutes from './routes/attraction.routes.js';
 import ecoTourismRoutes from './routes/ecotourism.routes.js';
 import serviceRoutes from './routes/service.routes.js';
+import packageRoutes from './routes/package.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import sosRoutes from './routes/sos.routes.js';
 
@@ -66,6 +68,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
+// Initialize Passport
+app.use(passport.initialize());
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
@@ -106,6 +111,7 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/attractions', attractionRoutes);
 app.use('/api/eco-tourism', ecoTourismRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/packages', packageRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/sos', sosRoutes);
 
