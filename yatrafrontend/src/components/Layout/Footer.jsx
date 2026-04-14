@@ -30,16 +30,16 @@ const Footer = () => {
               Safe, verified, and transparent travel in India. Your trusted partner for fraud-free tourism experiences.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-gray-400 transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-gray-400 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-gray-400 transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="text-gray-400 transition-colors">
                 <Youtube className="w-5 h-5" />
               </a>
             </div>
@@ -52,8 +52,8 @@ const Footer = () => {
               <li>
                 <Link to="/about" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   About Us
                 </Link>
@@ -61,8 +61,8 @@ const Footer = () => {
               <li>
                 <Link to="/destinations" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Destinations
                 </Link>
@@ -70,8 +70,8 @@ const Footer = () => {
               <li>
                 <Link to="/services" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Services
                 </Link>
@@ -79,8 +79,8 @@ const Footer = () => {
               <li>
                 <Link to="/eco-tourism" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Eco Tourism
                 </Link>
@@ -88,8 +88,8 @@ const Footer = () => {
               <li>
                 <Link to="/safety-sos" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Safety & SOS
                 </Link>
@@ -104,8 +104,8 @@ const Footer = () => {
               <li>
                 <Link to="/contact" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Contact Us
                 </Link>
@@ -113,8 +113,8 @@ const Footer = () => {
               <li>
                 <Link to="/faq" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   FAQ
                 </Link>
@@ -122,8 +122,8 @@ const Footer = () => {
               <li>
                 <a href="#" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Privacy Policy
                 </a>
@@ -131,8 +131,8 @@ const Footer = () => {
               <li>
                 <a href="#" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Terms of Service
                 </a>
@@ -140,8 +140,8 @@ const Footer = () => {
               <li>
                 <a href="#" className={`transition-colors text-sm ${
                   isDark 
-                    ? 'text-slate-400 hover:text-slate-200'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-slate-400'
+                    : 'text-gray-400'
                 }`}>
                   Refund Policy
                 </a>
@@ -188,15 +188,15 @@ const Footer = () => {
               <div className="flex space-x-2">
                 <button className={`px-3 py-2 rounded-lg text-xs transition-colors ${
                   isDark 
-                    ? 'bg-slate-800 hover:bg-slate-700'
-                    : 'bg-gray-800 hover:bg-gray-700'
+                    ? 'bg-slate-800'
+                    : 'bg-gray-800'
                 }`}>
                   📱 Play Store
                 </button>
                 <button className={`px-3 py-2 rounded-lg text-xs transition-colors ${
                   isDark 
-                    ? 'bg-slate-800 hover:bg-slate-700'
-                    : 'bg-gray-800 hover:bg-gray-700'
+                    ? 'bg-slate-800'
+                    : 'bg-gray-800'
                 }`}>
                   🍎 App Store
                 </button>

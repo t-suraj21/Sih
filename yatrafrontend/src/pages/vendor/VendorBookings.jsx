@@ -190,7 +190,7 @@ const VendorBookings = () => {
               <h2 className="text-xl font-bold text-gray-900">Booking Details</h2>
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-colors"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -315,14 +315,14 @@ const VendorBookings = () => {
               <div className="flex space-x-2">
                 <a 
                   href={`tel:${booking.customerPhone}`}
-                  className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                 >
                   <Phone className="w-4 h-4 mr-2" />
                   Call
                 </a>
                 <a 
                   href={`mailto:${booking.customerEmail}`}
-                  className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors"
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Email
@@ -333,14 +333,14 @@ const VendorBookings = () => {
                 <div className="flex space-x-2">
                   <button 
                     onClick={() => handleStatusChange(booking.id, 'confirmed')}
-                    className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Confirm
                   </button>
                   <button 
                     onClick={() => handleStatusChange(booking.id, 'cancelled')}
-                    className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg transition-colors"
                   >
                     <XCircle className="w-4 h-4 mr-2" />
                     Cancel
@@ -397,7 +397,7 @@ const VendorBookings = () => {
               <p className="text-gray-600 mb-4">{error}</p>
               <button 
                 onClick={loadVendorData}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors"
               >
                 Try Again
               </button>
@@ -486,12 +486,12 @@ const VendorBookings = () => {
             </select>
             <button 
               onClick={loadVendorData}
-              className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors mr-2"
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors mr-2"
             >
               <Search className="w-4 h-4 mr-2" />
               Refresh
             </button>
-            <button className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export
             </button>
@@ -515,7 +515,7 @@ const VendorBookings = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredBookings.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-gray-50">
+                  <tr key={booking.id}>
                     <td className="py-4 px-6">
                       <div>
                         <p className="font-medium text-gray-900">{booking.bookingId}</p>
@@ -557,19 +557,19 @@ const VendorBookings = () => {
                       <div className="flex items-center space-x-2">
                         <button 
                           onClick={() => setSelectedBooking(booking)}
-                          className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          className="p-2 text-gray-400 transition-colors"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <a 
                           href={`tel:${booking.customerPhone}`}
-                          className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                          className="p-2 text-gray-400 transition-colors"
                         >
                           <Phone className="w-4 h-4" />
                         </a>
                         <a 
                           href={`mailto:${booking.customerEmail}`}
-                          className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          className="p-2 text-gray-400 transition-colors"
                         >
                           <Mail className="w-4 h-4" />
                         </a>

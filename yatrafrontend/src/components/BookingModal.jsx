@@ -71,7 +71,7 @@ const BookingModal = ({ isOpen, onClose, service, destination, serviceType = 'ho
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -234,7 +234,7 @@ const BookingModal = ({ isOpen, onClose, service, destination, serviceType = 'ho
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold transition-colors"
                 >
                   Continue to Details
                 </button>
@@ -423,13 +423,13 @@ const BookingModal = ({ isOpen, onClose, service, destination, serviceType = 'ho
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold transition-colors"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold transition-colors"
                   >
                     Confirm Booking
                   </button>
@@ -574,8 +574,8 @@ const BookingModal = ({ isOpen, onClose, service, destination, serviceType = 'ho
                 onClick={onClose}
                 className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                   isEcoTourism() 
-                    ? 'bg-green-600 hover:bg-green-700 text-white' 
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-blue-600 text-white'
                 }`}
               >
                 Close

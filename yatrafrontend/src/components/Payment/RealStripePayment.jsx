@@ -189,13 +189,13 @@ const RealStripePayment = ({
               setPaymentStatus('idle');
               setPaymentError('');
             }}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             Try Again
           </button>
           <button
             onClick={onCancel}
-            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
+            className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
           >
             Cancel
           </button>
@@ -323,7 +323,7 @@ const RealStripePayment = ({
           <button
             type="submit"
             disabled={isProcessing || paymentStatus === 'processing'}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center"
+            className="w-full bg-blue-600 disabled:bg-blue-400 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center"
           >
             {isProcessing ? (
               <>
@@ -342,7 +342,7 @@ const RealStripePayment = ({
             type="button"
             onClick={onCancel}
             disabled={isProcessing}
-            className="w-full bg-gray-300 hover:bg-gray-400 disabled:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium transition-colors"
+            className="w-full bg-gray-300 disabled:bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium transition-colors"
           >
             Cancel
           </button>

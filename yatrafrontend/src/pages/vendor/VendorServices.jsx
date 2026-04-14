@@ -120,18 +120,18 @@ const VendorServices = () => {
         <div className="flex space-x-2">
           <button 
             onClick={() => setEditingService(service)}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center"
+            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center"
           >
             <Edit className="w-4 h-4 mr-1" />
             Edit
           </button>
-          <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+          <button className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
             <Eye className="w-4 h-4 mr-1" />
             View
           </button>
           <button 
             onClick={() => handleDeleteService(service.id)}
-            className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="px-3 py-2 text-red-600 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -219,7 +219,7 @@ const VendorServices = () => {
               </h2>
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -318,13 +318,13 @@ const VendorServices = () => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-6 py-2 text-gray-600 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
               >
                 <Save className="w-4 h-4 mr-2" />
                 {service ? 'Update' : 'Create'} Service
@@ -380,7 +380,7 @@ const VendorServices = () => {
           <button
             onClick={() => setShowAddModal(true)}
             disabled={loading}
-            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
+            className="mt-4 sm:mt-0 bg-blue-600 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center"
           >
             <Plus className="w-5 h-5 mr-2" />
             Add New Service
@@ -395,7 +395,7 @@ const VendorServices = () => {
               <p className="text-green-800">{success}</p>
               <button 
                 onClick={() => setSuccess(null)}
-                className="ml-auto text-green-600 hover:text-green-800"
+                className="ml-auto text-green-600"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -411,7 +411,7 @@ const VendorServices = () => {
               <p className="text-red-800">{error}</p>
               <button 
                 onClick={() => setError(null)}
-                className="ml-auto text-red-600 hover:text-red-800"
+                className="ml-auto text-red-600"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -442,7 +442,7 @@ const VendorServices = () => {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
-            <button className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg transition-colors">
               <Filter className="w-4 h-4 mr-2" />
               More Filters
             </button>
@@ -477,7 +477,7 @@ const VendorServices = () => {
             </p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Add Your First Service
             </button>

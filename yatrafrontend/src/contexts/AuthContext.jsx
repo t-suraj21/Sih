@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import apiService from '../services/api.service.js';
 
 const AuthContext = createContext();
@@ -70,12 +70,7 @@ const initialState = {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Check for existing token on app load
-  useEffect(() => {
-    checkAuthState();
-  }, []);
-
-  const checkAuthState = async () => {
+  const checkAuthState = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const refreshToken = localStorage.getItem('refreshToken');
@@ -103,22 +98,55 @@ export const AuthProvider = ({ children }) => {
         // Token might be expired, try to refresh
         if (refreshToken) {
           try {
-            await refreshAuthToken(refreshToken);
+            const refreshResponse = await apiService.refreshToken(refreshToken);
+            if (refreshResponse.success && refreshResponse.data) {
+              const { token: newToken, refreshToken: newRefreshToken } = refreshResponse.data;
+              localStorage.setItem('token', newToken);
+              localStorage.setItem('refreshToken', newRefreshToken);
+              
+              // Get updated user profile
+              const profileResponse = await apiService.getProfile();
+              if (profileResponse.success && profileResponse.data?.user) {
+                dispatch({
+                  type: 'LOGIN_SUCCESS',
+                  payload: {
+                    user: profileResponse.data.user,
+                    token: newToken
+                  }
+                });
+              }
+            } else {
+              // Refresh failed, clear tokens
+              localStorage.removeItem('token');
+              localStorage.removeItem('refreshToken');
+              dispatch({ type: 'LOGOUT' });
+            }
           } catch (refreshError) {
-            // Refresh failed, logout
-            logout();
+            // Refresh failed, clear tokens
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            dispatch({ type: 'LOGOUT' });
           }
         } else {
-          logout();
+          // No refresh token, clear and logout
+          localStorage.removeItem('token');
+          dispatch({ type: 'LOGOUT' });
         }
       }
     } catch (error) {
       console.error('Auth state check failed:', error);
-      logout();
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      dispatch({ type: 'LOGOUT' });
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, []); // Empty dependency array since it doesn't depend on any props or state
+
+  // Check for existing token on app load
+  useEffect(() => {
+    checkAuthState();
+  }, [checkAuthState]);
 
   const login = async (credentials) => {
     dispatch({ type: 'LOGIN_START' });
@@ -328,9 +356,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const clearError = () => {
+  const clearError = React.useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
-  };
+  }, []);
 
   // Helper functions
   const isAdmin = () => state.user?.role === 'admin';

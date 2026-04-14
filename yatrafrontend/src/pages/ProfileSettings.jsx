@@ -166,7 +166,7 @@ const ProfileSettings = () => {
               />
 
               <div className="space-y-3">
-                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-colors">
                   <div className="flex items-center">
                     <Lock className="w-5 h-5 text-gray-600 mr-3" />
                     <div className="text-left">
@@ -177,7 +177,7 @@ const ProfileSettings = () => {
                   <span className="text-gray-400">→</span>
                 </button>
 
-                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-colors">
                   <div className="flex items-center">
                     <Smartphone className="w-5 h-5 text-gray-600 mr-3" />
                     <div className="text-left">
@@ -190,7 +190,7 @@ const ProfileSettings = () => {
                   <span className="text-gray-400">→</span>
                 </button>
 
-                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-colors">
                   <div className="flex items-center">
                     <Mail className="w-5 h-5 text-gray-600 mr-3" />
                     <div className="text-left">
@@ -214,7 +214,7 @@ const ProfileSettings = () => {
             </div>
             
             <div className="space-y-4">
-              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-colors">
                 <div className="flex items-center">
                   <Download className="w-5 h-5 text-gray-600 mr-3" />
                   <div className="text-left">
@@ -225,7 +225,7 @@ const ProfileSettings = () => {
                 <span className="text-gray-400">→</span>
               </button>
 
-              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg transition-colors">
                 <div className="flex items-center">
                   <Globe className="w-5 h-5 text-gray-600 mr-3" />
                   <div className="text-left">
@@ -253,7 +253,7 @@ const ProfileSettings = () => {
 
             <button
               onClick={handleDeleteAccount}
-              className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              className="flex items-center px-6 py-3 bg-red-600 text-white rounded-lg font-medium transition-colors"
             >
               <Trash2 className="w-4 h-4 mr-2" />
               Delete Account
@@ -262,7 +262,7 @@ const ProfileSettings = () => {
 
           {/* Save Button */}
           <div className="flex justify-end">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
               Save Settings
             </button>
           </div>

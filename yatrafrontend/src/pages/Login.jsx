@@ -128,8 +128,11 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    // Implement Google OAuth login
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    // Get the API URL and construct the OAuth URL
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    // Remove /api from the end if present, then add /api/auth/google
+    const baseUrl = apiUrl.replace(/\/api$/, '');
+    window.location.href = `${baseUrl}/api/auth/google`;
   };
 
   return (
@@ -163,7 +166,7 @@ const Login = () => {
                   className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all hover:shadow-md ${
                     formData.role === type.id 
                       ? 'border-blue-500 bg-blue-50 shadow-sm' 
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-gray-200'
                   }`}
                 >
                   <input
@@ -200,7 +203,7 @@ const Login = () => {
                 className={`flex-1 flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                   loginMethod === 'email' 
                     ? 'bg-white text-blue-600 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    : 'text-gray-600'
                 }`}
               >
                 <Mail className="w-4 h-4 mr-2" />
@@ -212,7 +215,7 @@ const Login = () => {
                 className={`flex-1 flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                   loginMethod === 'phone' 
                     ? 'bg-white text-blue-600 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    : 'text-gray-600'
                 }`}
               >
                 <Phone className="w-4 h-4 mr-2" />
@@ -261,9 +264,9 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <EyeOff className="h-5 w-5 text-gray-400" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <Eye className="h-5 w-5 text-gray-400" />
                   )}
                 </button>
               </div>
@@ -284,7 +287,7 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+                <Link to="/forgot-password" className="font-medium text-blue-600">
                   Forgot password?
                 </Link>
               </div>
@@ -311,7 +314,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
               >
                 {loading ? (
                   <>
@@ -328,7 +331,7 @@ const Login = () => {
             <div className="text-center">
               <button
                 type="button"
-                className="text-sm text-blue-600 hover:text-blue-500 font-medium"
+                className="text-sm text-blue-600 font-medium"
                 onClick={() => navigate('/login/otp')}
               >
                 Sign in with OTP instead →
@@ -351,7 +354,7 @@ const Login = () => {
             <div className="mt-6 grid grid-cols-1 gap-3">
               <button 
                 onClick={handleGoogleLogin}
-                className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 transition-all"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -368,7 +371,7 @@ const Login = () => {
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link to="/signup" className="font-semibold text-blue-600 hover:text-blue-500">
+              <Link to="/signup" className="font-semibold text-blue-600">
                 Create account
               </Link>
             </p>
@@ -397,7 +400,7 @@ const Login = () => {
         <div className="text-center">
           <p className="text-xs text-gray-500">
             Need help? Contact our{' '}
-            <Link to="/support" className="text-blue-600 hover:text-blue-500">
+            <Link to="/support" className="text-blue-600">
               24/7 Support Team
             </Link>
           </p>

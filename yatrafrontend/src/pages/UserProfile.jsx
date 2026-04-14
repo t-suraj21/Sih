@@ -91,7 +91,7 @@ const UserProfile = () => {
               </div>
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center"
+                className="bg-white/20 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center"
               >
                 {isEditing ? (
                   <>
@@ -225,14 +225,14 @@ const UserProfile = () => {
                         <button
                           onClick={handleSave}
                           disabled={loading}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center disabled:opacity-50"
+                          className="bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center disabled:opacity-50"
                         >
                           <Save className="w-4 h-4 mr-2" />
                           {loading ? 'Saving...' : 'Save Changes'}
                         </button>
                         <button
                           onClick={handleCancel}
-                          className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-medium transition-colors"
+                          className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium transition-colors"
                         >
                           Cancel
                         </button>
@@ -267,19 +267,19 @@ const UserProfile = () => {
                 <div className="bg-gray-50 rounded-xl p-6">
                   <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
                   <div className="space-y-3">
-                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-100 transition-colors">
+                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg transition-colors">
                       <div className="flex items-center">
                         <Lock className="w-4 h-4 text-gray-600 mr-3" />
                         <span className="text-sm text-gray-700">Change Password</span>
                       </div>
                     </button>
-                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-100 transition-colors">
+                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg transition-colors">
                       <div className="flex items-center">
                         <Settings className="w-4 h-4 text-gray-600 mr-3" />
                         <span className="text-sm text-gray-700">Privacy Settings</span>
                       </div>
                     </button>
-                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-100 transition-colors">
+                    <button className="w-full flex items-center justify-between p-3 bg-white rounded-lg transition-colors">
                       <div className="flex items-center">
                         <Shield className="w-4 h-4 text-gray-600 mr-3" />
                         <span className="text-sm text-gray-700">Security Settings</span>

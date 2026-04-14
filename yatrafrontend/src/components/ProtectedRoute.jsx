@@ -87,14 +87,14 @@ const UnauthorizedAccess = ({ userRole, requiredRoles }) => {
         <div className="space-y-3">
           <button
             onClick={() => window.history.back()}
-            className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+            className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
           >
             Go Back
           </button>
           
           <button
             onClick={() => window.location.href = '/'}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
           >
             Go to Homepage
           </button>
@@ -106,7 +106,7 @@ const UnauthorizedAccess = ({ userRole, requiredRoles }) => {
               </p>
               <button
                 onClick={() => window.location.href = '/vendor/register'}
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+                className="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
               >
                 Register as Service Provider
               </button>

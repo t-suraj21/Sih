@@ -311,7 +311,7 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType, onBook }) 
         </p>
         <button 
           onClick={onBook}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
         >
           Book Now
         </button>
@@ -337,7 +337,7 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType, onBook }) 
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -357,7 +357,7 @@ const ServiceDetailsModal = ({ service, isOpen, onClose, serviceType, onBook }) 
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    : 'border-transparent text-gray-500'
                 }`}
               >
                 {tab.name}

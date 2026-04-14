@@ -236,7 +236,11 @@ const Signup = () => {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    // Get the API URL and construct the OAuth URL
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    // Remove /api from the end if present, then add /api/auth/google
+    const baseUrl = apiUrl.replace(/\/api$/, '');
+    window.location.href = `${baseUrl}/api/auth/google`;
   };
 
   const renderStep1 = () => (
@@ -253,7 +257,7 @@ const Signup = () => {
             className={`block p-6 border-2 rounded-2xl cursor-pointer transition-all hover:shadow-md ${
               formData.role === type.id 
                 ? `border-transparent bg-gradient-to-r ${type.color} text-white shadow-lg` 
-                : `border-gray-200 hover:border-gray-300 ${type.bgColor}`
+                : `border-gray-200 ${type.bgColor}`
             }`}
           >
             <input
@@ -310,7 +314,7 @@ const Signup = () => {
 
       <button
         type="submit"
-        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl"
+        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl"
       >
         Continue with {userTypes.find(t => t.id === formData.role)?.name}
       </button>
@@ -449,8 +453,8 @@ const Signup = () => {
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? 
-              <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" /> : 
-              <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+              <EyeOff className="h-5 w-5 text-gray-400" /> : 
+              <Eye className="h-5 w-5 text-gray-400" />
             }
           </button>
         </div>
@@ -480,8 +484,8 @@ const Signup = () => {
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
             {showConfirmPassword ? 
-              <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" /> : 
-              <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+              <EyeOff className="h-5 w-5 text-gray-400" /> : 
+              <Eye className="h-5 w-5 text-gray-400" />
             }
           </button>
         </div>
@@ -507,13 +511,13 @@ const Signup = () => {
         <button
           type="button"
           onClick={() => setStep(1)}
-          className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors"
+          className="flex-1 bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors"
         >
           Back
         </button>
         <button
           type="submit"
-          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-xl transition-all"
+          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium py-3 px-4 rounded-xl transition-all"
         >
           Continue
         </button>
@@ -555,11 +559,11 @@ const Signup = () => {
           />
           <span className="text-sm text-gray-700 leading-relaxed">
             I agree to the{' '}
-            <Link to="/terms" className="text-blue-600 hover:text-blue-500 font-medium">
+            <Link to="/terms" className="text-blue-600 font-medium">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link to="/user-agreement" className="text-blue-600 hover:text-blue-500 font-medium">
+            <Link to="/user-agreement" className="text-blue-600 font-medium">
               User Agreement
             </Link> *
           </span>
@@ -576,7 +580,7 @@ const Signup = () => {
           />
           <span className="text-sm text-gray-700 leading-relaxed">
             I agree to the{' '}
-            <Link to="/privacy" className="text-blue-600 hover:text-blue-500 font-medium">
+            <Link to="/privacy" className="text-blue-600 font-medium">
               Privacy Policy
             </Link>{' '}
             and consent to data processing for platform services *
@@ -617,14 +621,14 @@ const Signup = () => {
         <button
           type="button"
           onClick={() => setStep(2)}
-          className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors"
+          className="flex-1 bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl transition-colors"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={loading || !formData.acceptTerms || !formData.acceptPrivacy}
-          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+          className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
         >
           {loading ? (
             <div className="flex items-center justify-center">
@@ -707,7 +711,7 @@ const Signup = () => {
                   <button 
                     type="button"
                     onClick={handleGoogleSignup}
-                    className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                    className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 transition-all"
                   >
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -723,7 +727,7 @@ const Signup = () => {
               <div className="mt-8 text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?{' '}
-                  <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500">
+                  <Link to="/login" className="font-semibold text-blue-600">
                     Sign in here
                   </Link>
                 </p>
@@ -754,7 +758,7 @@ const Signup = () => {
         <div className="text-center">
           <p className="text-xs text-gray-500">
             Need help with registration? Contact our{' '}
-            <Link to="/support" className="text-blue-600 hover:text-blue-500">
+            <Link to="/support" className="text-blue-600">
               24/7 Support Team
             </Link>
           </p>

@@ -116,7 +116,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 rounded-full transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -283,7 +283,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                 <button
                   type="button"
                   onClick={() => addArrayItem('features.amenities', newAmenity, setNewAmenity)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -298,7 +298,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                     <button
                       type="button"
                       onClick={() => removeArrayItem('features.amenities', index)}
-                      className="text-gray-500 hover:text-red-500"
+                      className="text-gray-500"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -323,7 +323,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                 <button
                   type="button"
                   onClick={() => addArrayItem('features.included', newIncluded, setNewIncluded)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -338,7 +338,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                     <button
                       type="button"
                       onClick={() => removeArrayItem('features.included', index)}
-                      className="text-green-500 hover:text-red-500"
+                      className="text-green-500"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -363,7 +363,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                 <button
                   type="button"
                   onClick={() => addArrayItem('features.excluded', newExcluded, setNewExcluded)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -378,7 +378,7 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
                     <button
                       type="button"
                       onClick={() => removeArrayItem('features.excluded', index)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -439,14 +439,14 @@ const ServiceForm = ({ isOpen, onClose, onSuccess, editService = null }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg transition-colors"
               disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-green-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? 'Saving...' : editService ? 'Update Service' : 'Create Service'}

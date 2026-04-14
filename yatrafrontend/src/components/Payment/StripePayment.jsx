@@ -293,7 +293,7 @@ const StripePayment = ({ amount, onPaymentSuccess, onPaymentError }) => {
       <button
         onClick={processPayment}
         disabled={isProcessing}
-        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6 flex items-center justify-center space-x-2"
+        className="w-full bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6 flex items-center justify-center space-x-2"
       >
         {isProcessing ? (
           <>

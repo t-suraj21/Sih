@@ -55,12 +55,12 @@ const AdminAnalytics = () => {
           <div className="flex space-x-3">
             <button 
               onClick={loadAnalytics}
-              className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </button>
-            <button className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export Report
             </button>

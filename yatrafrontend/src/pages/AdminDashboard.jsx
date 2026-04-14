@@ -262,7 +262,7 @@ const AdminDashboard = () => {
         <div className="p-6 border-b border-gray-100">
               <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">System Alerts</h2>
-            <button className="text-purple-600 hover:text-purple-500 text-sm font-medium">
+            <button className="text-purple-600 text-sm font-medium">
               View All
             </button>
           </div>
@@ -298,7 +298,7 @@ const AdminDashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
+          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Users className="w-6 h-6 text-blue-600" />
           </div>
           <p className="font-medium text-gray-900">User Management</p>
@@ -306,7 +306,7 @@ const AdminDashboard = () => {
         </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Building className="w-6 h-6 text-green-600" />
           </div>
           <p className="font-medium text-gray-900">Vendor Approval</p>
@@ -314,7 +314,7 @@ const AdminDashboard = () => {
         </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <BarChart3 className="w-6 h-6 text-purple-600" />
           </div>
           <p className="font-medium text-gray-900">Analytics</p>
@@ -322,7 +322,7 @@ const AdminDashboard = () => {
         </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-red-200 transition-colors">
+          <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Settings className="w-6 h-6 text-red-600" />
           </div>
           <p className="font-medium text-gray-900">System Settings</p>
@@ -351,7 +351,7 @@ const AdminDashboard = () => {
             <option value="vendor">Vendor</option>
             <option value="admin">Admin</option>
           </select>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
             Export
           </button>
         </div>
@@ -373,7 +373,7 @@ const AdminDashboard = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
+                <tr key={user.id}>
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -406,19 +406,19 @@ const AdminDashboard = () => {
                     <div className="flex items-center space-x-2">
                       <button 
                         onClick={() => handleUserAction(user.id, 'view')}
-                        className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                        className="p-2 text-gray-400 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleUserAction(user.id, 'edit')}
-                        className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                        className="p-2 text-gray-400 transition-colors"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                 <button
                         onClick={() => handleUserAction(user.id, user.status === 'active' ? 'suspend' : 'activate')}
-                        className="p-2 text-gray-400 hover:text-yellow-600 transition-colors"
+                        className="p-2 text-gray-400 transition-colors"
                       >
                         {user.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                 </button>
@@ -444,7 +444,7 @@ const AdminDashboard = () => {
             <option value="pending">Pending Approval</option>
             <option value="suspended">Suspended</option>
           </select>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
             Bulk Actions
           </button>
         </div>
@@ -502,19 +502,19 @@ const AdminDashboard = () => {
               <div className="flex space-x-2">
                 <button 
                   onClick={() => handleVendorAction(vendor.id, 'view')}
-                  className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                  className="p-2 text-gray-400 transition-colors"
                 >
                   <Eye className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => handleVendorAction(vendor.id, 'verify')}
-                  className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                  className="p-2 text-gray-400 transition-colors"
                 >
                   <CheckCircle className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => handleVendorAction(vendor.id, 'contact')}
-                  className="p-2 text-gray-400 hover:text-purple-600 transition-colors"
+                  className="p-2 text-gray-400 transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                 </button>
@@ -617,7 +617,7 @@ const AdminDashboard = () => {
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       activeTab === tab.id
                         ? 'bg-purple-50 text-purple-600 border border-purple-200'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        : 'text-gray-600'
                     }`}
                   >
                     {tab.icon}
@@ -629,7 +629,7 @@ const AdminDashboard = () => {
               <div className="mt-6 pt-6 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 rounded-lg font-medium transition-colors"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Logout</span>

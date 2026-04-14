@@ -22,12 +22,12 @@ const AboutUs = () => {
   ];
 
   const team = [
-    { name: 'Suraj Kumar', role: 'Founder & CEO', image: '/images/team/suraj.jpg', description: 'Former Tourism Ministry official with 20+ years experience.' },
-    { name: 'Vidushi Gupta', role: 'Head of Safety & Operations', image: '/images/team/vidushi.jpg', description: 'Safety expert and former police officer for tourist security.' },
-    { name: 'Vedika Shivhare', role: 'Technology Director', image: '/images/team/vedika.jpg', description: 'Tech innovator creating seamless travel experiences.' },
-    { name: 'Sonu Yadav', role: 'Marketing Head', image: '/images/team/sonu.jpg', description: 'Expert in digital campaigns and brand growth.' },
-    { name: 'Vivek Singh Chauhan', role: 'Product Manager', image: '/images/team/vivek.jpg', description: 'Specializes in travel product innovation and UX design.' },
-    { name: 'Shubham Bhagat', role: 'Finance Director', image: '/images/team/shubham.jpg', description: 'Handles budgeting, investments and revenue growth.' },
+    { name: 'Suraj Kumar', role: 'Founder & CEO', image: '/images/team/suraj.jpg' },
+    { name: 'Vidushi Gupta', role: 'Head of Safety & Operations', image: '/images/team/vidushi.jpg' },
+    { name: 'Vedika Shivhare', role: 'Technology Director', image: '/images/team/vedika.jpg' },
+    { name: 'Sonu Yadav', role: 'Marketing Head', image: '/images/team/sonu.jpg'},
+    { name: 'Vivek Singh Chauhan', role: 'Product Manager', image: '/images/team/vivek.jpg' },
+    { name: 'Shubham Bhagat', role: 'Finance Director', image: '/images/team/shubham.jpg'},
   ];
 
   const checkScrollButtons = () => {
@@ -123,7 +123,7 @@ const AboutUs = () => {
               disabled={!canScrollLeft} 
               className={`p-3 rounded-full border transition-all ${
                 canScrollLeft 
-                  ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' 
+                  ? 'border-blue-400 text-blue-400' 
                   : 'border-gray-600 text-gray-600 cursor-not-allowed'
               }`}
             >
@@ -134,7 +134,7 @@ const AboutUs = () => {
               disabled={!canScrollRight} 
               className={`p-3 rounded-full border transition-all ${
                 canScrollRight 
-                  ? 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white' 
+                  ? 'border-blue-400 text-blue-400' 
                   : 'border-gray-600 text-gray-600 cursor-not-allowed'
               }`}
             >
@@ -213,10 +213,10 @@ const AboutUs = () => {
             or a service provider wanting to reach verified customers, we're here to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+            <button className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
               Start Your Journey
             </button>
-            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+            <button className="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
               Become a Partner
             </button>
           </div>

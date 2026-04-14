@@ -151,7 +151,7 @@ const ContactUs = () => {
           </div>
           <button
             onClick={() => setSubmitted(false)}
-            className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
           >
             Send Another
           </button>
@@ -176,7 +176,7 @@ const ContactUs = () => {
         {/* Contact Methods */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {contactMethods.map((method, idx) => (
-            <div key={idx} className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-700 transition-colors">
+            <div key={idx} className="bg-gray-800 rounded-lg shadow-lg p-6 transition-colors">
               <div className="flex justify-center mb-4">{method.icon}</div>
               <h3 className="text-xl font-semibold mb-2">{method.title}</h3>
               <p className="text-blue-400 font-medium mb-2">{method.details}</p>
@@ -297,7 +297,7 @@ const ContactUs = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors disabled:opacity-50"
+                className="w-full flex items-center justify-center space-x-2 bg-blue-600 text-white py-3 rounded-lg transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
@@ -361,7 +361,7 @@ const ContactUs = () => {
                     </div>
                     <ul className="space-y-2 text-gray-300">
                       {cat.questions.map((q, qi) => (
-                        <li key={qi} className="cursor-pointer hover:text-blue-400">
+                        <li key={qi} className="cursor-pointer">
                           • {q}
                         </li>
                       ))}

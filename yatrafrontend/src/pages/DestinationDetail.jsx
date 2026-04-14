@@ -72,7 +72,7 @@ const DestinationDetail = () => {
   };
 
   const handleBookHotel = (hotel) => {
-    navigate(`/hotels/${hotel.id}`);
+    navigate(`/booking`, { state: { hotel } });
   };
 
   const handleExploreAttraction = (attraction) => {
@@ -117,7 +117,7 @@ const DestinationDetail = () => {
           <p className="text-gray-600 mb-4">{error || 'The requested destination could not be found.'}</p>
           <button
             onClick={() => navigate('/destinations')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
           >
             Back to Destinations
           </button>
@@ -198,7 +198,7 @@ const DestinationDetail = () => {
                 <button
                   onClick={() => setIsFavorited(!isFavorited)}
                   className={`p-3 rounded-full transition-colors ${
-                    isFavorited ? 'bg-red-500 text-white' : 'bg-white bg-opacity-20 text-white hover:bg-opacity-30'
+                    isFavorited ? 'bg-red-500 text-white' : 'bg-white bg-opacity-20 text-white'
                   }`}
                 >
                   <Heart className={`w-6 h-6 ${isFavorited ? 'fill-current' : ''}`} />
@@ -206,12 +206,12 @@ const DestinationDetail = () => {
                 <button
                   onClick={() => setIsBookmarked(!isBookmarked)}
                   className={`p-3 rounded-full transition-colors ${
-                    isBookmarked ? 'bg-blue-500 text-white' : 'bg-white bg-opacity-20 text-white hover:bg-opacity-30'
+                    isBookmarked ? 'bg-blue-500 text-white' : 'bg-white bg-opacity-20 text-white'
                   }`}
                 >
                   <Bookmark className={`w-6 h-6 ${isBookmarked ? 'fill-current' : ''}`} />
                 </button>
-                <button className="p-3 rounded-full bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-colors">
+                <button className="p-3 rounded-full bg-white bg-opacity-20 text-white transition-colors">
                   <Share2 className="w-6 h-6" />
                 </button>
               </div>
@@ -231,7 +231,7 @@ const DestinationDetail = () => {
                 className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-gray-500'
                 }`}
               >
                 {tab.icon}
@@ -358,7 +358,7 @@ const DestinationDetail = () => {
                         
                         <button
                           onClick={() => handleExploreAttraction(attraction)}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+                          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
                         >
                           Explore
                         </button>
@@ -423,7 +423,7 @@ const DestinationDetail = () => {
                         
                         <button
                           onClick={() => handleBookHotel(hotel)}
-                          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+                          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
                         >
                           Book Now
                         </button>

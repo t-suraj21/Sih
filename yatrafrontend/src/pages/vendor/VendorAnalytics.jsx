@@ -157,7 +157,7 @@ const VendorAnalytics = () => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {services.map((service, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+              <tr key={index}>
                 <td className="py-4 px-6">
                   <p className="font-medium text-gray-900">{service.name}</p>
                 </td>
@@ -243,7 +243,7 @@ const VendorAnalytics = () => {
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold text-gray-900">Payment Analytics</h3>
-        <button className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+        <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors">
           <Download className="w-4 h-4 mr-2" />
           Download Report
         </button>
@@ -308,12 +308,12 @@ const VendorAnalytics = () => {
           <div className="flex items-center space-x-3 mt-4 sm:mt-0">
             <button 
               onClick={loadAnalytics}
-              className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </button>
-            <button className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export Data
             </button>

@@ -235,7 +235,7 @@ const Booking = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
+                className="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors"
               >
                 Continue to Payment
               </button>
@@ -365,7 +365,7 @@ const Booking = () => {
                   { id: 'wallet', name: 'Digital Wallet', icon: <div className="w-5 h-5 bg-purple-600 rounded text-white text-xs flex items-center justify-center">W</div> }
                 ].map((method) => (
                   <label key={method.id} className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-                    bookingData.paymentMethod === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
+                    bookingData.paymentMethod === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
                   }`}>
                     <input
                       type="radio"
@@ -467,14 +467,14 @@ const Booking = () => {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-4 px-6 rounded-lg transition-colors"
+                className="flex-1 bg-gray-200 text-gray-700 font-semibold py-4 px-6 rounded-lg transition-colors"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50"
+                className="flex-1 bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors disabled:opacity-50"
               >
                 {isProcessing ? (
                   <div className="flex items-center justify-center">
@@ -532,11 +532,11 @@ const Booking = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+            <button className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
               <Download className="w-4 h-4" />
               <span>Download Receipt</span>
             </button>
-            <button className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            <button className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
               View Booking Details
             </button>
           </div>
@@ -557,7 +557,7 @@ const Booking = () => {
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => window.history.back()}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+              className="flex items-center space-x-2 text-gray-600"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back</span>

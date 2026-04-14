@@ -156,7 +156,7 @@ const SafetySOS = () => {
                 className={`w-32 h-32 rounded-full text-white font-bold text-xl mb-6 transition-all transform hover:scale-105 ${
                   sosActive 
                     ? 'bg-green-600 animate-pulse' 
-                    : 'bg-red-600 hover:bg-red-700 active:scale-95'
+                    : 'bg-red-600 active:scale-95'
                 }`}
               >
                 {sosActive ? (
@@ -192,15 +192,15 @@ const SafetySOS = () => {
             <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+                <button className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
                   <Share2 className="w-5 h-5" />
                   <span>Share Live Location</span>
                 </button>
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+                <button className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
                   <Navigation className="w-5 h-5" />
                   <span>Find Nearest Hospital</span>
                 </button>
-                <button className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+                <button className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
                   <Users className="w-5 h-5" />
                   <span>Contact Local Guide</span>
                 </button>
@@ -220,7 +220,7 @@ const SafetySOS = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {numbers.map((contact, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 transition-colors">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold text-gray-900">{contact.name}</h4>
                           <span className="text-2xl font-bold text-blue-600">{contact.number}</span>
@@ -233,7 +233,7 @@ const SafetySOS = () => {
                           </span>
                           <button
                             onClick={() => handleEmergencyCall(contact.number)}
-                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition-colors flex items-center space-x-1"
+                            className="bg-red-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors flex items-center space-x-1"
                           >
                             <Phone className="w-4 h-4" />
                             <span>Call</span>

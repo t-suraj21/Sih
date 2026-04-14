@@ -161,7 +161,7 @@ const AdminUsers = () => {
               <h2 className="text-xl font-bold text-gray-900">User Details</h2>
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-colors"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -299,14 +299,14 @@ const AdminUsers = () => {
               <div className="flex space-x-2">
                 <a 
                   href={`mailto:${user.email}`}
-                  className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors"
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Email
                 </a>
                 <a 
                   href={`tel:${user.phone}`}
-                  className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                 >
                   <Phone className="w-4 h-4 mr-2" />
                   Call
@@ -317,7 +317,7 @@ const AdminUsers = () => {
                 {user.status === 'active' ? (
                   <button 
                     onClick={() => handleUserAction(user.id, 'suspend')}
-                    className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg transition-colors"
                   >
                     <Lock className="w-4 h-4 mr-2" />
                     Suspend
@@ -325,7 +325,7 @@ const AdminUsers = () => {
                 ) : (
                   <button 
                     onClick={() => handleUserAction(user.id, 'activate')}
-                    className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                   >
                     <Unlock className="w-4 h-4 mr-2" />
                     Activate
@@ -379,12 +379,12 @@ const AdminUsers = () => {
           <div className="flex items-center space-x-3 mt-4 sm:mt-0">
             <button 
               onClick={loadUsers}
-              className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </button>
-            <button className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export
             </button>
@@ -497,7 +497,7 @@ const AdminUsers = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id}>
                     <td className="py-4 px-6">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -548,16 +548,16 @@ const AdminUsers = () => {
                       <div className="flex items-center space-x-2">
                         <button 
                           onClick={() => setSelectedUser(user)}
-                          className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          className="p-2 text-gray-400 transition-colors"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
+                        <button className="p-2 text-gray-400 transition-colors">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleUserAction(user.id, user.status === 'active' ? 'suspend' : 'activate')}
-                          className="p-2 text-gray-400 hover:text-yellow-600 transition-colors"
+                          className="p-2 text-gray-400 transition-colors"
                         >
                           {user.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                         </button>

@@ -200,7 +200,7 @@ const VendorDashboard = () => {
         <div className="p-6 border-b border-gray-100">
               <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">Recent Bookings</h2>
-            <Link to="#" className="text-green-600 hover:text-green-500 text-sm font-medium">
+            <Link to="#" className="text-green-600 text-sm font-medium">
               View All
             </Link>
           </div>
@@ -242,10 +242,10 @@ const VendorDashboard = () => {
                     </span>
                   </div>
                   <div className="flex space-x-2">
-                    <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
+                    <button className="p-2 text-gray-400 transition-colors">
                       <Phone className="w-4 h-4" />
                     </button>
-                    <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                    <button className="p-2 text-gray-400 transition-colors">
                       <Mail className="w-4 h-4" />
                     </button>
                   </div>
@@ -260,7 +260,7 @@ const VendorDashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Plus className="w-6 h-6 text-green-600" />
           </div>
           <p className="font-medium text-gray-900">Add Service</p>
@@ -268,7 +268,7 @@ const VendorDashboard = () => {
         </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
+          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <BarChart3 className="w-6 h-6 text-blue-600" />
           </div>
           <p className="font-medium text-gray-900">Analytics</p>
@@ -276,7 +276,7 @@ const VendorDashboard = () => {
         </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Users className="w-6 h-6 text-purple-600" />
           </div>
           <p className="font-medium text-gray-900">Customers</p>
@@ -284,7 +284,7 @@ const VendorDashboard = () => {
                 </button>
 
         <button className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow text-center group">
-          <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-yellow-200 transition-colors">
+          <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3 transition-colors">
             <Settings className="w-6 h-6 text-yellow-600" />
           </div>
           <p className="font-medium text-gray-900">Settings</p>
@@ -298,7 +298,7 @@ const VendorDashboard = () => {
               <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">My Services</h2>
-        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
+        <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2">
           <Plus className="w-4 h-4" />
           <span>Add New Service</span>
         </button>
@@ -322,7 +322,7 @@ const VendorDashboard = () => {
               <option value="adventure">Adventure Sports</option>
             </select>
           </div>
-          <button className="text-gray-600 hover:text-gray-800 p-2">
+          <button className="text-gray-600 p-2">
             <RefreshCw className="w-5 h-5" />
           </button>
         </div>
@@ -333,7 +333,7 @@ const VendorDashboard = () => {
               <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 text-lg mb-2">No services listed yet</p>
               <p className="text-sm text-gray-400 mb-6">Start by adding your tourism services to attract customers.</p>
-              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto">
+              <button className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto">
                 <Plus className="w-4 h-4" />
                 <span>Add Your First Service</span>
               </button>
@@ -371,11 +371,11 @@ const VendorDashboard = () => {
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                  <button className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
                     <Eye className="w-4 h-4 mr-1" />
                     View
                   </button>
-                  <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
+                  <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center">
                     <Edit className="w-4 h-4 mr-1" />
                     Edit
                   </button>
@@ -401,7 +401,7 @@ const VendorDashboard = () => {
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
           </select>
-          <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
             Export
                   </button>
         </div>
@@ -431,7 +431,7 @@ const VendorDashboard = () => {
                 </tr>
               ) : (
                 bookings.map((booking) => (
-                <tr key={booking._id || booking.id} className="hover:bg-gray-50">
+                <tr key={booking._id || booking.id}>
                   <td className="py-4 px-6">
                           <div>
                       <p className="font-medium text-gray-900">
@@ -462,13 +462,13 @@ const VendorDashboard = () => {
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-2">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                      <button className="p-2 text-gray-400 transition-colors">
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-green-600 transition-colors">
+                      <button className="p-2 text-gray-400 transition-colors">
                         <Phone className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-400 hover:text-purple-600 transition-colors">
+                      <button className="p-2 text-gray-400 transition-colors">
                         <Mail className="w-4 h-4" />
                       </button>
                     </div>
@@ -565,7 +565,7 @@ const VendorDashboard = () => {
               <p className="text-red-800">{error}</p>
               <button 
                 onClick={loadVendorData}
-                className="ml-auto text-red-600 hover:text-red-800 text-sm font-medium"
+                className="ml-auto text-red-600 text-sm font-medium"
               >
                 Retry
               </button>
@@ -597,7 +597,7 @@ const VendorDashboard = () => {
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                       activeTab === tab.id
                         ? 'bg-green-50 text-green-600 border border-green-200'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        : 'text-gray-600'
                     }`}
                   >
                     {tab.icon}
@@ -609,7 +609,7 @@ const VendorDashboard = () => {
               <div className="mt-6 pt-6 border-t border-gray-100">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors"
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 rounded-lg font-medium transition-colors"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Logout</span>

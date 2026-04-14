@@ -613,7 +613,7 @@ const DestinationDetails = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Destination Not Found</h1>
-          <Link to="/" className="text-blue-600 hover:text-blue-700">← Back to Home</Link>
+          <Link to="/" className="text-blue-600">← Back to Home</Link>
         </div>
       </div>
     );
@@ -642,7 +642,7 @@ const DestinationDetails = () => {
         <div className="absolute top-4 left-4">
           <Link
             to="/"
-            className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors inline-flex items-center space-x-2"
+            className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg transition-colors inline-flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back</span>
@@ -694,7 +694,7 @@ const DestinationDetails = () => {
                   className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center space-x-2 transition-colors ${
                     activeTab === tab.id
                       ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500'
                   }`}
                 >
                   {tab.icon}
@@ -824,7 +824,7 @@ const DestinationDetails = () => {
                             setSelectedService(hotel);
                             setIsBookingModalOpen(true);
                           }}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
                         >
                           Book Now
                         </button>
@@ -890,7 +890,7 @@ const DestinationDetails = () => {
                           <CheckCircle className="w-4 h-4 text-green-600" />
                           <span className="text-sm text-green-600 font-medium">Verified Guide</span>
                         </div>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                           Hire Guide
                         </button>
                       </div>
@@ -944,7 +944,7 @@ const DestinationDetails = () => {
                       <CheckCircle className="w-4 h-4 text-green-600" />
                       <span className="text-sm text-green-600 font-medium">Verified Service</span>
                     </div>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                       Book Now
                     </button>
                   </div>
@@ -999,7 +999,7 @@ const DestinationDetails = () => {
                             <span className="text-sm text-green-600 font-medium">FSSAI Certified</span>
                           </div>
                         </div>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                        <button className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                           View Menu
                         </button>
                       </div>

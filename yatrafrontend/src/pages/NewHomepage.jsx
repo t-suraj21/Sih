@@ -1,1434 +1,1346 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Play, 
-  ArrowRight, 
-  Star, 
-  MapPin, 
-  Calendar, 
-  Users, 
-  Phone, 
-  ChevronLeft, 
-  ChevronRight,
-  Camera,
-  Mountain,
-  Waves,
-  TreePine,
-  Plus,
-  Instagram,
-  Facebook,
-  Twitter,
-  Youtube,
-  Linkedin,
-  Menu,
-  X,
-  Leaf,
-  CheckCircle
+import {
+  Play, ArrowRight, Star, MapPin, Calendar, Users, Phone,
+  ChevronLeft, ChevronRight, Search, Clock, Mail, Send,
+  Menu, X, Leaf, CheckCircle, Ship, Mountain, Waves, Palmtree,
+  Globe, Facebook, Twitter, Instagram, Youtube, Linkedin
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 
 const NewHomepage = () => {
   const { isDark } = useTheme();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // Navbar states
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  // Existing states
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [currentDestinationIndex, setCurrentDestinationIndex] = useState(2); // Center item
+  const [searchDestination, setSearchDestination] = useState('');
+  const [searchType, setSearchType] = useState('Adventure');
+  const [searchDuration, setSearchDuration] = useState('7 days');
+  const [activeCategory, setActiveCategory] = useState(2);
+  const [activeDestTab, setActiveDestTab] = useState('North India');
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [activeFAQ, setActiveFAQ] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [scrollStartX, setScrollStartX] = useState(0);
-  const [scrollStartY, setScrollStartY] = useState(0);
-  const destinationsRef = useRef(null);
-  const popularDestinationsRef = useRef(null);
-  const topDestinationsRef = useRef(null);
+  const [email, setEmail] = useState('');
 
-  // Hero video destinations
-  const heroDestinations = [
-    {
-      id: 1,
-      number: "01",
-      title: "NEVER STOP",
-      subtitle: "EXPLORING BHARAT",
-      description: "Discover the incredible diversity of India with verified guides, FSSAI-approved restaurants, and transparent pricing. From the majestic Himalayas to pristine beaches.",
-      backgroundImage: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1920&h=1080&fit=crop",
-      cta: "CONTACT US",
-      watchPromo: "WATCH PROMO"
-    }
-  ];
+  const popularToursRef = useRef(null);
 
-  // Featured destinations with video thumbnails
-  const featuredDestinations = [
-    {
-      id: 1,
-      number: "01",
-      title: "Golden Temple",
-      subtitle: "January 27 12:24 Pm",
-      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=500&h=300&fit=crop",
-      hasVideo: true
-    },
-    {
-      id: 2,
-      number: "02",
-      title: "Kashmir Valley",
-      subtitle: "January 27 12:24 Pm",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=300&fit=crop",
-      hasVideo: true
-    },
-    {
-      id: 3,
-      number: "03",
-      title: "Kerala Backwaters",
-      subtitle: "January 27 12:24 Pm",
-      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=500&h=300&fit=crop",
-      hasVideo: true
-    },
-    {
-      id: 4,
-      number: "04",
-      title: "Rajasthan Desert",
-      subtitle: "January 27 12:24 Pm",
-      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=300&fit=crop",
-      hasVideo: true
-    }
-  ];
-
-  // Top destinations carousel
-  const topDestinations = [
-    {
-      id: 1,
-      name: "Goa Beaches",
-      description: "Experience pristine beaches, vibrant nightlife, and Portuguese heritage in India's coastal paradise",
-      price: "₹ 15,000",
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=500&fit=crop"
-    },
-    {
-      id: 2,
-      name: "Kashmir Valley",
-      description: "Discover the 'Paradise on Earth' with stunning lakes, snow-capped mountains, and houseboats",
-      price: "₹ 25,000",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
-    },
-    {
-      id: 3,
-      name: "Taj Mahal, Agra",
-      description: "Marvel at the world's most beautiful monument to love, a UNESCO World Heritage Site",
-      price: "₹ 8,500",
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=500&fit=crop"
-    },
-    {
-      id: 4,
-      name: "Rajasthan Royal Tour",
-      description: "Explore majestic palaces, desert landscapes, and rich cultural heritage of the Land of Kings",
-      price: "₹ 22,000",
-      image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=500&fit=crop"
-    },
-    {
-      id: 5,
-      name: "Kerala Backwaters",
-      description: "Cruise through serene backwaters, lush greenery, and experience God's Own Country",
-      price: "₹ 18,000",
-      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=500&fit=crop"
-    },
-    {
-      id: 6,
-      name: "Himachal Pradesh",
-      description: "Adventure in the Himalayas with trekking, skiing, and breathtaking mountain views",
-      price: "₹ 16,500",
-      image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=400&h=500&fit=crop"
-    },
-    {
-      id: 7,
-      name: "Golden Temple, Amritsar",
-      description: "Visit the holiest Sikh shrine with its golden architecture and spiritual serenity",
-      price: "₹ 12,000",
-      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=500&fit=crop"
-    },
-    {
-      id: 8,
-      name: "Leh Ladakh",
-      description: "Experience high-altitude desert landscapes, ancient monasteries, and adventure sports",
-      price: "₹ 28,000",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=500&fit=crop"
-    },
-    {
-      id: 9,
-      name: "Andaman Islands",
-      description: "Dive into crystal-clear waters, pristine beaches, and vibrant coral reefs",
-      price: "₹ 32,000",
-      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=500&fit=crop"
-    },
-    {
-      id: 10,
-      name: "Varanasi",
-      description: "Witness ancient spiritual traditions along the sacred Ganges River in India's oldest city",
-      price: "₹ 10,000",
-      image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=400&h=500&fit=crop"
-    }
-  ];
-
-  // Excursion route
-  const excursionRoute = {
-    title: "Golden Triangle Tour",
-    day: "Day 01",
-    subtitle: "Classic India Heritage Circuit",
-    description: "Embark on India's most iconic journey through the Golden Triangle - Delhi, Agra, and Jaipur. This carefully curated 7-day expedition takes you through UNESCO World Heritage sites, magnificent Mughal architecture, and vibrant Rajasthani culture. Experience authentic Indian hospitality with government-certified guides, FSSAI-approved restaurants, and luxury accommodations.",
-    duration: "7 Days / 6 Nights",
-    price: "₹ 35,000",
-    rating: 4.8,
-    reviews: 2847,
-    mainImage: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
-    galleryImages: [
-      {
-        image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=300&fit=crop",
-        title: "Red Fort, Delhi",
-        description: "Explore Mughal architecture"
-      },
-      {
-        image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=300&fit=crop",
-        title: "Hawa Mahal, Jaipur",
-        description: "Pink City's iconic palace"
-      },
-      {
-        image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=300&fit=crop",
-        title: "Taj Mahal, Agra",
-        description: "Monument of eternal love"
-      }
-    ],
-    highlights: [
-      "UNESCO World Heritage Sites",
-      "Government Certified Guides",
-      "FSSAI Approved Restaurants",
-      "Luxury Transportation",
-      "24/7 Support",
-      "Cultural Experiences"
-    ],
-    itinerary: [
-      { day: 1, city: "Delhi", activity: "Arrival & Red Fort" },
-      { day: 2, city: "Delhi", activity: "India Gate & Lotus Temple" },
-      { day: 3, city: "Agra", activity: "Taj Mahal & Agra Fort" },
-      { day: 4, city: "Agra", activity: "Fatehpur Sikri" },
-      { day: 5, city: "Jaipur", activity: "Amber Fort & City Palace" },
-      { day: 6, city: "Jaipur", activity: "Hawa Mahal & Local Markets" },
-      { day: 7, city: "Delhi", activity: "Departure" }
-    ],
-    currentDay: "02/07",
-    tourOperators: [
-      { name: "Incredible India", logo: "🇮🇳", rating: 4.9 },
-      { name: "Heritage Tours", logo: "🏛️", rating: 4.8 },
-      { name: "Royal Rajasthan", logo: "👑", rating: 4.7 },
-      { name: "Golden Triangle Co.", logo: "🔶", rating: 4.8 },
-      { name: "India Discovery", logo: "🗺️", rating: 4.6 }
-    ]
-  };
-
-  // Tour price includes
-  const tourIncludes = [
-    "Air-conditioned vehicle",
-    "Vehicle pick up from Airport",
-    "Hotel 3 stars",
-    "Transport hotel to Airport",
-    "Transport hotel to Airport",
-    "Train tickets to destinations",
-    "Tour guide for all tours",
-    "Breakfast (4)"
-  ];
-
-  // Destination categories
-  const destinationCategories = [
-    {
-      id: 1,
-      name: "Adventure Trip",
-      count: "24 Destinations",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
-    },
-    {
-      id: 2,
-      name: "Heritage Tour",
-      count: "30 Destinations",
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=200&fit=crop"
-    },
-    {
-      id: 3,
-      name: "Spiritual Journey",
-      count: "45 Destinations",
-      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300&h=200&fit=crop"
-    },
-    {
-      id: 4,
-      name: "Beach Holiday",
-      count: "34 Destinations",
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300&h=200&fit=crop"
-    },
-    {
-      id: 5,
-      name: "Hill Station",
-      count: "49 Destinations",
-      image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=300&h=200&fit=crop"
-    },
-    {
-      id: 6,
-      name: "Cultural Experience",
-      count: "28 Destinations",
-      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop"
-    }
-  ];
-
-  // Popular destinations
-  const popularDestinations = [
-    {
-      id: 1,
-      name: "Kerala Backwaters",
-      location: "Kerala",
-      duration: "10 Days Trip",
-      price: "₹ 25,000",
-      tag: "Popular",
-      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=200&fit=crop"
-    },
-    {
-      id: 2,
-      name: "Rajasthan Royal Tour",
-      location: "Rajasthan",
-      duration: "10 Days Trip",
-      price: "₹ 35,000",
-      tag: "Heritage",
-      image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=300&h=200&fit=crop"
-    },
-    {
-      id: 3,
-      name: "Goa Beach Paradise",
-      location: "Goa",
-      duration: "10 Days Trip",
-      price: "₹ 20,000",
-      tag: "Beach",
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=300&h=200&fit=crop"
-    },
-    {
-      id: 4,
-      name: "Himachal Adventure",
-      location: "Himachal Pradesh",
-      duration: "10 Days Trip",
-      price: "₹ 28,000",
-      tag: "Adventure",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
-    },
-    {
-      id: 5,
-      name: "Golden Triangle Classic",
-      location: "Delhi-Agra-Jaipur",
-      duration: "10 Days Trip",
-      price: "₹ 22,000",
-      tag: "Classic",
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=200&fit=crop"
-    },
-    {
-      id: 6,
-      name: "South India Temple Tour",
-      location: "Tamil Nadu",
-      duration: "10 Days Trip",
-      price: "₹ 18,000",
-      tag: "Spiritual",
-      image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=300&h=200&fit=crop"
-    },
-    {
-      id: 7,
-      name: "Kashmir Paradise",
-      location: "Kashmir",
-      duration: "10 Days Trip",
-      price: "₹ 32,000",
-      tag: "Nature",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop"
-    },
-    {
-      id: 8,
-      name: "Northeast Explorer",
-      location: "Meghalaya",
-      duration: "10 Days Trip",
-      price: "₹ 26,000",
-      tag: "Explorer",
-      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=200&fit=crop"
-    }
-  ];
-
-  // Statistics
-  const statistics = [
-    { number: "50K+", label: "Happy Travelers" },
-    { number: "15+", label: "Years Of Experience" },
-    { number: "200+", label: "Destinations" },
-    { number: "4.9", label: "Overall Rating" }
-  ];
-
-  // Testimonials
-  const testimonials = [
-    {
-      id: 1,
-      name: "Rajesh Kumar",
-      location: "Mumbai",
-      rating: 5,
-      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor pofout incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud poloy lop exercitationLorem minim veniam, quis nostrud poloy lop exercitationLorem",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      location: "Delhi",
-      rating: 5,
-      comment: "Amazing experience with Bharat Bhraman! The guides were knowledgeable and all arrangements were perfect. Highly recommended for anyone looking for authentic Indian travel experiences.",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
-    },
-    {
-      id: 3,
-      name: "Amit Patel",
-      location: "Bangalore",
-      rating: 5,
-      comment: "Excellent service and attention to detail. The Golden Triangle tour was perfectly organized with verified guides and safe accommodations throughout.",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-    }
-  ];
-
-  // Photo gallery
-  const photoGallery = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-      title: "Himalayan Trek"
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=300&h=300&fit=crop",
-      title: "Backwater Journey"
-    },
-    {
-      id: 3,
-      image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=300&h=300&fit=crop",
-      title: "Heritage Sites"
-    },
-    {
-      id: 4,
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
-      title: "Mountain Adventure"
-    }
-  ];
-
-  // FAQ data
-  const faqs = [
-    {
-      id: 1,
-      question: "What makes Bharat Bhraman different from other travel companies?",
-      answer: "Bharat Bhraman focuses on verified, safe, and transparent travel experiences. All our guides are government-certified, restaurants are FSSAI-approved, and we provide 24/7 SOS support with real-time location tracking."
-    },
-    {
-      id: 2,
-      question: "Are all your tour guides certified?",
-      answer: "Yes, all our tour guides carry valid government IDs and are certified by the respective state tourism boards. They undergo regular training and background verification for your safety and authentic experience."
-    },
-    {
-      id: 3,
-      question: "How do you ensure food safety during tours?",
-      answer: "We partner only with FSSAI-certified restaurants and food outlets. Our team regularly monitors hygiene standards and we provide real-time hygiene ratings for all dining options."
-    },
-    {
-      id: 4,
-      question: "What is included in your SOS support service?",
-      answer: "Our 24/7 SOS support includes emergency assistance, location tracking, direct police contact, medical emergency support, and immediate travel assistance in case of any unforeseen circumstances."
-    }
-  ];
-
-  // Navigation items for navbar
   const navigationItems = [
     { name: 'HOME', href: '/' },
-    { name: 'DESTINATION', href: '/destinations' },
-    { name: 'SERVICE', href: '/services' },
+    { name: 'DESTINATIONS', href: '/destinations' },
+    { name: 'INDIA MAP', href: '/india-map' },
+    { name: 'MY LIST', href: '/user-list' },
     { name: 'ABOUT US', href: '/about' },
     { name: 'CONTACT', href: '/contact' }
   ];
 
-  // Navbar functions
+  const tourCategories = [
+    { id: 1, name: "Cruises", image: "https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=500&h=650&fit=crop&q=90", icon: <Ship className="w-6 h-6" /> },
+    { id: 2, name: "Hiking", image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=500&h=650&fit=crop&q=90", icon: <Mountain className="w-6 h-6" /> },
+    { id: 3, name: "Beach", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&h=650&fit=crop&q=90", icon: <Waves className="w-6 h-6" /> },
+    { id: 4, name: "Wildlife", image: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=500&h=650&fit=crop&q=90", icon: <Palmtree className="w-6 h-6" /> },
+    { id: 5, name: "Cultural", image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500&h=650&fit=crop&q=90", icon: <Globe className="w-6 h-6" /> }
+  ];
+
+  const topDestinationsTabs = ['North India', 'South India', 'West India', 'East India', 'Northeast India'];
+
+  const topDestinations = {
+    'North India': [
+      { id: 1, name: "Manali", state: "Himachal Pradesh", listings: "38 Listings", image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=400&h=560&fit=crop&q=90", price: "₹14,500" },
+      { id: 2, name: "Rishikesh", state: "Uttarakhand", listings: "42 Listings", image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=560&fit=crop&q=90", price: "₹13,800" },
+      { id: 3, name: "Srinagar", state: "Jammu & Kashmir", listings: "28 Listings", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=560&fit=crop&q=90", price: "₹18,500" },
+      { id: 4, name: "Leh", state: "Ladakh", listings: "22 Listings", image: "https://images.unsplash.com/photo-1469521669194-babb45599def?w=400&h=560&fit=crop&q=90", price: "₹24,500" }
+    ],
+    'South India': [
+      { id: 1, name: "Munnar", state: "Kerala", listings: "45 Listings", image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=560&fit=crop&q=90", price: "₹16,200" },
+      { id: 2, name: "Ooty", state: "Tamil Nadu", listings: "50 Listings", image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=560&fit=crop&q=90", price: "₹11,500" },
+      { id: 3, name: "Coorg", state: "Karnataka", listings: "48 Listings", image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=560&fit=crop&q=90", price: "₹12,800" },
+      { id: 4, name: "Pondicherry", state: "Puducherry", listings: "34 Listings", image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=560&fit=crop&q=90", price: "₹13,900" }
+    ],
+    'West India': [
+      { id: 1, name: "Goa", state: "Goa", listings: "32 Listings", image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&h=560&fit=crop&q=90", price: "₹12,500" },
+      { id: 2, name: "Udaipur", state: "Rajasthan", listings: "55 Listings", image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=560&fit=crop&q=90", price: "₹15,800" },
+      { id: 3, name: "Lonavala", state: "Maharashtra", listings: "65 Listings", image: "https://images.unsplash.com/photo-1566552881560-0be862a7c445?w=400&h=560&fit=crop&q=90", price: "₹13,200" },
+      { id: 4, name: "Kutch", state: "Gujarat", listings: "52 Listings", image: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=400&h=560&fit=crop&q=90", price: "₹13,500" }
+    ],
+    'East India': [
+      { id: 1, name: "Darjeeling", state: "West Bengal", listings: "40 Listings", image: "https://images.unsplash.com/photo-1605538883669-825200433431?w=400&h=560&fit=crop&q=90", price: "₹14,200" },
+      { id: 2, name: "Puri", state: "Odisha", listings: "38 Listings", image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&h=560&fit=crop&q=90", price: "₹13,500" },
+      { id: 3, name: "Gaya", state: "Bihar", listings: "27 Listings", image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=560&fit=crop&q=90", price: "₹12,900" },
+      { id: 4, name: "Sundarbans", state: "West Bengal", listings: "31 Listings", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=560&fit=crop&q=90", price: "₹17,100" }
+    ],
+    'Northeast India': [
+      { id: 1, name: "Shillong", state: "Meghalaya", listings: "35 Listings", image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=560&fit=crop&q=90", price: "₹16,800" },
+      { id: 2, name: "Kaziranga", state: "Assam", listings: "28 Listings", image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=560&fit=crop&q=90", price: "₹15,800" },
+      { id: 3, name: "Gangtok", state: "Sikkim", listings: "30 Listings", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=560&fit=crop&q=90", price: "₹17,500" },
+      { id: 4, name: "Kohima", state: "Nagaland", listings: "18 Listings", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=560&fit=crop&q=90", price: "₹18,500" }
+    ]
+  };
+
+  const popularTours = [
+    { id: 1, name: "Golden Triangle Tour", rating: 4.8, reviews: 285, days: 7, price: 22000, image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&h=420&fit=crop&q=90" },
+    { id: 2, name: "Kerala Backwaters", rating: 4.9, reviews: 342, days: 5, price: 16200, image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&h=420&fit=crop&q=90" },
+    { id: 3, name: "Ladakh Adventure", rating: 4.8, reviews: 198, days: 6, price: 24500, image: "https://images.unsplash.com/photo-1469521669194-babb45599def?w=600&h=420&fit=crop&q=90" },
+    { id: 4, name: "Rajasthan Heritage", rating: 4.8, reviews: 267, days: 8, price: 19800, image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&h=420&fit=crop&q=90" }
+  ];
+
+  const statistics = [
+    { number: "12+", label: "Years Experience" },
+    { number: "97%", label: "Retention Rate" },
+    { number: "8K+", label: "Tours Completed" },
+    { number: "19K+", label: "Happy Travellers" }
+  ];
+
+  const tourGuides = [
+    { id: 1, name: "Rajesh Kumar", role: "Senior Guide", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face&q=90" },
+    { id: 2, name: "Priya Sharma", role: "Lead Guide", image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face&q=90" },
+    { id: 3, name: "Amit Patel", role: "Adventure Guide", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face&q=90" },
+    { id: 4, name: "Anita Desai", role: "Cultural Guide", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face&q=90" }
+  ];
+
+  const testimonials = [
+    { id: 1, name: "Rajesh Kumar", role: "Traveller", rating: 5, comment: "A journey that perfectly blends tradition with adventure! From the moment I booked with Bharat Bhraman, I knew it was the right choice. The commitment to authentic Indian experiences and verified services made all the difference.", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face&q=90" },
+    { id: 2, name: "Priya Mehta", role: "Traveller", rating: 5, comment: "Incredible India experience with Bharat Bhraman! Every detail was perfectly organized, from FSSAI-approved restaurants to certified guides. The transparency in pricing and 24/7 support made our family trip stress-free and memorable.", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&h=120&fit=crop&crop=face&q=90" },
+    { id: 3, name: "Amit Singh", role: "Traveller", rating: 5, comment: "Best travel experience in India! The verified guides shared amazing stories, all accommodations were top-notch, and the real-time location tracking gave us peace of mind. Highly recommend for anyone exploring India!", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face&q=90" }
+  ];
+
+  const galleryImages = [
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1469521669194-babb45599def?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=500&fit=crop&q=90",
+    "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=500&h=500&fit=crop&q=90"
+  ];
+
   const isActiveLink = (href) => {
-    if (href === '/') {
-      return location.pathname === '/';
-    }
+    if (href === '/') return location.pathname === '/';
     return location.pathname.startsWith(href);
   };
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+    try { await logout(); navigate('/'); } catch (error) { console.error('Logout error:', error); }
   };
 
-  // Handle scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+  const handleSearch = (e) => { e.preventDefault(); navigate('/destinations'); };
+  const handleNewsletterSubscribe = (e) => { e.preventDefault(); setEmail(''); };
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Navigation functions
-  const scrollDestinations = (direction) => {
-    if (destinationsRef.current) {
-      const scrollAmount = 320;
-      destinationsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
+  const scrollPopularTours = (direction) => {
+    if (popularToursRef.current) {
+      popularToursRef.current.scrollBy({ left: direction === 'left' ? -370 : 370, behavior: 'smooth' });
     }
   };
-
-  const scrollTopDestinations = (direction) => {
-    if (topDestinationsRef.current) {
-      const scrollAmount = 450; // Match card width + gap
-      topDestinationsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const scrollPopularDestinations = (direction) => {
-    if (popularDestinationsRef.current) {
-      const scrollAmount = 320;
-      popularDestinationsRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  const nextDestination = () => {
-    setCurrentDestinationIndex((prev) => 
-      prev >= topDestinations.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const prevDestination = () => {
-    setCurrentDestinationIndex((prev) => 
-      prev <= 0 ? topDestinations.length - 1 : prev - 1
-    );
-  };
-
-  // Cursor-based scrolling functions for top destinations
-  const handleTopDestinationsMouseDown = (e) => {
-    setIsScrolling(true);
-    setScrollStartX(e.clientX);
-    setScrollStartY(e.clientY);
-    e.preventDefault();
-  };
-
-  const handleTopDestinationsMouseMove = (e) => {
-    if (!isScrolling || !topDestinationsRef.current) return;
-    
-    const deltaX = e.clientX - scrollStartX;
-    const deltaY = e.clientY - scrollStartY;
-    
-    // Only scroll horizontally if horizontal movement is greater
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      const scrollAmount = deltaX * 2; // Increased sensitivity for better control
-      topDestinationsRef.current.scrollLeft -= scrollAmount;
-      setScrollStartX(e.clientX);
-    }
-  };
-
-  const handleTopDestinationsMouseUp = () => {
-    setIsScrolling(false);
-  };
-
-  const handleTopDestinationsMouseLeave = () => {
-    setIsScrolling(false);
-  };
-
-  // Handle booking functionality
-  const handleBookNow = (destination) => {
-    if (!isAuthenticated) {
-      // If user is not authenticated, redirect to login with return URL
-      navigate('/login', { 
-        state: { 
-          from: '/booking',
-          destination: destination
-        }
-      });
-      return;
-    }
-
-    // If authenticated, navigate to booking page with destination data
-    navigate('/booking', {
-      state: {
-        destination: {
-          id: destination.id,
-          name: destination.name,
-          description: destination.description,
-          price: destination.price,
-          image: destination.image,
-          type: 'destination'
-        }
-      }
-    });
-  };
-
-  // Add event listeners for cursor scrolling
-  useEffect(() => {
-    if (isScrolling) {
-      document.addEventListener('mousemove', handleTopDestinationsMouseMove);
-      document.addEventListener('mouseup', handleTopDestinationsMouseUp);
-      document.addEventListener('mouseleave', handleTopDestinationsMouseLeave);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleTopDestinationsMouseMove);
-      document.removeEventListener('mouseup', handleTopDestinationsMouseUp);
-      document.removeEventListener('mouseleave', handleTopDestinationsMouseLeave);
-    };
-  }, [isScrolling, scrollStartX, scrollStartY]);
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-black text-white'}`}>
-      {/* Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black/95 backdrop-blur-md shadow-2xl' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+    <div className="min-h-screen" style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", backgroundColor: '#ffffff', overflowX: 'hidden' }}>
+
+      {/* ─── GLOBAL STYLES ─── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+        * { box-sizing: border-box; }
+
+        body { font-family: 'DM Sans', sans-serif; }
+
+        .font-display { font-family: 'Playfair Display', serif; }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .nav-link-underline::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 2px;
+          background: #06b6d4;
+          border-radius: 999px;
+          transition: width 0.3s ease;
+        }
+        .nav-link-underline:hover::after,
+        .nav-link-active::after { width: 28px !important; }
+
+        .hero-gradient {
+          background: linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.18) 0%,
+            rgba(0,0,0,0.38) 50%,
+            rgba(0,0,0,0.72) 100%
+          );
+        }
+
+        .card-hover {
+          transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 32px 64px rgba(0,0,0,0.14);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 24px rgba(6,182,212,0.35);
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 32px rgba(6,182,212,0.45);
+        }
+
+        .section-tag {
+          display: inline-block;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.85rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #06b6d4;
+          background: rgba(6,182,212,0.08);
+          padding: 6px 16px;
+          border-radius: 999px;
+          border: 1px solid rgba(6,182,212,0.2);
+          margin-bottom: 16px;
+        }
+
+        .stat-ring {
+          background: conic-gradient(#06b6d4 var(--pct), #e5e7eb var(--pct));
+        }
+
+        .fade-in { animation: fadeIn 0.6s ease forwards; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+        .bounce-arrows { animation: bounceDown 1.4s ease-in-out infinite; }
+        @keyframes bounceDown {
+          0%,100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
+        }
+
+        .img-zoom img { transition: transform 0.6s ease; }
+        .img-zoom:hover img { transform: scale(1.08); }
+
+        .glass-card {
+          backdrop-filter: blur(12px);
+          background: rgba(255,255,255,0.92);
+          border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .dest-tab-active {
+          background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+          color: #fff !important;
+          box-shadow: 0 4px 16px rgba(6,182,212,0.35);
+        }
+
+        .testimonial-card {
+          transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .pill-dot {
+          transition: all 0.3s ease;
+        }
+        .pill-dot.active {
+          width: 28px;
+          background: #06b6d4;
+        }
+
+        .footer-link { transition: padding-left 0.2s; }
+        .footer-link:hover { padding-left: 6px; }
+
+        .social-icon {
+          transition: all 0.25s ease;
+          border: 1.5px solid rgba(6,182,212,0.2);
+        }
+        .social-icon:hover {
+          transform: translateY(-3px);
+        }
+
+        .gallery-item { overflow: hidden; }
+        .gallery-item img { transition: transform 0.55s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item .overlay { transition: opacity 0.35s ease; opacity: 0; }
+        .gallery-item:hover .overlay { opacity: 1; }
+
+        .categories-shell {
+          display: grid;
+          grid-template-columns: 1.35fr 1fr;
+          gap: 22px;
+        }
+
+        .category-featured {
+          min-height: 520px;
+        }
+
+        .category-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .category-card {
+          position: relative;
+          border-radius: 22px;
+          overflow: hidden;
+          cursor: pointer;
+          isolation: isolate;
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+          box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .category-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 24px 52px rgba(0,0,0,0.18);
+        }
+
+        .category-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.55s ease;
+        }
+
+        .category-card:hover img {
+          transform: scale(1.08);
+        }
+
+        .category-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(5,10,18,0.88) 0%, rgba(5,10,18,0.2) 55%, transparent 100%);
+        }
+
+        .category-content {
+          position: absolute;
+          left: 18px;
+          right: 18px;
+          bottom: 16px;
+          color: #fff;
+        }
+
+        .category-chip {
+          position: absolute;
+          top: 14px;
+          left: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 11px;
+          font-size: 0.72rem;
+          font-weight: 700;
+          border-radius: 999px;
+          color: #fff;
+          background: rgba(255,255,255,0.16);
+          border: 1px solid rgba(255,255,255,0.35);
+          backdrop-filter: blur(5px);
+        }
+
+        .category-active-ring {
+          position: absolute;
+          inset: 0;
+          border: 2px solid #22d3ee;
+          border-radius: 22px;
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+          pointer-events: none;
+        }
+
+        .topdest-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 18px;
+        }
+
+        .topdest-card {
+          position: relative;
+          border-radius: 24px;
+          overflow: hidden;
+          cursor: pointer;
+          box-shadow: 0 14px 38px rgba(2,6,23,0.14);
+          border: 1px solid rgba(2,6,23,0.08);
+          transform: translateY(0);
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .topdest-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 24px 48px rgba(2,6,23,0.2);
+        }
+
+        .topdest-image-wrap {
+          position: relative;
+          aspect-ratio: 3 / 4;
+        }
+
+        .topdest-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transform: scale(1);
+          transition: transform 0.5s ease;
+        }
+
+        .topdest-card:hover .topdest-image {
+          transform: scale(1.08);
+        }
+
+        .topdest-main-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(2,6,23,0.9) 0%, rgba(2,6,23,0.24) 58%, transparent 100%);
+        }
+
+        .topdest-hover-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(8,145,178,0.58) 0%, rgba(8,145,178,0.12) 55%, transparent 100%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .topdest-card:hover .topdest-hover-overlay {
+          opacity: 1;
+        }
+
+        .topdest-details {
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          bottom: 16px;
+          transform: translateY(0);
+          transition: transform 0.3s ease;
+        }
+
+        .topdest-card:hover .topdest-details {
+          transform: translateY(-6px);
+        }
+
+        .topdest-reveal {
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s ease;
+          margin-top: 0;
+        }
+
+        .topdest-card:hover .topdest-reveal {
+          max-height: 70px;
+          opacity: 1;
+          margin-top: 10px;
+        }
+
+        .hidden-mobile { display: flex; }
+        .show-mobile { display: none; }
+
+        @media (max-width: 1024px) {
+          .hidden-mobile { display: none !important; }
+          .show-mobile {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .categories-shell {
+            grid-template-columns: 1fr;
+          }
+
+          .category-featured {
+            min-height: 380px;
+          }
+
+          .category-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .topdest-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 640px) {
+          .category-featured {
+            min-height: 320px;
+          }
+
+          .category-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .topdest-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+          }
+        }
+      `}</style>
+
+      {/* ─── NAVBAR ─── */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+        transition: 'all 0.35s ease',
+        backgroundColor: isScrolled ? 'rgba(255,255,255,0.97)' : 'transparent',
+        backdropFilter: isScrolled ? 'blur(16px)' : 'none',
+        boxShadow: isScrolled ? '0 2px 24px rgba(0,0,0,0.08)' : 'none',
+        borderBottom: isScrolled ? '1px solid rgba(0,0,0,0.06)' : 'none'
+      }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
+
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <Leaf className="w-8 h-8 text-green-500 transform group-hover:rotate-12 transition-transform duration-300" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+              <div style={{ position: 'relative' }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 16px rgba(6,182,212,0.4)'
+                }}>
+                  <Leaf style={{ width: 22, height: 22, color: '#fff' }} />
                 </div>
-                <div className="text-white">
-                  <div className="text-2xl font-bold tracking-tight">
-                    BHARAT
-                  </div>
-                  <div className="text-xs font-medium tracking-widest text-green-400 -mt-1">
-                    BHRAMAN
-                  </div>
-                </div>
+                <div style={{
+                  position: 'absolute', top: -3, right: -3,
+                  width: 10, height: 10, borderRadius: '50%',
+                  background: '#22d3ee', border: '2px solid #fff',
+                  animation: 'pulse 2s ease infinite'
+                }} />
+              </div>
+              <div>
+                <div style={{
+                  fontFamily: 'Playfair Display, serif',
+                  fontSize: '1.2rem', fontWeight: 700, letterSpacing: '0.08em',
+                  color: isScrolled ? '#111827' : '#fff',
+                  lineHeight: 1.1
+                }}>BHARAT</div>
+                <div style={{
+                  fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.22em',
+                  color: '#06b6d4', marginTop: 1
+                }}>BHRAMAN</div>
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
+            {/* Desktop Nav */}
+            <div style={{ alignItems: 'center', gap: 4 }} className="hidden-mobile">
               {navigationItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`relative px-6 py-2 text-sm font-semibold tracking-wider transition-all duration-300 group ${
-                    isActiveLink(item.href)
-                      ? 'text-green-400'
-                      : 'text-white hover:text-green-400'
-                  }`}
+                  className={`nav-link-underline ${isActiveLink(item.href) ? 'nav-link-active' : ''}`}
+                  style={{
+                    position: 'relative',
+                    padding: '8px 16px',
+                    fontSize: '0.75rem', fontWeight: 700,
+                    letterSpacing: '0.1em',
+                    color: isScrolled
+                      ? (isActiveLink(item.href) ? '#06b6d4' : '#374151')
+                      : 'rgba(255,255,255,0.92)',
+                    textDecoration: 'none',
+                    borderRadius: 8,
+                    transition: 'color 0.2s'
+                  }}
                 >
                   {item.name}
-                  
-                  {/* Active/Hover underline */}
-                  <span className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-green-400 transition-all duration-300 ${
-                    isActiveLink(item.href) 
-                      ? 'w-8' 
-                      : 'w-0 group-hover:w-8'
-                  }`} />
                 </Link>
               ))}
             </div>
 
-            {/* Auth Section - Desktop */}
-            <div className="hidden lg:flex items-center space-x-4">
+            {/* Auth */}
+            <div style={{ alignItems: 'center', gap: 12 }} className="hidden-mobile">
               {isAuthenticated ? (
-                <div className="flex items-center space-x-3">
-                  <Link
-                    to={user?.role === 'admin' ? '/dashboard/admin' : user?.role === 'vendor' ? '/dashboard/vendor' : '/dashboard/user'}
-                    className="text-white hover:text-green-400 transition-colors text-sm font-medium"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105"
-                  >
+                <>
+                  <button onClick={handleLogout} className="btn-primary"
+                    style={{ padding: '10px 24px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer' }}>
                     Logout
                   </button>
-                </div>
+                </>
               ) : (
-                <div className="flex items-center space-x-3">
-                  <Link
-                    to="/login"
-                    className="text-white hover:text-green-400 transition-colors text-sm font-medium px-4 py-2"
-                  >
+                <>
+                  <Link to="/login"
+                    style={{ fontSize: '0.85rem', fontWeight: 600, color: isScrolled ? '#374151' : '#fff', textDecoration: 'none', padding: '10px 16px' }}>
                     Login
                   </Link>
-                  <Link
-                    to="/signup"
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
-                  >
+                  <Link to="/signup" className="btn-primary"
+                    style={{ padding: '10px 24px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 700, color: '#fff', textDecoration: 'none', display: 'inline-block' }}>
                     Sign Up
                   </Link>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-            >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+            {/* Mobile Toggle */}
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="show-mobile"
+              style={{ padding: 8, borderRadius: 10, border: 'none', background: 'transparent', cursor: 'pointer', color: isScrolled ? '#111' : '#fff' }}>
+              {isMenuOpen ? <X style={{ width: 24, height: 24 }} /> : <Menu style={{ width: 24, height: 24 }} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-t border-green-500/20">
-            <div className="px-4 py-6 space-y-4">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-3 text-base font-semibold tracking-wider transition-all duration-300 rounded-lg ${
-                    isActiveLink(item.href)
-                      ? 'text-green-400 bg-green-500/10'
-                      : 'text-white hover:text-green-400 hover:bg-white/5'
-                  }`}
+          <div style={{ background: '#fff', borderTop: '1px solid #f3f4f6', padding: '16px 24px 24px' }}>
+            {navigationItems.map((item) => (
+              <Link key={item.name} to={item.href} onClick={() => setIsMenuOpen(false)}
+                style={{
+                  display: 'block', padding: '12px 16px', fontWeight: 700, fontSize: '0.85rem',
+                  letterSpacing: '0.08em', color: isActiveLink(item.href) ? '#06b6d4' : '#374151',
+                  textDecoration: 'none', borderRadius: 10, marginBottom: 4,
+                  background: isActiveLink(item.href) ? 'rgba(6,182,212,0.06)' : 'transparent'
+                }}>
+                {item.name}
+              </Link>
+            ))}
+            <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: 16, marginTop: 8, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {isAuthenticated ? (
+                <button
+                  onClick={async () => {
+                    setIsMenuOpen(false);
+                    await handleLogout();
+                  }}
+                  className="btn-primary"
+                  style={{ display: 'block', textAlign: 'center', padding: '12px', fontWeight: 700, color: '#fff', borderRadius: 12, border: 'none', cursor: 'pointer' }}
                 >
-                  {item.name}
-                </Link>
-              ))}
-              
-              {/* Mobile Auth */}
-              <div className="pt-4 border-t border-green-500/20 space-y-3">
-                {isAuthenticated ? (
-                  <>
-                    <Link
-                      to={user?.role === 'admin' ? '/dashboard/admin' : user?.role === 'vendor' ? '/dashboard/vendor' : '/dashboard/user'}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block px-4 py-3 text-white hover:text-green-400 transition-colors font-medium rounded-lg hover:bg-white/5"
-                    >
-                      Dashboard
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block px-4 py-3 text-white hover:text-green-400 transition-colors font-medium rounded-lg hover:bg-white/5"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/signup"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold text-center transition-colors"
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
-              </div>
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)}
+                    style={{ display: 'block', textAlign: 'center', padding: '12px', fontWeight: 600, color: '#374151', textDecoration: 'none', borderRadius: 12, border: '1.5px solid #e5e7eb' }}>
+                    Login
+                  </Link>
+                  <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="btn-primary"
+                    style={{ display: 'block', textAlign: 'center', padding: '12px', fontWeight: 700, color: '#fff', textDecoration: 'none', borderRadius: 12 }}>
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden -mt-20">
-        {/* Background */}
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url("${heroDestinations[0].backgroundImage}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'brightness(0.4)'
-          }}
-        />
-        
-        {/* Green overlay */}
-        {/* <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 via-green-800/60 to-transparent z-10" /> */}
-        
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center min-h-screen">
-          {/* Left Content */}
-          <div className="flex-1 max-w-3xl lg:pr-30">
-            <div className="text-8xl md:text-9xl font-bold text-white/20 mb-4">
-              01
+      {/* ─── HERO ─── */}
+      <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&q=95")',
+          backgroundSize: 'cover', backgroundPosition: 'center'
+        }}>
+          <div className="hero-gradient" style={{ position: 'absolute', inset: 0 }} />
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1280, margin: '0 auto', padding: '120px 24px 80px', textAlign: 'center' }}>
+          <div className="fade-in">
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 24,
+              background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.22)', borderRadius: 999,
+              padding: '8px 20px'
+            }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22d3ee', animation: 'pulse 2s ease infinite' }} />
+              <span style={{ color: 'rgba(255,255,255,0.92)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '0.05em' }}>
+                Get unforgettable pleasure with us
+              </span>
             </div>
-            <div className="mb-8">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-                NEVER STOP
-                <br />
-                <span className="text-green-400">EXPLORING BHARAT</span>
-              </h1>
-              <p className="text-lg md:text-xl text-gray-300 max-w-xl leading-relaxed">
-                Discover the incredible diversity of India with verified guides, FSSAI-approved restaurants, and transparent pricing. From the majestic Himalayas to pristine beaches.
-              </p>
-            </div>
-            
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 mb-12">
-              <button 
-                onClick={() => navigate('/contact')}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-300 hover:scale-105"
-              >
-                <span>CONTACT US</span>
-                <ArrowRight className="w-5 h-5" />
+
+            <h1 className="font-display" style={{
+              fontSize: 'clamp(2.8rem, 7vw, 6rem)',
+              fontWeight: 800, color: '#fff',
+              lineHeight: 1.1, marginBottom: 32,
+              textShadow: '0 4px 24px rgba(0,0,0,0.3)'
+            }}>
+              Natural Wonder<br />
+              <span style={{ color: '#22d3ee' }}>Of The World</span>
+            </h1>
+
+            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 56 }}>
+              <button onClick={() => navigate('/destinations')} className="btn-primary"
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 36px', borderRadius: 16, fontSize: '1rem', fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer' }}>
+                Explore Tours <ArrowRight style={{ width: 18, height: 18 }} />
               </button>
-              
-              <button className="bg-green-600/20 hover:bg-green-600/30 border border-green-600 text-white px-8 py-4 rounded-lg font-semibold flex items-center space-x-2 transition-all duration-300 hover:scale-105">
-                <Play className="w-5 h-5" />
-                <span>WATCH PROMO</span>
+              <button style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '16px 36px', borderRadius: 16,
+                fontSize: '1rem', fontWeight: 700, color: '#fff',
+                background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)',
+                border: '1.5px solid rgba(255,255,255,0.35)', cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}>
+                <Play style={{ width: 18, height: 18 }} /> Our Services
               </button>
             </div>
-          </div>
-          
-          {/* Right Content - Video Thumbnails */}
-          <div className="hidden lg:flex flex-col space-y-6 max-w-sm ml-4">
-            {featuredDestinations.map((destination, index) => (
-              <div
-                key={destination.id}
-                className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${
-                  index === currentVideoIndex ? 'scale-105 ring-4 ring-green-400' : 'hover:scale-102'
-                }`}
-                onClick={() => setCurrentVideoIndex(index)}
-              >
-                <img
-                  src={destination.image}
-                  alt={destination.title}
-                  className="w-full h-32 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute top-4 right-4 text-4xl font-bold text-white/50">
-                  {destination.number}
-                </div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-white font-bold text-lg mb-1">{destination.title}</h3>
-                  <p className="text-gray-300 text-sm">{destination.subtitle}</p>
-                </div>
-                {destination.hasVideo && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                      <Play className="w-6 h-6 text-white ml-1" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Top Destinations Section */}
-      <section className="py-20 bg-black">
-        <div className="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Top Destinations
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Discover India's most breathtaking destinations with verified guides and authentic experiences. From heritage sites to natural wonders.
-            </p>
-          </div>
-          
-          {/* Full Display Scrollable Destinations */}
-          <div className="relative">
-            {/* Navigation Buttons */}
-            <button
-              onClick={() => scrollTopDestinations('left')}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-black/80 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group shadow-2xl"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-7 h-7 text-white group-hover:text-green-400 transition-colors duration-300" />
-            </button>
-            
-            <button
-              onClick={() => scrollTopDestinations('right')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-black/80 hover:bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group shadow-2xl"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-7 h-7 text-white group-hover:text-green-400 transition-colors duration-300" />
-            </button>
-
-            {/* Scroll indicator */}
-            <div className="text-center mb-8">
-              <p className="text-gray-400 text-sm">← Drag to scroll or use arrow buttons →</p>
-            </div>
-            
-            <div 
-              ref={topDestinationsRef}
-              className={`flex gap-8 overflow-x-auto scrollbar-hide pb-6 ${
-                isScrolling ? 'cursor-grabbing' : 'cursor-grab'
-              }`}
-              onMouseDown={handleTopDestinationsMouseDown}
-              onMouseMove={handleTopDestinationsMouseMove}
-              onMouseUp={handleTopDestinationsMouseUp}
-              onMouseLeave={handleTopDestinationsMouseLeave}
-              style={{ 
-                userSelect: 'none',
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none'
-              }}
-            >
-              {topDestinations.map((destination, index) => (
-                <div
-                  key={destination.id}
-                  className="flex-shrink-0 w-96 lg:w-[450px] transition-all duration-200 hover:scale-105"
-                >
-                  <div className="relative h-[350px] lg:h-[500px] rounded-3xl overflow-hidden group cursor-pointer shadow-2xl">
-                    {/* Background Image */}
-                    <img
-                      src={destination.image}
-                      alt={destination.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      draggable={false}
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    
-                    {/* Hover Effect - Glow Outside */}
-                    <div className="absolute -inset-6 bg-gradient-to-r from-green-400/30 via-green-500/30 to-green-400/30 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-2xl -z-10" />
-                    
-                    {/* Content Overlay */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-8">
-                      {/* Destination Info */}
-                      <div className="text-white">
-                        <h3 className="text-3xl lg:text-4xl font-bold mb-3 group-hover:text-green-400 transition-colors duration-300">
-                          {destination.name}
-                        </h3>
-                        <p className="text-gray-200 mb-6 text-base lg:text-lg leading-relaxed group-hover:text-gray-100 transition-colors duration-300">
-                          {destination.description}
-                        </p>
-                        
-                        {/* Price and Button */}
-                        <div className="flex items-center justify-between">
-                          <span className="text-3xl lg:text-4xl font-bold text-green-400 group-hover:text-green-300 transition-colors duration-300">
-                            {destination.price}
-                          </span>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookNow(destination);
-                            }}
-                            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-green-500/25 hover:shadow-2xl"
-                          >
-                            Book Now
-                          </button>
-                        </div>
-                      </div>
-                      
-                      {/* Additional Hover Elements */}
-                      <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
-                          <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                          <span className="text-white font-medium">5</span>
-                        </div>
-                      </div>
-                      
-                      {/* Location Badge */}
-                      <div className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        <div className="flex items-center space-x-2 bg-black/60 backdrop-blur-sm rounded-full px-4 py-2">
-                          <MapPin className="w-5 h-5 text-green-400" />
-                          <span className="text-white font-medium">India</span>
-                        </div>
-                      </div>
-                      
-                      {/* Destination Number */}
-                      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 opacity-20 group-hover:opacity-30 transition-opacity duration-300">
-                        <span className="text-8xl lg:text-9xl font-bold text-white">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Excursion Route Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-green-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-green-600 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="text-green-400 font-semibold text-lg tracking-wider uppercase">Featured Journey</span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 mt-4">
-              Premium Excursion Routes
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Discover India's most iconic destinations through carefully curated multi-day journeys with expert guides, luxury accommodations, and authentic cultural experiences.
-            </p>
-          </div>
-          
-          {/* Main Content Card */}
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-2xl border border-gray-700/50">
-            <div className="grid lg:grid-cols-5 gap-12 items-center">
-              {/* Left Content */}
-              <div className="lg:col-span-3">
-                <div className="flex items-center space-x-4 mb-6">
-                  <span className="bg-green-600 text-white px-4 py-2 rounded-full font-semibold text-sm">
-                    {excursionRoute.day}
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                    <span className="text-white font-semibold">{excursionRoute.rating}</span>
-                    <span className="text-gray-400">({excursionRoute.reviews} reviews)</span>
-                  </div>
-                </div>
-                
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                  {excursionRoute.title}
-                </h3>
-                
-                <p className="text-green-400 text-lg font-semibold mb-6">
-                  {excursionRoute.subtitle}
-                </p>
-                
-                <p className="text-gray-300 text-lg leading-relaxed mb-8">
-                  {excursionRoute.description}
-                </p>
-                
-                {/* Tour Highlights */}
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                  {excursionRoute.highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                      <span className="text-gray-300 text-sm">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Price and CTA */}
-                <div className="flex items-center justify-between">
+            {/* Search Box */}
+            <div className="glass-card" style={{ borderRadius: 24, padding: 28, maxWidth: 900, margin: '0 auto' }}>
+              <form onSubmit={handleSearch}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, alignItems: 'end' }}>
                   <div>
-                    <span className="text-3xl font-bold text-green-400">{excursionRoute.price}</span>
-                    <span className="text-gray-400 ml-2">per person</span>
-                    <div className="text-sm text-gray-400">{excursionRoute.duration}</div>
-                  </div>
-                  <button 
-                    onClick={() => handleBookNow({
-                      id: 'golden-triangle',
-                      name: excursionRoute.title,
-                      description: excursionRoute.description,
-                      price: excursionRoute.price,
-                      image: excursionRoute.mainImage,
-                      type: 'tour'
-                    })}
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-2xl"
-                  >
-                    Book This Journey
-                  </button>
-                </div>
-              </div>
-              
-              {/* Right Content - Enhanced Images */}
-              <div className="lg:col-span-2">
-                <div className="relative">
-                  {/* Main Featured Image */}
-                  <div className="relative rounded-2xl overflow-hidden mb-4 group">
-                    <img
-                      src={excursionRoute.mainImage}
-                      alt={excursionRoute.title}
-                      className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <span className="bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        Main Destination
-                      </span>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 8, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      Destination
+                    </label>
+                    <div style={{ position: 'relative' }}>
+                      <MapPin style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 18, height: 18, color: '#06b6d4' }} />
+                      <input type="text" placeholder="Search Location" value={searchDestination} onChange={(e) => setSearchDestination(e.target.value)}
+                        style={{ width: '100%', paddingLeft: 40, paddingRight: 16, paddingTop: 14, paddingBottom: 14, borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: '0.9rem', outline: 'none', background: '#fff', color: '#111' }} />
                     </div>
                   </div>
-                  
-                  {/* Gallery Images */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {excursionRoute.galleryImages.map((item, index) => (
-                      <div key={index} className="relative rounded-xl overflow-hidden group cursor-pointer">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-full h-24 object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <span className="text-white text-xs font-medium text-center px-2">
-                            {item.title}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 8, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      Type
+                    </label>
+                    <select value={searchType} onChange={(e) => setSearchType(e.target.value)}
+                      style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: '0.9rem', outline: 'none', background: '#fff', color: '#111', cursor: 'pointer' }}>
+                      <option>Adventure</option><option>Beach</option><option>Heritage</option><option>Wildlife</option><option>Spiritual</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 8, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      Duration
+                    </label>
+                    <select value={searchDuration} onChange={(e) => setSearchDuration(e.target.value)}
+                      style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: '0.9rem', outline: 'none', background: '#fff', color: '#111', cursor: 'pointer' }}>
+                      <option>7 days</option><option>3 days</option><option>5 days</option><option>10 days</option><option>14 days</option>
+                    </select>
+                  </div>
+                  <div>
+                    <button type="submit" className="btn-primary"
+                      style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 24px', borderRadius: 12, fontSize: '0.9rem', fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer' }}>
+                      <Search style={{ width: 18, height: 18 }} /> Search
+                    </button>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Tour Price Includes Section */}
-      <section className="py-12 bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-6">Tour Price Includes</h3>
-              <p className="text-gray-400 mb-6">
-                Our comprehensive packages include everything you need for a hassle-free journey through incredible India.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {tourIncludes.map((item, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-sm">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Scroll indicator */}
+        <div className="bounce-arrows" style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, zIndex: 10 }}>
+          <ChevronRight style={{ width: 22, height: 22, color: 'rgba(255,255,255,0.7)', transform: 'rotate(90deg)' }} />
+          <ChevronRight style={{ width: 22, height: 22, color: 'rgba(255,255,255,0.4)', transform: 'rotate(90deg)' }} />
         </div>
       </section>
 
-      {/* Destinations Category Section */}
-      <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Destinations Category
+      {/* ─── TOUR CATEGORIES ─── */}
+      <section style={{ padding: '96px 0', background: 'linear-gradient(180deg, #fff 0%, #f8fafc 100%)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 72 }}>
+            <div className="section-tag">Browse Categories</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: 0 }}>
+              Tour Categories
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Choose your perfect Indian adventure from our carefully curated travel categories, each offering unique experiences and memories.
-            </p>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {destinationCategories.map((category) => (
-              <div
-                key={category.id}
-                className="group cursor-pointer"
-                onClick={() => navigate(`/destinations?category=${category.name.toLowerCase().replace(' ', '-')}`)}
-              >
-                <div className="relative rounded-2xl overflow-hidden mb-4 aspect-square">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
-                </div>
-                <h3 className="text-white font-bold text-lg mb-1 group-hover:text-green-400 transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-gray-400 text-sm">{category.count}</p>
-              </div>
+
+          {/* Refined Responsive Category Layout */}
+          <div className="categories-shell">
+            {(() => {
+              const featuredCategory = tourCategories[activeCategory] || tourCategories[0];
+              const compactCategories = tourCategories.filter((_, i) => i !== activeCategory);
+
+              return (
+                <>
+                  <div
+                    className="category-card category-featured"
+                    onClick={() => navigate('/destinations')}
+                  >
+                    <img src={featuredCategory.image} alt={featuredCategory.name} />
+                    <div className="category-overlay" />
+                    <div className="category-chip">
+                      {featuredCategory.icon}
+                      <span>Featured Category</span>
+                    </div>
+                    <div className="category-content">
+                      <h3 className="font-display" style={{ margin: 0, fontSize: '2rem', fontWeight: 700 }}>
+                        {featuredCategory.name}
+                      </h3>
+                      <p style={{ margin: '10px 0 0', fontSize: '0.9rem', color: 'rgba(255,255,255,0.84)' }}>
+                        Curated experiences, trusted operators, and seamless planning.
+                      </p>
+                    </div>
+                    <div className="category-active-ring" />
+                  </div>
+
+                  <div className="category-grid">
+                    {compactCategories.map((category, idx) => {
+                      const originalIndex = tourCategories.findIndex((c) => c.id === category.id);
+                      return (
+                        <div
+                          key={category.id}
+                          className="category-card"
+                          style={{ minHeight: idx < 2 ? 250 : 220 }}
+                          onClick={() => {
+                            setActiveCategory(originalIndex);
+                            navigate('/destinations');
+                          }}
+                        >
+                          <img src={category.image} alt={category.name} />
+                          <div className="category-overlay" />
+                          <div className="category-chip">{category.icon}</div>
+                          <div className="category-content">
+                            <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>{category.name}</h3>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+
+          {/* Dots */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 48 }}>
+            {tourCategories.map((_, i) => (
+              <button key={i} onClick={() => setActiveCategory(i)} className={`pill-dot ${i === activeCategory ? 'active' : ''}`}
+                style={{ width: i === activeCategory ? 28 : 10, height: 10, borderRadius: 999, background: i === activeCategory ? '#06b6d4' : '#d1d5db', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.3s' }} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Why Choose India Section */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-96 h-96 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-400/20 to-emerald-500/20 backdrop-blur-sm border border-green-400/30 rounded-full px-6 py-3 mb-8">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-green-400 font-semibold text-sm tracking-wider uppercase">Incredible India</span>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+      {/* ─── TOP DESTINATIONS ─── */}
+      <section style={{ padding: '96px 0', background: '#fff' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 56, flexWrap: 'wrap', gap: 24 }}>
+            <div>
+              <div className="section-tag">Explore India</div>
+              <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: 0 }}>
+                Top Destinations
+              </h2>
             </div>
-            
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8">
-              <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                Why Choose India for
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                Your Next Adventure?
-              </span>
-            </h2>
-            
-            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Discover a land where ancient traditions meet modern wonders, where every journey tells a story, 
-              and where unforgettable experiences await at every turn.
-            </p>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {topDestinationsTabs.map((tab) => (
+                <button key={tab} onClick={() => setActiveDestTab(tab)}
+                  className={activeDestTab === tab ? 'dest-tab-active' : ''}
+                  style={{
+                    padding: '10px 22px', borderRadius: 999, fontSize: '0.85rem', fontWeight: 600,
+                    border: activeDestTab === tab ? 'none' : '1.5px solid #e5e7eb',
+                    background: activeDestTab === tab ? '' : '#fff',
+                    color: activeDestTab === tab ? '#fff' : '#4b5563', cursor: 'pointer',
+                    transition: 'all 0.25s ease'
+                  }}>
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Interactive Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-            {[
-              {
-                icon: "🏛️",
-                title: "5000+ Years of History",
-                description: "Explore UNESCO World Heritage sites, ancient temples, and architectural marvels that span millennia",
-                highlight: "29 UNESCO Sites"
-              },
-              {
-                icon: "🍛",
-                title: "Culinary Paradise",
-                description: "Savor authentic flavors from 28 states, each with unique spices, recipes, and culinary traditions",
-                highlight: "1000+ Dishes"
-              },
-              {
-                icon: "🏔️",
-                title: "Diverse Landscapes",
-                description: "From Himalayan peaks to tropical beaches, deserts to rainforests - all in one incredible country",
-                highlight: "7 Climate Zones"
-              },
-              {
-                icon: "🎭",
-                title: "Rich Cultural Heritage",
-                description: "Experience vibrant festivals, classical arts, traditional crafts, and warm hospitality",
-                highlight: "22 Languages"
-              },
-              {
-                icon: "🐅",
-                title: "Wildlife & Nature",
-                description: "Home to tigers, elephants, and exotic species across 104 national parks and sanctuaries",
-                highlight: "45,000+ Species"
-              },
-              {
-                icon: "💰",
-                title: "Incredible Value",
-                description: "Luxury experiences at affordable prices - get more for your travel budget than anywhere else",
-                highlight: "Best ROI Destination"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="group relative">
-                {/* Glow Effect */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-green-400/20 via-emerald-500/20 to-teal-400/20 rounded-3xl blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                
-                <div className="relative bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl border border-gray-700/50 hover:border-green-400/30 transition-all duration-300 hover:scale-105">
-                  {/* Icon */}
-                  <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+          {/* Cards */}
+          <div className="topdest-grid">
+            {topDestinations[activeDestTab].map((destination) => (
+              <article
+                key={destination.id}
+                className="topdest-card"
+                onClick={() => navigate(`/state/${encodeURIComponent(destination.state)}`)}
+              >
+                <div className="topdest-image-wrap">
+                  <img src={destination.image} alt={destination.name} className="topdest-image" />
+                  <div className="topdest-main-overlay" />
+                  <div className="topdest-hover-overlay" />
+
+                  <div style={{ position: 'absolute', top: 14, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                    <div style={{
+                      background: 'rgba(255,255,255,0.16)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255,255,255,0.35)',
+                      borderRadius: 999,
+                      padding: '7px 12px',
+                      color: '#fff',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.03em'
+                    }}>
+                      {destination.listings}
+                    </div>
+                    <div style={{
+                      background: 'rgba(255,255,255,0.95)',
+                      borderRadius: 999,
+                      padding: '7px 12px',
+                      color: '#0f172a',
+                      fontSize: '0.72rem',
+                      fontWeight: 800
+                    }}>
+                      {destination.price}
+                    </div>
+                  </div>
+
+                  <div className="topdest-details">
+                    <h3 className="font-display" style={{ color: '#fff', fontSize: '1.45rem', fontWeight: 700, margin: '0 0 4px' }}>
+                      {destination.name}
+                    </h3>
+                    <p style={{ color: 'rgba(255,255,255,0.82)', margin: 0, fontSize: '0.82rem', fontWeight: 500 }}>
+                      {destination.state}
+                    </p>
+                    <div className="topdest-reveal">
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', color: 'rgba(255,255,255,0.95)', fontWeight: 600 }}>
+                        <MapPin style={{ width: 12, height: 12 }} />
+                        <span>Trusted stays and local tours</span>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.78)', marginTop: 4 }}>
+                        Tap to explore curated packages
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── PLAN YOUR TRIP ─── */}
+      <section style={{ padding: '96px 0', background: 'linear-gradient(135deg, #f0fdff 0%, #ecfeff 50%, #f0f9ff 100%)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 64, alignItems: 'center' }}>
+
+            {/* Images */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="img-zoom" style={{ borderRadius: 24, overflow: 'hidden', height: 340, boxShadow: '0 16px 48px rgba(0,0,0,0.1)' }}>
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=700&fit=crop&q=90" alt="Mountain" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 48 }}>
+                <div className="img-zoom" style={{ borderRadius: 999, overflow: 'hidden', height: 200, boxShadow: '0 16px 48px rgba(0,0,0,0.1)' }}>
+                  <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&h=400&fit=crop&q=90" alt="Kerala" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </div>
+                <div className="img-zoom" style={{ borderRadius: 20, overflow: 'hidden', height: 160, boxShadow: '0 12px 32px rgba(0,0,0,0.1)' }}>
+                  <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop&q=90" alt="Taj Mahal" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div>
+              <div className="section-tag">Let's Go Together</div>
+              <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 700, color: '#111827', margin: '0 0 20px', lineHeight: 1.2 }}>
+                Plan Your Trip<br />With Us
+              </h2>
+              <p style={{ color: '#6b7280', fontSize: '1rem', lineHeight: 1.8, marginBottom: 36 }}>
+                Experience the incredible diversity of India with verified guides, FSSAI-approved restaurants, and transparent pricing. We ensure safe, authentic, and memorable journeys across beautiful Bharat.
+              </p>
+
+              {[
+                { icon: <CheckCircle style={{ width: 24, height: 24 }} />, title: "Exclusive Trip", desc: "Customized itineraries with verified guides and authentic experiences tailored to your preferences." },
+                { icon: <Users style={{ width: 24, height: 24 }} />, title: "Professional Guide", desc: "Government-certified guides with deep knowledge of local culture, history, and hidden gems." }
+              ].map((feature, i) => (
+                <div key={i} style={{ display: 'flex', gap: 20, marginBottom: 28, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: 16,
+                    background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    color: '#fff', boxShadow: '0 8px 24px rgba(6,182,212,0.35)'
+                  }}>
                     {feature.icon}
                   </div>
-                  
-                  {/* Highlight Badge */}
-                  <div className="inline-block bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold mb-4 border border-green-400/30">
-                    {feature.highlight}
-                  </div>
-                  
-                  {/* Content */}
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
-                    {feature.description}
-                  </p>
-                  
-                  {/* Hover Arrow */}
-                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                    <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                      <ArrowRight className="w-4 h-4 text-white" />
-                    </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111827', margin: '0 0 6px' }}>{feature.title}</h3>
+                    <p style={{ color: '#6b7280', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>{feature.desc}</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+
+              <button onClick={() => navigate('/destinations')} className="btn-primary"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 36px', borderRadius: 16, fontSize: '0.95rem', fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer', marginTop: 8 }}>
+                Learn More <ArrowRight style={{ width: 18, height: 18 }} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── POPULAR TOURS ─── */}
+      <section style={{ padding: '96px 0', background: '#f8fafc' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <div className="section-tag">Best Places For You</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: '0 0 16px' }}>
+              Most Popular Tours
+            </h2>
+            <p style={{ color: '#6b7280', maxWidth: 560, margin: '0 auto', lineHeight: 1.8, fontSize: '0.95rem' }}>
+              Discover India's most loved destinations with carefully curated tour packages featuring authentic experiences and verified services.
+            </p>
           </div>
 
-          {/* Impressive Statistics */}
-          <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 backdrop-blur-sm rounded-3xl p-12 border border-green-400/20">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                India by the Numbers
-              </h3>
-              <p className="text-green-400 text-lg font-semibold">
-                Incredible facts that make India extraordinary
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { number: "1.4B+", label: "People", description: "Diverse cultures united" },
-                { number: "28", label: "States", description: "Each unique & beautiful" },
-                { number: "40+", label: "Languages", description: "Rich linguistic heritage" },
-                { number: "#1", label: "Yoga Origin", description: "Birthplace of wellness" }
-              ].map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
-                    {stat.number}
+          <div style={{ position: 'relative' }}>
+            <button onClick={() => scrollPopularTours('left')}
+              style={{ position: 'absolute', left: -20, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 48, height: 48, borderRadius: '50%', background: '#fff', border: '1.5px solid #e5e7eb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.1)', transition: 'all 0.25s ease' }}>
+              <ChevronLeft style={{ width: 22, height: 22, color: '#374151' }} />
+            </button>
+            <button onClick={() => scrollPopularTours('right')}
+              style={{ position: 'absolute', right: -20, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 48, height: 48, borderRadius: '50%', background: '#fff', border: '1.5px solid #e5e7eb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.1)', transition: 'all 0.25s ease' }}>
+              <ChevronRight style={{ width: 22, height: 22, color: '#374151' }} />
+            </button>
+
+            <div ref={popularToursRef} className="scrollbar-hide"
+              style={{ display: 'flex', gap: 24, overflowX: 'auto', scrollBehavior: 'smooth', paddingBottom: 8, touchAction: 'pan-y' }}>
+              {popularTours.map((tour) => (
+                <div key={tour.id} className="card-hover"
+                  onClick={() => navigate('/destinations')}
+                  style={{ flexShrink: 0, width: 320, background: '#fff', borderRadius: 24, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.07)', cursor: 'pointer', border: '1px solid rgba(0,0,0,0.04)' }}>
+                  <div style={{ position: 'relative', height: 220 }} className="img-zoom">
+                    <img src={tour.image} alt={tour.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)' }} />
+                    <div style={{
+                      position: 'absolute', top: 16, right: 16,
+                      background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)',
+                      borderRadius: 12, padding: '8px 14px',
+                      fontSize: '0.82rem', fontWeight: 700, color: '#06b6d4',
+                      display: 'flex', alignItems: 'center', gap: 6
+                    }}>
+                      <Clock style={{ width: 14, height: 14 }} /> {tour.days} Days
+                    </div>
                   </div>
-                  <div className="text-white font-bold text-lg mb-1 group-hover:text-green-400 transition-colors duration-300">
-                    {stat.label}
-                  </div>
-                  <div className="text-gray-400 text-sm">
-                    {stat.description}
+
+                  <div style={{ padding: 24 }}>
+                    <h3 className="font-display" style={{ fontSize: '1.15rem', fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>
+                      {tour.name}
+                    </h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} style={{ width: 15, height: 15, color: '#f59e0b', fill: '#f59e0b' }} />
+                      ))}
+                      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#6b7280', marginLeft: 4 }}>
+                        {tour.rating} ({tour.reviews})
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 16, borderTop: '1px solid #f3f4f6' }}>
+                      <div>
+                        <span style={{ fontSize: '1.5rem', fontWeight: 800, color: '#111827' }}>₹{tour.price.toLocaleString()}</span>
+                        <span style={{ fontSize: '0.8rem', color: '#9ca3af', marginLeft: 4 }}>/person</span>
+                      </div>
+                      <button style={{
+                        display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                        borderRadius: 12, background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                        color: '#fff', border: 'none', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(6,182,212,0.3)'
+                      }}>
+                        Book Now <ArrowRight style={{ width: 14, height: 14 }} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Call to Action */}
-          <div className="text-center mt-16">
-            <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl p-12 border border-green-400/20">
-              <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Ready to Experience Incredible India?
-              </h3>
-              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-                Join millions of travelers who have discovered the magic of India. 
-                Your extraordinary journey begins with just one click.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
-                  onClick={() => navigate('/destinations')}
-                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 hover:from-green-500 hover:via-emerald-500 hover:to-green-500 text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-green-500/25 border border-green-400/20"
-                >
-                  Explore Destinations
-                </button>
-                <button 
-                  onClick={() => navigate('/contact')}
-                  className="bg-transparent hover:bg-green-600/20 border-2 border-green-600 hover:border-green-500 text-green-400 hover:text-white px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105"
-                >
-                  Plan My Trip
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="py-16 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {statistics.slice(0, 4).map((stat, index) => (
-              <div
-                key={index}
-                className={`text-center p-8 rounded-2xl ${
-                  index === 1 ? 'bg-green-600' : 'bg-gray-800'
-                }`}
-              >
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-300 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Happy Trip Section */}
-          <div className="grid md:grid-cols-2 gap-12 items-center mt-20">
-            <div>
-              <div className="mb-6">
-                <span className="text-green-400 font-semibold text-lg">Happy Trip</span>
-                <div className="w-20 h-1 bg-green-400 mt-2 mb-4"></div>
-              </div>
-              
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Experience the joy of authentic Indian travel with thousands of satisfied customers who have explored incredible destinations with complete safety and transparency. Join our community of happy travelers and create unforgettable memories across beautiful Bharat.
-              </p>
-            </div>
-            
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&h=400&fit=crop"
-                alt="Happy travelers"
-                className="w-full h-80 object-cover rounded-2xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-900 relative">
-        {/* Background */}
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: 'url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-        
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              F.A.Q
+      {/* ─── GALLERY ─── */}
+      <section style={{ padding: '96px 0', background: '#fff' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <div className="section-tag">Moments</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: 0 }}>
+              Recent Gallery
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Find answers to commonly asked questions about traveling with Bharat Bhraman and our verified services.
-            </p>
           </div>
-          
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div
-                key={faq.id}
-                className="bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden"
-              >
-                <button
-                  onClick={() => setActiveFAQ(activeFAQ === index ? -1 : index)}
-                  className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors"
-                >
-                  <span className="text-white font-semibold text-lg pr-8">
-                    {faq.question}
-                  </span>
-                  <Plus
-                    className={`w-6 h-6 text-white transition-transform duration-300 ${
-                      activeFAQ === index ? 'rotate-45' : ''
-                    }`}
-                  />
-                </button>
-                
-                {activeFAQ === index && (
-                  <div className="px-8 pb-6">
-                    <p className="text-gray-300 leading-relaxed">
-                      {faq.answer}
-                    </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'auto', gap: 16 }}>
+            {galleryImages.map((image, index) => (
+              <div key={index} className="gallery-item"
+                style={{
+                  position: 'relative', borderRadius: 20, overflow: 'hidden',
+                  gridRow: (index === 0 || index === 5) ? 'span 2' : 'span 1',
+                  height: (index === 0 || index === 5) ? 440 : 212,
+                  cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+                }}>
+                <img src={image} alt={`Gallery ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                <div className="overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(6,182,212,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{
+                    width: 52, height: 52, borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+                  }}>
+                    <Play style={{ width: 22, height: 22, color: '#06b6d4', marginLeft: 3 }} />
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
-      
+
+      {/* ─── STATISTICS ─── */}
+      <section style={{ padding: '80px 0', background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #22d3ee 100%)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 40 }}>
+            {statistics.map((stat, index) => (
+              <div key={index} style={{ textAlign: 'center' }}>
+                <div style={{
+                  width: 140, height: 140, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)',
+                  border: '2px solid rgba(255,255,255,0.3)',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 16px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+                }}>
+                  <div className="font-display" style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{stat.number}</div>
+                </div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TOUR GUIDES ─── */}
+      <section style={{ padding: '96px 0', background: '#fff' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <div className="section-tag">Meet the Team</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: 0 }}>
+              Our Tour Guides
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 28 }}>
+            {tourGuides.map((guide, index) => {
+              const isFeatured = index === 1;
+              return (
+                <div key={guide.id} className="card-hover"
+                  style={{
+                    borderRadius: 24, overflow: 'hidden', cursor: 'pointer',
+                    background: isFeatured ? 'linear-gradient(135deg, #06b6d4, #0891b2)' : '#f8fafc',
+                    boxShadow: isFeatured ? '0 16px 48px rgba(6,182,212,0.35)' : '0 4px 16px rgba(0,0,0,0.06)',
+                    transform: isFeatured ? 'translateY(-16px)' : 'none',
+                    border: isFeatured ? 'none' : '1px solid #f3f4f6'
+                  }}>
+                  <div style={{ height: 200, overflow: 'hidden' }} className="img-zoom">
+                    <img src={guide.image} alt={guide.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  </div>
+                  <div style={{ padding: 24, textAlign: 'center' }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: isFeatured ? '#fff' : '#111827', margin: '0 0 6px' }}>{guide.name}</h3>
+                    <p style={{ fontSize: '0.82rem', fontWeight: 500, color: isFeatured ? 'rgba(255,255,255,0.8)' : '#6b7280', margin: '0 0 20px' }}>{guide.role}</p>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 8 }}>
+                      {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
+                        <button key={i} className="social-icon"
+                          style={{
+                            width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                            background: isFeatured ? 'rgba(255,255,255,0.15)' : '#fff',
+                            color: isFeatured ? '#fff' : '#06b6d4',
+                            border: isFeatured ? '1.5px solid rgba(255,255,255,0.3)' : '1.5px solid rgba(6,182,212,0.2)'
+                          }}>
+                          <Icon style={{ width: 16, height: 16 }} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TESTIMONIALS ─── */}
+      <section style={{ padding: '96px 0', background: 'linear-gradient(135deg, #f0fdff 0%, #ecfeff 100%)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <div className="section-tag">Testimonials</div>
+            <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#111827', margin: 0 }}>
+              What Our Clients Say
+            </h2>
+          </div>
+
+          <div style={{ position: 'relative', maxWidth: 860, margin: '0 auto' }}>
+            <div style={{ position: 'relative', height: 340, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {testimonials.map((testimonial, index) => {
+                const diff = index - activeTestimonial;
+                const isActive = diff === 0;
+                const isPrev = diff === -1 || diff === testimonials.length - 1;
+                const isNext = diff === 1 || diff === -(testimonials.length - 1);
+                return (
+                  <div key={testimonial.id} className="testimonial-card"
+                    style={{
+                      position: 'absolute', width: '100%',
+                      transform: isActive ? 'translateX(0) scale(1)' : isPrev ? 'translateX(-110%) scale(0.88)' : 'translateX(110%) scale(0.88)',
+                      opacity: isActive ? 1 : 0.4,
+                      pointerEvents: isActive ? 'all' : 'none',
+                      zIndex: isActive ? 10 : 5
+                    }}>
+                    <div style={{
+                      background: '#fff', borderRadius: 28, padding: 36,
+                      boxShadow: '0 16px 48px rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(6,182,212,0.1)'
+                    }}>
+                      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', marginBottom: 24 }}>
+                        <img src={testimonial.avatar} alt={testimonial.name} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '3px solid #22d3ee' }} />
+                        <div style={{ flex: 1 }}>
+                          <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>{testimonial.name}</h4>
+                          <p style={{ fontSize: '0.82rem', color: '#6b7280', margin: 0 }}>{testimonial.role}</p>
+                        </div>
+                        <div style={{ display: 'flex', gap: 4 }}>
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} style={{ width: 18, height: 18, color: '#f59e0b', fill: '#f59e0b' }} />
+                          ))}
+                        </div>
+                      </div>
+                      <p style={{ color: '#4b5563', fontSize: '0.95rem', lineHeight: 1.8, margin: '0 0 20px', fontStyle: 'italic' }}>
+                        "{testimonial.comment}"
+                      </p>
+                      <div className="font-display" style={{ fontSize: '4rem', color: '#06b6d4', lineHeight: 1, opacity: 0.4 }}>"</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 40 }}>
+              {testimonials.map((_, i) => (
+                <button key={i} onClick={() => setActiveTestimonial(i)}
+                  style={{ width: i === activeTestimonial ? 28 : 10, height: 10, borderRadius: 999, background: i === activeTestimonial ? '#06b6d4' : '#d1d5db', border: 'none', cursor: 'pointer', transition: 'all 0.3s ease', padding: 0 }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── NEWSLETTER ─── */}
+      <section style={{ padding: '96px 0', background: '#fff' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 64, alignItems: 'center' }}>
+            <div>
+              <div className="section-tag">Stay Updated</div>
+              <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', fontWeight: 700, color: '#111827', margin: '0 0 32px', lineHeight: 1.2 }}>
+                Get the Latest<br />Newsletter
+              </h2>
+              <form onSubmit={handleNewsletterSubscribe} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 260px', position: 'relative' }}>
+                  <Mail style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', width: 20, height: 20, color: '#06b6d4' }} />
+                  <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                    style={{ width: '100%', paddingLeft: 48, paddingRight: 20, paddingTop: 16, paddingBottom: 16, borderRadius: 999, border: '2px solid #e5e7eb', fontSize: '0.9rem', outline: 'none', background: '#fff', color: '#111', transition: 'border-color 0.25s' }} />
+                </div>
+                <button type="submit" className="btn-primary"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 28px', borderRadius: 999, fontSize: '0.9rem', fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                  Subscribe <Send style={{ width: 16, height: 16 }} />
+                </button>
+              </form>
+            </div>
+
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827', marginBottom: 20 }}>Instagram Grid</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                {galleryImages.slice(0, 6).map((image, index) => (
+                  <div key={index} className="gallery-item" style={{ borderRadius: 16, overflow: 'hidden', aspectRatio: '1', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+                    <img src={image} alt={`Instagram ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <div className="overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(6,182,212,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Instagram style={{ width: 24, height: 24, color: '#fff' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FOOTER ─── */}
+      <footer style={{ background: '#0f172a', padding: '72px 0 0' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 48, marginBottom: 56 }}>
+
+            {/* Brand */}
+            <div>
+              <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 20 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #06b6d4, #0891b2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Leaf style={{ width: 22, height: 22, color: '#fff' }} />
+                </div>
+                <div>
+                  <div className="font-display" style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', letterSpacing: '0.08em' }}>BHARAT</div>
+                  <div style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.22em', color: '#06b6d4', marginTop: 1 }}>BHRAMAN</div>
+                </div>
+              </Link>
+              <p style={{ color: '#94a3b8', fontSize: '0.88rem', lineHeight: 1.8, marginBottom: 24 }}>
+                Discover the incredible diversity of India with verified guides and authentic experiences.
+              </p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
+                  <button key={i} className="social-icon"
+                    style={{ width: 38, height: 38, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Icon style={{ width: 16, height: 16 }} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Links */}
+            <div>
+              <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', marginBottom: 20, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Useful Links</h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {['Home', 'About Us', 'Our Services', 'Terms of Service', 'Tour Booking'].map((item) => (
+                  <li key={item}>
+                    <Link to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`}
+                      className="footer-link"
+                      style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 8, fontWeight: 400 }}>
+                      <ArrowRight style={{ width: 14, height: 14, color: '#06b6d4' }} /> {item}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', marginBottom: 20, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Get In Touch</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {[
+                  { icon: <Phone style={{ width: 18, height: 18, color: '#06b6d4' }} />, lines: ['+91 234 567 890', '+91 876 543 210'] },
+                  { icon: <Mail style={{ width: 18, height: 18, color: '#06b6d4' }} />, lines: ['info@bharatbhraman.com', 'support@bharatbhraman.com'] },
+                  { icon: <MapPin style={{ width: 18, height: 18, color: '#06b6d4', flexShrink: 0 }} />, lines: ['123 Heritage Lane, New Delhi, India'] }
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={{ marginTop: 2 }}>{item.icon}</div>
+                    <div>{item.lines.map((l, j) => (
+                      <div key={j} style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: 1.7 }}>{l}</div>
+                    ))}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Instagram */}
+            <div>
+              <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', marginBottom: 20, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Instagram</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                {galleryImages.slice(0, 6).map((image, index) => (
+                  <div key={index} className="gallery-item" style={{ borderRadius: 12, overflow: 'hidden', aspectRatio: '1', cursor: 'pointer' }}>
+                    <img src={image} alt={`Footer ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <div className="overlay" style={{ position: 'absolute', inset: 0, background: 'rgba(6,182,212,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Instagram style={{ width: 18, height: 18, color: '#fff' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '24px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            <p style={{ color: '#64748b', fontSize: '0.82rem', margin: 0 }}>
+              © 2024 Bharat Bhraman. All rights reserved.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <span style={{ color: '#64748b', fontSize: '0.82rem' }}>We Accept</span>
+              {['Mastercard', 'Visa', 'PayPal', 'UPI'].map((method) => (
+                <div key={method} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '4px 12px', fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  {method}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* ─── SCROLL TO TOP ─── */}
+      <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="btn-primary"
+        style={{ position: 'fixed', bottom: 28, right: 28, width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', zIndex: 40 }}>
+        <ChevronRight style={{ width: 20, height: 20, color: '#fff', transform: 'rotate(-90deg)' }} />
+      </button>
     </div>
   );
 };

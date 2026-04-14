@@ -310,7 +310,7 @@ const UserDashboard = () => {
             </div>
             <Link 
               to="/bookings" 
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 text-sm font-medium bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-colors"
+              className="flex items-center space-x-2 text-blue-600 text-sm font-medium bg-blue-50 px-4 py-2 rounded-xl transition-colors"
             >
               <span>View All</span>
               <ChevronRight className="w-4 h-4" />
@@ -336,7 +336,7 @@ const UserDashboard = () => {
                     <div className="flex-1">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors">{booking.title}</h3>
+                          <h3 className="font-bold text-gray-900 text-lg transition-colors">{booking.title}</h3>
                           <div className="flex items-center space-x-2 mt-1">
                             <MapPin className="w-4 h-4 text-gray-400" />
                             <p className="text-sm text-gray-600">{booking.destination}</p>
@@ -368,7 +368,7 @@ const UserDashboard = () => {
               <p className="text-gray-600 mb-6">Start your journey by exploring amazing destinations</p>
               <Link 
                 to="/destinations" 
-                className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 <Compass className="w-5 h-5" />
                 <span>Explore Destinations</span>
@@ -395,7 +395,7 @@ const UserDashboard = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Link 
             to="/destinations" 
-            className="group relative bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border border-blue-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            className="group relative bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
               <Compass className="w-7 h-7 text-white" />
@@ -406,32 +406,32 @@ const UserDashboard = () => {
           </Link>
 
           <Link 
-            to="/hotels" 
-            className="group relative bg-gradient-to-br from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 border border-emerald-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            to="/india-map" 
+            className="group relative bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <Hotel className="w-7 h-7 text-white" />
+              <MapPin className="w-7 h-7 text-white" />
             </div>
-            <p className="font-bold text-gray-900 mb-1">Hotels</p>
-            <p className="text-sm text-gray-600">Book Stay</p>
+            <p className="font-bold text-gray-900 mb-1">India Map</p>
+            <p className="text-sm text-gray-600">Tourist Locations</p>
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-green-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </Link>
 
           <Link 
-            to="/eco-tourism" 
-            className="group relative bg-gradient-to-br from-teal-50 to-cyan-50 hover:from-teal-100 hover:to-cyan-100 border border-teal-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            to="/user-list" 
+            className="group relative bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <Leaf className="w-7 h-7 text-white" />
+              <ShoppingCart className="w-7 h-7 text-white" />
             </div>
-            <p className="font-bold text-gray-900 mb-1">Eco Tour</p>
-            <p className="text-sm text-gray-600">Sustainable</p>
+            <p className="font-bold text-gray-900 mb-1">My List</p>
+            <p className="text-sm text-gray-600">Booking List</p>
             <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </Link>
 
           <Link 
             to="/safety-sos" 
-            className="group relative bg-gradient-to-br from-red-50 to-pink-50 hover:from-red-100 hover:to-pink-100 border border-red-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            className="group relative bg-gradient-to-br from-red-50 to-pink-50 border border-red-100 rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
               <Shield className="w-7 h-7 text-white" />
@@ -557,7 +557,7 @@ const UserDashboard = () => {
         <h2 className="text-2xl font-bold text-gray-900">My Bookings</h2>
         <Link 
           to="/destinations" 
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           New Booking
         </Link>
@@ -591,10 +591,10 @@ const UserDashboard = () => {
                 </div>
               </div>
               <div className="mt-4 flex space-x-2">
-                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors">
+                <button className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors">
                   View Details
                 </button>
-                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
                   Manage
                 </button>
               </div>
@@ -727,14 +727,14 @@ const UserDashboard = () => {
                     location: ''
                   });
                 }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-4 py-2 text-gray-600 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={profileLoading}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
+                className="bg-blue-600 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center"
               >
                 {profileLoading && (
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -786,11 +786,11 @@ const UserDashboard = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors">
+              <button className="relative p-2 text-gray-600 rounded-xl transition-colors">
                 <Bell className="w-6 h-6" />
                 <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
               </button>
-              <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors">
+              <button className="p-2 text-gray-600 rounded-xl transition-colors">
                 <Search className="w-6 h-6" />
               </button>
             </div>
@@ -807,7 +807,7 @@ const UserDashboard = () => {
               <p className="text-red-800">{error}</p>
               <button 
                 onClick={loadDashboardData}
-                className="ml-auto text-red-600 hover:text-red-800 text-sm font-medium bg-red-100 hover:bg-red-200 px-4 py-2 rounded-xl transition-colors"
+                className="ml-auto text-red-600 text-sm font-medium bg-red-100 px-4 py-2 rounded-xl transition-colors"
               >
                 Retry
               </button>
@@ -848,13 +848,13 @@ const UserDashboard = () => {
                       className={`w-full flex items-center space-x-4 px-4 py-4 rounded-2xl font-medium transition-all duration-300 group ${
                         activeTab === tab.id
                           ? `bg-${tab.color}-50 text-${tab.color}-600 border border-${tab.color}-200 shadow-sm scale-105`
-                          : 'text-gray-600 hover:bg-gray-50 hover:scale-102'
+                          : 'text-gray-600 hover:scale-102'
                       }`}
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
                         activeTab === tab.id
                           ? `bg-${tab.color}-100`
-                          : 'bg-gray-100 group-hover:bg-gray-200'
+                          : 'bg-gray-100'
                       }`}>
                         {tab.icon}
                       </div>
@@ -877,7 +877,7 @@ const UserDashboard = () => {
                       <p className="text-xs text-gray-600">24/7 Support Available</p>
                     </div>
                   </div>
-                  <button className="w-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 rounded-xl transition-colors">
+                  <button className="w-full bg-green-600 text-white text-sm font-medium py-2 rounded-xl transition-colors">
                     Contact Support
                   </button>
                 </div>
@@ -886,9 +886,9 @@ const UserDashboard = () => {
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-2xl font-medium transition-all duration-300 hover:scale-105 group"
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 rounded-2xl font-medium transition-all duration-300 hover:scale-105 group"
                   >
-                    <div className="w-10 h-10 bg-red-100 group-hover:bg-red-200 rounded-xl flex items-center justify-center transition-colors">
+                    <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center transition-colors">
                       <LogOut className="w-5 h-5" />
                     </div>
                     <span className="font-semibold">Logout</span>
@@ -911,11 +911,11 @@ const UserDashboard = () => {
                     <p className="text-gray-600 mt-2">Places you've saved for future adventures</p>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-medium transition-colors">
+                    <button className="flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-medium transition-colors">
                       <Filter className="w-4 h-4" />
                       <span>Filter</span>
                     </button>
-                    <button className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors">
+                    <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-xl font-medium transition-colors">
                       <Plus className="w-4 h-4" />
                       <span>Add New</span>
                     </button>
@@ -928,7 +928,7 @@ const UserDashboard = () => {
                       <div className="relative">
                         <img src={item.image} alt={item.name} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
                         <div className="absolute top-4 right-4">
-                          <button className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
+                          <button className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transition-colors">
                             <Heart className="w-4 h-4 text-red-500 fill-current" />
                           </button>
                         </div>
@@ -937,7 +937,7 @@ const UserDashboard = () => {
                       <div className="p-6">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors">{item.name}</h3>
+                            <h3 className="font-bold text-gray-900 text-lg transition-colors">{item.name}</h3>
                             <p className="text-sm text-gray-600 capitalize">{item.type}</p>
                           </div>
                           <div className="flex items-center space-x-1">
@@ -946,10 +946,10 @@ const UserDashboard = () => {
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                          <button className="text-blue-600 text-sm font-medium">
                             View Details
                           </button>
-                          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Book Now
                           </button>
                         </div>
@@ -964,7 +964,7 @@ const UserDashboard = () => {
                       <p className="text-gray-600 mb-8 max-w-md mx-auto">Start exploring destinations and save your favorite places for future trips.</p>
                       <Link 
                         to="/destinations" 
-                        className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                        className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors"
                       >
                         <Compass className="w-5 h-5" />
                         <span>Explore Destinations</span>

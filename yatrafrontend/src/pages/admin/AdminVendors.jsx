@@ -132,7 +132,7 @@ const AdminVendors = () => {
               <h2 className="text-xl font-bold text-gray-900">Vendor Details</h2>
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-colors"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -251,14 +251,14 @@ const AdminVendors = () => {
               <div className="flex space-x-2">
                 <a 
                   href={`mailto:${vendor.email}`}
-                  className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition-colors"
                 >
                   <Mail className="w-4 h-4 mr-2" />
                   Email
                 </a>
                 <a 
                   href={`tel:${vendor.phone}`}
-                  className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                 >
                   <Phone className="w-4 h-4 mr-2" />
                   Call
@@ -269,14 +269,14 @@ const AdminVendors = () => {
                 <div className="flex space-x-2">
                   <button 
                     onClick={() => handleVendorAction(vendor.id, 'approve')}
-                    className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors"
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Approve
                   </button>
                   <button 
                     onClick={() => handleVendorAction(vendor.id, 'reject')}
-                    className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg transition-colors"
                   >
                     <XCircle className="w-4 h-4 mr-2" />
                     Reject
@@ -331,12 +331,12 @@ const AdminVendors = () => {
           <div className="flex items-center space-x-3 mt-4 sm:mt-0">
             <button 
               onClick={loadVendors}
-              className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </button>
-            <button className="flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg transition-colors">
               <Download className="w-4 h-4 mr-2" />
               Export
             </button>
@@ -481,7 +481,7 @@ const AdminVendors = () => {
                 <div className="flex space-x-2">
                   <button 
                     onClick={() => setSelectedVendor(vendor)}
-                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                    className="p-2 text-gray-400 transition-colors"
                   >
                     <Eye className="w-4 h-4" />
                   </button>
@@ -489,13 +489,13 @@ const AdminVendors = () => {
                     <>
                       <button 
                         onClick={() => handleVendorAction(vendor.id, 'approve')}
-                        className="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                        className="p-2 text-gray-400 transition-colors"
                       >
                         <CheckCircle className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleVendorAction(vendor.id, 'reject')}
-                        className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-2 text-gray-400 transition-colors"
                       >
                         <XCircle className="w-4 h-4" />
                       </button>

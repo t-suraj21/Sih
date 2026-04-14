@@ -212,7 +212,7 @@ const FAQ = () => {
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
                       activeCategory === category.id
                         ? 'bg-blue-100 text-blue-700 border-l-4 border-blue-600'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        : 'text-gray-700'
                     }`}
                   >
                     {category.icon}
@@ -225,15 +225,15 @@ const FAQ = () => {
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-900 mb-4">Still need help?</h3>
                 <div className="space-y-3">
-                  <a href="tel:1800-XXX-XXXX" className="flex items-center space-x-3 text-sm text-blue-600 hover:text-blue-700">
+                  <a href="tel:1800-XXX-XXXX" className="flex items-center space-x-3 text-sm text-blue-600">
                     <Phone className="w-4 h-4" />
                     <span>Call Support</span>
                   </a>
-                  <a href="mailto:support@yatra.gov.in" className="flex items-center space-x-3 text-sm text-green-600 hover:text-green-700">
+                  <a href="mailto:support@yatra.gov.in" className="flex items-center space-x-3 text-sm text-green-600">
                     <Mail className="w-4 h-4" />
                     <span>Email Us</span>
                   </a>
-                  <button className="flex items-center space-x-3 text-sm text-purple-600 hover:text-purple-700">
+                  <button className="flex items-center space-x-3 text-sm text-purple-600">
                     <MessageSquare className="w-4 h-4" />
                     <span>Live Chat</span>
                   </button>
@@ -273,7 +273,7 @@ const FAQ = () => {
                         setSearchTerm('');
                         setActiveCategory('all');
                       }}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-blue-600 font-medium"
                     >
                       Clear filters
                     </button>
@@ -285,7 +285,7 @@ const FAQ = () => {
                         onClick={() => toggleFAQ(index)}
                         className="w-full flex items-center justify-between text-left focus:outline-none group"
                       >
-                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors pr-4">
+                        <h3 className="text-lg font-medium text-gray-900 transition-colors pr-4">
                           {faq.question}
                         </h3>
                         <div className="flex-shrink-0">
@@ -325,11 +325,11 @@ const FAQ = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href="/contact"
-                  className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   Contact Support
                 </a>
-                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                <button className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                   Start Live Chat
                 </button>
               </div>

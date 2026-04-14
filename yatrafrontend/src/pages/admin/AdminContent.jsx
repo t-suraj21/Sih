@@ -66,7 +66,7 @@ const AdminContent = () => {
             <h1 className="text-3xl font-bold text-gray-900">Content Management</h1>
             <p className="text-gray-600 mt-1">Manage platform content and destinations</p>
           </div>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
+          <button className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
             <Plus className="w-5 h-5 mr-2" />
             Add Content
           </button>

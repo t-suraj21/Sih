@@ -2,16 +2,19 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { BookingProvider } from './contexts/BookingContext';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute, { AdminRoute, VendorRoute, TouristRoute, PublicRoute } from './components/ProtectedRoute';
 import NewHomepage from './pages/NewHomepage';
 import Destinations from './pages/Destinations';
 import DestinationDetails from './pages/DestinationDetails';
-import Services from './pages/Services';
-import Hotels from './pages/Hotels';
+import StateDetails from './pages/StateDetails';
+import UserList from './pages/UserList';
+import PaymentPage from './pages/PaymentPage';
+import BookingConfirmation from './pages/BookingConfirmation';
+import IndiaMap from './pages/IndiaMap';
 import Booking from './pages/Booking';
 import SafetySOS from './pages/SafetySOS';
-import EcoTourism from './pages/EcoTourism';
 import UserDashboard from './pages/UserDashboard';
 import VendorDashboard from './pages/VendorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -32,6 +35,10 @@ import AdminAnalytics from './pages/admin/AdminAnalytics';
 // Profile Pages
 import UserProfile from './pages/UserProfile';
 import ProfileSettings from './pages/ProfileSettings';
+import PackageCustomization from './pages/PackageCustomization';
+import PackageBooking from './pages/PackageBooking';
+import PackageBookingConfirmation from './pages/PackageBookingConfirmation';
+import AuthCallback from './pages/AuthCallback';
 import './App.css';
 
 function App() {
@@ -39,20 +46,22 @@ function App() {
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <Router>
-          <Layout>
-            <Routes>
+          <BookingProvider>
+            <Router>
+            <Layout>
+              <Routes>
               {/* Homepage with Africa Tours design */}
               <Route path="/" element={<NewHomepage />} />
               
               {/* All other routes */}
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destination/:destinationName" element={<DestinationDetails />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/destination/:destinationName/services" element={<Services />} />
-              <Route path="/hotels" element={<Hotels />} />
+              <Route path="/state/:stateName" element={<StateDetails />} />
+              <Route path="/user-list" element={<UserList />} />
+              <Route path="/payment" element={<PaymentPage />} />
+              <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+              <Route path="/india-map" element={<IndiaMap />} />
               <Route path="/safety-sos" element={<SafetySOS />} />
-              <Route path="/eco-tourism" element={<EcoTourism />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/faq" element={<FAQ />} />
@@ -68,11 +77,27 @@ function App() {
                   <Signup />
                 </PublicRoute>
               } />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               
               {/* Protected Routes - Require Authentication */}
               <Route path="/booking" element={
                 <ProtectedRoute>
                   <Booking />
+                </ProtectedRoute>
+              } />
+              <Route path="/package-customization" element={
+                <ProtectedRoute>
+                  <PackageCustomization />
+                </ProtectedRoute>
+              } />
+              <Route path="/package-booking" element={
+                <ProtectedRoute>
+                  <PackageBooking />
+                </ProtectedRoute>
+              } />
+              <Route path="/package-booking-confirmation" element={
+                <ProtectedRoute>
+                  <PackageBookingConfirmation />
                 </ProtectedRoute>
               } />
               
@@ -147,9 +172,10 @@ function App() {
                   <ProfileSettings />
                 </ProtectedRoute>
               } />
-            </Routes>
-          </Layout>
-          </Router>
+              </Routes>
+            </Layout>
+            </Router>
+          </BookingProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
